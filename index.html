@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Questline</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="background-orb orb-one"></div>
+    <div class="background-orb orb-two"></div>
+    <main class="shell">
+      <section class="hero-card">
+        <div class="hero-copy">
+          <p class="eyebrow">Minimal self-improvement, game intensity</p>
+          <h1>Questline turns habits into levels, streaks, and earned achievements.</h1>
+          <p class="hero-text">
+            Build goals during sign up, log progress in one tap, and collect proof that you are becoming who you said you would be.
+          </p>
+          <div class="hero-pills">
+            <span>Fitness quests</span>
+            <span>Certificate milestones</span>
+            <span>Apple-inspired monochrome UI</span>
+          </div>
+        </div>
+        <div class="hero-side glass-panel">
+          <div class="mini-stat">
+            <span>Daily streak</span>
+            <strong id="preview-streak">07</strong>
+          </div>
+          <div class="mini-stat">
+            <span>Unlocked badges</span>
+            <strong id="preview-badges">12</strong>
+          </div>
+          <div class="mini-stat">
+            <span>Current rank</span>
+            <strong id="preview-rank">Focused Hero</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="auth-layout">
+        <article class="glass-panel auth-card" id="auth-card">
+          <div class="section-heading">
+            <p class="eyebrow">Create your account</p>
+            <h2>Start with the goals you want to turn into wins.</h2>
+          </div>
+
+          <div class="mode-toggle">
+            <button class="mode-button active" data-mode="signup" type="button">Sign up</button>
+            <button class="mode-button" data-mode="login" type="button">Login</button>
+          </div>
+
+          <form id="auth-form" class="auth-form">
+            <div class="field-grid">
+              <label class="field" data-signup-only="true">
+                <span>Display name</span>
+                <input id="display-name" name="displayName" type="text" maxlength="40" placeholder="Rron" />
+              </label>
+              <label class="field">
+                <span>Email</span>
+                <input id="email" name="email" type="email" required placeholder="you@example.com" />
+              </label>
+              <label class="field">
+                <span>Password</span>
+                <input id="password" name="password" type="password" required minlength="6" placeholder="At least 6 characters" />
+              </label>
+            </div>
+
+            <div id="signup-goals">
+              <div class="inline-heading">
+                <h3>Choose your opening quests</h3>
+                <span>These get saved during sign up.</span>
+              </div>
+              <div class="goal-onboarding-grid">
+                <label class="field">
+                  <span>Goal 1</span>
+                  <input class="goal-input" type="text" maxlength="80" placeholder="Go to the gym 4 times a week" />
+                </label>
+                <label class="field">
+                  <span>Goal 2</span>
+                  <input class="goal-input" type="text" maxlength="80" placeholder="Finish AWS certification" />
+                </label>
+                <label class="field">
+                  <span>Goal 3</span>
+                  <input class="goal-input" type="text" maxlength="80" placeholder="Read 20 pages every day" />
+                </label>
+              </div>
+            </div>
+
+            <button id="auth-submit" class="primary-button" type="submit">Create account</button>
+            <p id="auth-message" class="message" aria-live="polite"></p>
+          </form>
+        </article>
+
+        <aside class="glass-panel feature-card">
+          <div class="section-heading">
+            <p class="eyebrow">Designed to feel rewarding</p>
+            <h2>What makes it game-like.</h2>
+          </div>
+          <div class="feature-list">
+            <article>
+              <strong>XP and levels</strong>
+              <p>Every completed goal check-in moves your rank forward.</p>
+            </article>
+            <article>
+              <strong>Streak engine</strong>
+              <p>Daily momentum gets surfaced so consistency becomes visible.</p>
+            </article>
+            <article>
+              <strong>Badges and certificates</strong>
+              <p>Big milestones convert into collectible achievement cards.</p>
+            </article>
+          </div>
+        </aside>
+      </section>
+
+      <section id="app-shell" class="app-shell hidden">
+        <header class="dashboard-header glass-panel">
+          <div>
+            <p class="eyebrow">Your progress arena</p>
+            <h2 id="welcome-title">Welcome back</h2>
+            <p id="welcome-subtitle" class="muted">Loading your profile...</p>
+            <p id="dashboard-message" class="message" aria-live="polite"></p>
+          </div>
+          <div class="header-actions">
+            <button id="add-goal-button" class="secondary-button" type="button">Add goal</button>
+            <button id="logout-button" class="ghost-button" type="button">Log out</button>
+          </div>
+        </header>
+
+        <section class="stats-grid">
+          <article class="glass-panel stat-card hero-stat">
+            <div class="stat-label">Current level</div>
+            <div class="level-row">
+              <div>
+                <strong id="level-value">1</strong>
+                <span id="rank-label">Rookie</span>
+              </div>
+              <div class="xp-block">
+                <span>XP</span>
+                <strong id="xp-value">0</strong>
+              </div>
+            </div>
+            <div class="progress-track">
+              <div id="xp-bar" class="progress-fill"></div>
+            </div>
+            <p id="xp-caption" class="muted">0 XP to the next level</p>
+          </article>
+
+          <article class="glass-panel stat-card">
+            <div class="stat-label">Active streak</div>
+            <strong id="streak-value">0 days</strong>
+            <p class="muted">Show up today to keep the chain alive.</p>
+          </article>
+
+          <article class="glass-panel stat-card">
+            <div class="stat-label">Completed check-ins</div>
+            <strong id="checkins-value">0</strong>
+            <p class="muted">Each check-in earns XP and can unlock badges.</p>
+          </article>
+
+          <article class="glass-panel stat-card">
+            <div class="stat-label">Achievements</div>
+            <strong id="achievement-count">0</strong>
+            <p class="muted">Milestones become visible proof of progress.</p>
+          </article>
+        </section>
+
+        <section class="dashboard-grid">
+          <article class="glass-panel panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Quest board</p>
+                <h3>Your active goals</h3>
+              </div>
+            </div>
+            <div id="goal-list" class="goal-list"></div>
+          </article>
+
+          <article class="glass-panel panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Achievement vault</p>
+                <h3>Unlocked badges</h3>
+              </div>
+            </div>
+            <div id="achievement-list" class="achievement-list"></div>
+          </article>
+        </section>
+
+        <section class="dashboard-grid lower-grid">
+          <article class="glass-panel panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Quick check-in</p>
+                <h3>Log a win</h3>
+              </div>
+            </div>
+            <form id="progress-form" class="stack-form">
+              <label class="field">
+                <span>Goal</span>
+                <select id="progress-goal" required></select>
+              </label>
+              <label class="field">
+                <span>Notes</span>
+                <textarea id="progress-notes" rows="4" maxlength="240" placeholder="What did you complete today?"></textarea>
+              </label>
+              <button class="primary-button" type="submit">Claim XP</button>
+            </form>
+          </article>
+
+          <article class="glass-panel panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Recent activity</p>
+                <h3>Progress timeline</h3>
+              </div>
+            </div>
+            <div id="activity-list" class="activity-list"></div>
+          </article>
+        </section>
+      </section>
+    </main>
+
+    <dialog id="goal-dialog" class="goal-dialog">
+      <form id="goal-form" class="goal-dialog-form" method="dialog">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">New quest</p>
+            <h3>Add another goal</h3>
+          </div>
+        </div>
+        <label class="field">
+          <span>Title</span>
+          <input id="goal-title" type="text" maxlength="80" required placeholder="Complete a new certificate module" />
+        </label>
+        <label class="field">
+          <span>Category</span>
+          <select id="goal-category">
+            <option value="Fitness">Fitness</option>
+            <option value="Learning">Learning</option>
+            <option value="Mindset">Mindset</option>
+            <option value="Career">Career</option>
+            <option value="Health">Health</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>XP reward</span>
+          <input id="goal-xp" type="number" min="5" max="250" value="25" />
+        </label>
+        <div class="dialog-actions">
+          <button id="cancel-goal-button" class="ghost-button" type="button">Cancel</button>
+          <button class="primary-button" type="submit">Save goal</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
