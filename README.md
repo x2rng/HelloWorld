@@ -7,6 +7,7 @@ Questline is a minimal black, white, and gray self-improvement tracker with game
 - Static frontend: `index.html`, `styles.css`, `app.js`
 - Supabase Auth + Postgres for users, goals, progress, and achievements
 - Vercel serverless endpoint: `api/env.js`
+- ESM package config in `package.json` for Vercel's Node.js function loader
 
 ## Features
 
