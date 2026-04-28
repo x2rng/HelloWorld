@@ -1,59 +1,105 @@
-# Questline
+# LevelUp
 
-Questline is a minimal black, white, and gray self-improvement tracker with game mechanics layered on top. Users sign up, define their goals during onboarding, and then track progress through streaks, XP, levels, quick check-ins, and achievement badges.
+LevelUp is a polished Next.js prototype for a gamified self-development platform where users build a better version of themselves and see that progress reflected in a customizable pixel avatar.
 
 ## Stack
 
-- Static frontend: `index.html`, `styles.css`, `app.js`
-- Supabase Auth + Postgres for users, goals, progress, and achievements
-- Vercel serverless endpoint: `api/env.js`
-- ESM package config in `package.json` for Vercel's Node.js function loader
+- Next.js App Router
+- TypeScript
+- Tailwind CSS v4
+- Local storage for fake auth and prototype persistence
+- React client components for the prototype flows
 
-## Features
+## Prototype flow
 
-- Email/password sign up and login with Supabase Auth
-- Goal creation during sign up through auth metadata and first-session onboarding
-- Gamified dashboard with XP, levels, streaks, quests, and badges
-- One-tap daily check-ins for each goal
-- Achievement unlocks for consistency and progress milestones
-- Mobile-friendly monochrome UI with a clean Apple-inspired visual language
+1. Register
+2. Complete onboarding
+3. Create an avatar
+4. Land on the dashboard
+5. Complete actions to earn XP and unlock achievements
+6. View profile and achievements
 
-## Supabase setup
+## Routes
 
-1. Create a Supabase project.
-2. In the SQL editor, run [`supabase/schema.sql`](./supabase/schema.sql).
-3. In Authentication, enable Email/Password.
-4. Decide whether you want email confirmation on or off.
-   If confirmation is on, sign-up stores the goals in user metadata and the first login finishes onboarding.
-5. Copy your project URL and anon key.
+- `/`
+- `/login`
+- `/register`
+- `/onboarding`
+- `/avatar`
+- `/dashboard`
+- `/profile`
+- `/achievements`
 
-## Vercel setup
+## Local development
 
-Add these environment variables in Vercel:
-
-- `SUPABASE_URL`
-- `SUPABASE_ANON_KEY`
-
-The frontend fetches those values through `/api/env`, so you do not have to hardcode public keys in the client source.
-
-## Local preview
-
-This project is intentionally zero-build. Any static server works.
-
-Examples:
+Use `pnpm`:
 
 ```bash
-python -m http.server 3000
+pnpm install
+pnpm dev
 ```
 
-or
+Then open [http://localhost:3000](http://localhost:3000).
+
+Validation commands:
 
 ```bash
-npx serve .
+pnpm lint
+pnpm build
 ```
 
-## Notes
+## Architecture
 
-- `goal_progress` prevents duplicate daily check-ins for the same goal with a unique constraint on `(goal_id, progress_date)`.
-- Achievements are unlocked from the client after each check-in, which keeps the initial setup simple for an empty repo.
-- If you want richer server-side validation later, the next step would be adding Supabase Edge Functions or SQL triggers.
+- `src/providers/app-provider.tsx`
+  Central app state, fake auth flow, local persistence, and mutation handlers.
+- `src/lib/progression.ts`
+  XP curve, category scoring, achievements, avatar unlock logic, and derived dashboard/profile view models.
+- `src/lib/catalog.ts`
+  Onboarding and avatar option catalogs.
+- `src/lib/types.ts`
+  Shared product and progression types.
+- `src/components/avatar`
+  Pixel avatar renderer and avatar customizer.
+- `src/components/onboarding`
+  Multi-step onboarding flow.
+- `src/components/dashboard`
+  Main dashboard presentation.
+- `src/components/profile`
+  Profile summary and progression history view.
+- `src/components/auth/route-gate.tsx`
+  Lightweight protected-route behavior for guest, onboarding, avatar, and app stages.
+
+## Persistence model
+
+- Auth is simulated locally.
+- User records are stored in `localStorage`.
+- The current app state is derived from three stages:
+  - no onboarding yet
+  - onboarding complete, avatar not created
+  - full app access
+- XP, streaks, achievements, completed actions, and milestone history all persist locally.
+
+## What is included in V1
+
+- Registration and login UI
+- Multi-step onboarding
+- Pixel avatar creation
+- Dashboard with XP, level, streak, actions, and category cards
+- Profile summary view
+- Achievements view
+- Mock future hooks for verification and social features
+
+## What is intentionally mocked
+
+- Authentication
+- User database
+- Social systems
+- Certificate or proof verification
+- Notifications and backend jobs
+
+## How to extend this later
+
+- Replace local storage auth with Supabase/Auth.js/Clerk without changing route structure.
+- Move progression and achievements logic from `src/lib/progression.ts` into server actions or API routes.
+- Persist users, actions, and uploads in a real database.
+- Add skill verification and social circles on top of the existing dashboard and achievements model.

@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+:root {
+  --color-surface: #f4f4f1;
+  --color-panel: rgba(255, 255, 255, 0.72);
+  --color-panel-strong: rgba(255, 255, 255, 0.9);
+  --color-border: rgba(15, 23, 42, 0.08);
+  --color-ink: #0f1720;
+  --color-muted: #5f6672;
+  --color-blue: #3f6cff;
+  --color-blue-soft: rgba(63, 108, 255, 0.1);
+  --color-green: #2f8f5b;
+  --color-green-soft: rgba(47, 143, 91, 0.11);
+  --color-amber: #c7932c;
+  --color-amber-soft: rgba(199, 147, 44, 0.13);
+  --color-red: #c95f5f;
+  --color-red-soft: rgba(201, 95, 95, 0.12);
+  --shadow-soft: 0 24px 90px rgba(15, 23, 42, 0.08);
+}
+
+@theme inline {
+  --color-background: var(--color-surface);
+  --color-foreground: var(--color-ink);
+  --font-sans: var(--font-jakarta);
+  --font-display: var(--font-grotesk);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background:
+    radial-gradient(circle at top left, rgba(63, 108, 255, 0.09), transparent 24%),
+    radial-gradient(circle at top right, rgba(199, 147, 44, 0.08), transparent 22%),
+    linear-gradient(180deg, #f9fafb 0%, #f2f3f5 48%, #eceff2 100%);
+  color: var(--color-ink);
+  font-family: var(--font-jakarta), sans-serif;
+}
+
+a,
+button,
+input,
+select,
+textarea {
+  transition:
+    color 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease,
+    opacity 180ms ease;
+}
+
+::selection {
+  background: rgba(63, 108, 255, 0.18);
+}
+
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-grotesk), sans-serif;
+    letter-spacing: -0.04em;
+  }
+}
+
+@layer utilities {
+  .glass-panel {
+    background: var(--color-panel);
+    backdrop-filter: blur(18px);
+    box-shadow: var(--shadow-soft);
+    border: 1px solid var(--color-border);
+  }
+
+  .surface-panel {
+    background: var(--color-panel-strong);
+    box-shadow: var(--shadow-soft);
+    border: 1px solid var(--color-border);
+  }
+
+  .eyebrow {
+    color: var(--color-muted);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+
+  .soft-divider {
+    border-color: rgba(15, 23, 42, 0.06);
+  }
+}
