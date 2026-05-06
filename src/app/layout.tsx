@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
-import { AppProvider } from "@/providers/app-provider";
 import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -14,8 +13,8 @@ const grotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "LevelUp",
-  description: "A premium self-growth operating system for building a better version of yourself.",
+  title: "EXP",
+  description: "B2B onboarding foundation for admins and employees.",
 };
 
 export default function RootLayout({
@@ -25,9 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${jakarta.variable} ${grotesk.variable} h-full antialiased`}>
-      <body className="min-h-full bg-[var(--color-surface)] text-[var(--color-ink)]">
-        <AppProvider>{children}</AppProvider>
-      </body>
+      <body className="min-h-full bg-[var(--color-surface)] text-[var(--color-ink)]">{children}</body>
     </html>
   );
 }

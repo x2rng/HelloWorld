@@ -1,10 +1,5 @@
-import { RouteGate } from "@/components/auth/route-gate";
-import { OnboardingFlow } from "@/components/onboarding/onboarding-flow";
+import { redirect } from "next/navigation";
 
 export default function OnboardingPage() {
-  return (
-    <RouteGate mode="onboarding">
-      <OnboardingFlow />
-    </RouteGate>
-  );
+  redirect("/");
 }

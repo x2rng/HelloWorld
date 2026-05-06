@@ -1,10 +1,5 @@
-import { RouteGate } from "@/components/auth/route-gate";
-import { ProfileView } from "@/components/profile/profile-view";
+import { redirect } from "next/navigation";
 
 export default function ProfilePage() {
-  return (
-    <RouteGate mode="app">
-      <ProfileView />
-    </RouteGate>
-  );
+  redirect("/");
 }

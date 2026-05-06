@@ -1,10 +1,5 @@
-import { AvatarCustomizer } from "@/components/avatar/avatar-customizer";
-import { RouteGate } from "@/components/auth/route-gate";
+import { redirect } from "next/navigation";
 
 export default function AvatarPage() {
-  return (
-    <RouteGate mode="avatar">
-      <AvatarCustomizer />
-    </RouteGate>
-  );
+  redirect("/");
 }

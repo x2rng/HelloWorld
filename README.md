@@ -1,6 +1,6 @@
-# LevelUp
+# EXP
 
-LevelUp is a polished Next.js prototype for a gamified self-development platform where users build a better version of themselves and see that progress reflected in a customizable pixel avatar.
+EXP is a Next.js foundation for a B2B gamified onboarding platform with real Supabase authentication, workspace-linked profiles, and role-aware routing for admins and employees.
 
 ## Stack
 
@@ -10,25 +10,24 @@ LevelUp is a polished Next.js prototype for a gamified self-development platform
 - Local storage for fake auth and prototype persistence
 - React client components for the prototype flows
 
-## Prototype flow
+## Current foundation flow
 
-1. Register
-2. Complete onboarding
-3. Create an avatar
-4. Land on the dashboard
-5. Complete actions to earn XP and unlock achievements
-6. View profile and achievements
+1. Admin creates a workspace account
+2. Supabase auth session is established
+3. Profile bootstrap creates the workspace and admin profile
+4. Root route redirects by role
+5. Admin lands on `/admin`
+6. Employee accounts can land on `/employee` once provisioned
 
 ## Routes
 
 - `/`
 - `/login`
 - `/register`
-- `/onboarding`
-- `/avatar`
-- `/dashboard`
-- `/profile`
-- `/achievements`
+- `/auth/bootstrap`
+- `/auth/callback`
+- `/admin`
+- `/employee`
 
 ## Local development
 
@@ -50,56 +49,21 @@ pnpm build
 
 ## Architecture
 
-- `src/providers/app-provider.tsx`
-  Central app state, fake auth flow, local persistence, and mutation handlers.
-- `src/lib/progression.ts`
-  XP curve, category scoring, achievements, avatar unlock logic, and derived dashboard/profile view models.
-- `src/lib/catalog.ts`
-  Onboarding and avatar option catalogs.
-- `src/lib/types.ts`
-  Shared product and progression types.
-- `src/components/avatar`
-  Pixel avatar renderer and avatar customizer.
-- `src/components/onboarding`
-  Multi-step onboarding flow.
-- `src/components/dashboard`
-  Main dashboard presentation.
-- `src/components/profile`
-  Profile summary and progression history view.
-- `src/components/auth/route-gate.tsx`
-  Lightweight protected-route behavior for guest, onboarding, avatar, and app stages.
-
-## Persistence model
-
-- Auth is simulated locally.
-- User records are stored in `localStorage`.
-- The current app state is derived from three stages:
-  - no onboarding yet
-  - onboarding complete, avatar not created
-  - full app access
-- XP, streaks, achievements, completed actions, and milestone history all persist locally.
-
-## What is included in V1
-
-- Registration and login UI
-- Multi-step onboarding
-- Pixel avatar creation
-- Dashboard with XP, level, streak, actions, and category cards
-- Profile summary view
-- Achievements view
-- Mock future hooks for verification and social features
-
-## What is intentionally mocked
-
-- Authentication
-- User database
-- Social systems
-- Certificate or proof verification
-- Notifications and backend jobs
+- `src/lib/supabase/client.ts`
+  Browser Supabase client.
+- `src/lib/supabase/server.ts`
+  Server Supabase client using Next.js cookies.
+- `src/lib/supabase/proxy.ts` and `proxy.ts`
+  Auth session refresh pipeline for SSR.
+- `src/lib/exp-auth.ts`
+  Profile bootstrap and role-aware redirects.
+- `src/app/admin` and `src/app/employee`
+  Minimal role-protected placeholders.
+- `supabase/migrations/202604290001_exp_foundation.sql`
+  Initial database foundation for workspaces, profiles, and invites.
 
 ## How to extend this later
 
-- Replace local storage auth with Supabase/Auth.js/Clerk without changing route structure.
-- Move progression and achievements logic from `src/lib/progression.ts` into server actions or API routes.
-- Persist users, actions, and uploads in a real database.
-- Add skill verification and social circles on top of the existing dashboard and achievements model.
+- Add onboarding tracks, milestones, tasks, assignments, and XP events on top of the workspace/profile foundation.
+- Build admin invite management on top of the `invites` table.
+- Replace deprecated consumer prototype routes/components once the new employee journey is implemented.
