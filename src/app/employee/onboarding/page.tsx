@@ -95,6 +95,14 @@ export default async function EmployeeOnboardingPage() {
     throw new Error(`Failed to load tasks: ${tasksError.message}`);
   }
 
+  const { error: syncProgressError } = await supabase.rpc("ensure_assignment_task_progress", {
+    target_assignment_id: assignment.id,
+  });
+
+  if (syncProgressError) {
+    throw new Error(`Failed to initialize task progress: ${syncProgressError.message}`);
+  }
+
   const { data: progressRows, error: progressError } = await supabase
     .from("task_progress")
     .select("id, assignment_id, task_id, employee_id, status, response_text, completed_at, created_at, updated_at")
