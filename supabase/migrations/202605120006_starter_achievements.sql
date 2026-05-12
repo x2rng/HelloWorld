@@ -15,6 +15,33 @@ alter table public.achievements
   add column if not exists sort_order integer default 1,
   add column if not exists created_at timestamptz default timezone('utc', now());
 
+do $$
+declare
+  required_old_column record;
+begin
+  for required_old_column in
+    select attname
+    from pg_attribute
+    where attrelid = 'public.achievements'::regclass
+      and attnum > 0
+      and not attisdropped
+      and attnotnull
+      and attname not in (
+        'id',
+        'code',
+        'title',
+        'description',
+        'sort_order',
+        'created_at'
+      )
+  loop
+    execute format(
+      'alter table public.achievements alter column %I drop not null',
+      required_old_column.attname
+    );
+  end loop;
+end $$;
+
 update public.achievements
 set
   id = coalesce(id, gen_random_uuid()),
