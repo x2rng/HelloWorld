@@ -14,6 +14,7 @@ export interface ProfileRecord {
   role: AppRole;
   full_name: string | null;
   email: string;
+  avatar_config?: unknown;
   created_at: string;
   updated_at: string;
   workspace?: Pick<WorkspaceRecord, "id" | "name"> | null;

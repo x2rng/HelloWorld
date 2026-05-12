@@ -15,6 +15,7 @@ import type {
   TaskProgressRecord,
   TaskRecord,
 } from "@/lib/exp-types";
+import { normalizeAvatarConfig } from "@/lib/avatar-config";
 import { getLevelInfo } from "@/lib/levels";
 import { createClient } from "@/lib/supabase/server";
 
@@ -35,6 +36,10 @@ type AssignmentWithTrack = {
 
 type TaskWithProgress = TaskRecord & {
   progress: TaskProgressRecord | null;
+};
+
+type EmployeeAvatarProfile = {
+  avatar_config: unknown;
 };
 
 function percent(completed: number, total: number) {
@@ -156,6 +161,16 @@ export default async function EmployeeOnboardingPage({
     throw new Error(`Failed to load unlocked achievements: ${unlockedAchievementsError.message}`);
   }
 
+  const { data: avatarProfile, error: avatarProfileError } = await supabase
+    .from("profiles")
+    .select("avatar_config")
+    .eq("id", profile.id)
+    .maybeSingle<EmployeeAvatarProfile>();
+
+  if (avatarProfileError) {
+    throw new Error(`Failed to load avatar: ${avatarProfileError.message}`);
+  }
+
   const progressByTask = new Map(progressRows.map((row) => [row.task_id, row]));
   const tasksByMilestone = new Map<string, TaskWithProgress[]>();
 
@@ -174,6 +189,7 @@ export default async function EmployeeOnboardingPage({
   const totalTasks = tasks.length;
   const overallPercent = percent(completedTasks, totalTasks);
   const level = getLevelInfo(stats?.total_xp ?? 0);
+  const avatarConfig = normalizeAvatarConfig(avatarProfile?.avatar_config);
 
   return (
     <div className="space-y-5">
@@ -245,6 +261,7 @@ export default async function EmployeeOnboardingPage({
         progress={level.progress}
         totalXp={level.totalXp}
         xpToNextLevel={level.xpToNextLevel}
+        avatarConfig={avatarConfig}
         compact
       />
 

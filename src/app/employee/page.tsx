@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { AchievementList } from "@/components/employee/achievement-list";
+import { AvatarEditorForm } from "@/components/employee/avatar-editor-form";
 import { AvatarStageCard } from "@/components/employee/avatar-stage-card";
 import { Card } from "@/components/ui/card";
 import { BadgePill } from "@/components/ui/badge-pill";
@@ -10,6 +11,7 @@ import type {
   EmployeeAchievementRecord,
   EmployeeStatsRecord,
 } from "@/lib/exp-types";
+import { normalizeAvatarConfig } from "@/lib/avatar-config";
 import { getLevelInfo } from "@/lib/levels";
 import { createClient } from "@/lib/supabase/server";
 
@@ -22,6 +24,10 @@ type EmployeeAssignment = {
     title: string;
     description: string | null;
   } | null;
+};
+
+type EmployeeAvatarProfile = {
+  avatar_config: unknown;
 };
 
 export const dynamic = "force-dynamic";
@@ -73,16 +79,44 @@ export default async function EmployeePage() {
     throw new Error(`Failed to load unlocked achievements: ${unlockedAchievementsError.message}`);
   }
 
+  const { data: avatarProfile, error: avatarProfileError } = await supabase
+    .from("profiles")
+    .select("avatar_config")
+    .eq("id", profile.id)
+    .maybeSingle<EmployeeAvatarProfile>();
+
+  if (avatarProfileError) {
+    throw new Error(`Failed to load avatar: ${avatarProfileError.message}`);
+  }
+
   const level = getLevelInfo(stats?.total_xp ?? 0);
+  const hasAvatarConfig = avatarProfile?.avatar_config != null;
+  const avatarConfig = normalizeAvatarConfig(avatarProfile?.avatar_config);
 
   return (
     <div className="space-y-5">
+      {!hasAvatarConfig ? (
+        <Card className="rounded-[36px] p-6 sm:p-8">
+          <p className="eyebrow">Avatar setup</p>
+          <h2 className="mt-2 text-4xl">Create your EXP avatar.</h2>
+          <p className="mt-3 max-w-2xl text-sm leading-7 text-[var(--color-muted)]">
+            Choose a simple full-body identity before continuing. Your avatar stays
+            consistent while the stage frame evolves with your level.
+          </p>
+          <div className="mt-6">
+            <AvatarEditorForm initialConfig={avatarConfig} />
+          </div>
+        </Card>
+      ) : null}
+
       <div className="grid gap-5 xl:grid-cols-[1.1fr_0.9fr]">
         <AvatarStageCard
           currentLevel={level.level}
           progress={level.progress}
           totalXp={level.totalXp}
           xpToNextLevel={level.xpToNextLevel}
+          avatarConfig={avatarConfig}
+          showEditAction={hasAvatarConfig}
         />
 
         <Card className="rounded-[36px] p-6 sm:p-8">
