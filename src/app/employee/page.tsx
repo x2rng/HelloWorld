@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { AchievementList } from "@/components/employee/achievement-list";
+import { AvatarStageCard } from "@/components/employee/avatar-stage-card";
 import { Card } from "@/components/ui/card";
 import { BadgePill } from "@/components/ui/badge-pill";
 import { Button } from "@/components/ui/button";
-import { ProgressBar } from "@/components/ui/progress-bar";
 import { requireRole } from "@/lib/exp-auth";
 import type {
   AchievementRecord,
@@ -78,10 +78,17 @@ export default async function EmployeePage() {
   return (
     <div className="space-y-5">
       <div className="grid gap-5 xl:grid-cols-[1.1fr_0.9fr]">
+        <AvatarStageCard
+          currentLevel={level.level}
+          progress={level.progress}
+          totalXp={level.totalXp}
+          xpToNextLevel={level.xpToNextLevel}
+        />
+
         <Card className="rounded-[36px] p-6 sm:p-8">
           <p className="eyebrow">Welcome</p>
           <h2 className="mt-2 text-4xl">{profile.full_name ?? profile.email}</h2>
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-[var(--color-muted)]">
+          <p className="mt-4 text-sm leading-7 text-[var(--color-muted)]">
             Your employee identity is backed by Supabase Auth and a workspace-linked profile. Your assigned onboarding
             track appears here when an admin assigns one.
           </p>
@@ -89,27 +96,8 @@ export default async function EmployeePage() {
             <BadgePill tone="blue">EMPLOYEE</BadgePill>
             <BadgePill tone="green">{profile.workspace?.name ?? "Workspace linked"}</BadgePill>
           </div>
-          <div className="mt-6 rounded-3xl border border-black/6 bg-white/70 p-5">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p className="eyebrow">Progression</p>
-                <h3 className="mt-2 text-3xl">Level {level.level}</h3>
-              </div>
-              <BadgePill tone="amber">{level.totalXp} XP</BadgePill>
-            </div>
-            <div className="mt-4">
-              <ProgressBar value={level.progress} tone={level.nextLevel ? "amber" : "green"} />
-              <p className="mt-2 text-sm text-[var(--color-muted)]">
-                {level.nextLevel
-                  ? `${level.xpToNextLevel} XP to Level ${level.nextLevel}`
-                  : "Max V1 level reached"}
-              </p>
-            </div>
-          </div>
-        </Card>
 
-        <Card className="rounded-[36px] p-6 sm:p-8">
-          <p className="eyebrow">Assignment</p>
+          <p className="eyebrow mt-8">Assignment</p>
           {assignment ? (
             <div className="mt-4">
               <div className="flex items-start justify-between gap-4">

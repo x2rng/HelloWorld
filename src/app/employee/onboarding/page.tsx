@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { completeTask } from "@/app/employee/onboarding/actions";
 import { AchievementList } from "@/components/employee/achievement-list";
+import { AvatarStageCard } from "@/components/employee/avatar-stage-card";
 import { BadgePill } from "@/components/ui/badge-pill";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -238,6 +239,14 @@ export default async function EmployeeOnboardingPage({
           </p>
         ) : null}
       </Card>
+
+      <AvatarStageCard
+        currentLevel={level.level}
+        progress={level.progress}
+        totalXp={level.totalXp}
+        xpToNextLevel={level.xpToNextLevel}
+        compact
+      />
 
       <section className="space-y-4">
         {milestones.length === 0 ? (
