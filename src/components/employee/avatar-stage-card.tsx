@@ -72,18 +72,18 @@ export function AvatarStageCard({
       <div className={cx("absolute -right-20 -top-24 h-64 w-64 rounded-full blur-3xl", accent.glow)} />
       <div className="relative grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
         <div className="flex justify-center lg:justify-start">
-          <div className={cx("relative", compact ? "h-64 w-52" : "h-80 w-64 sm:h-96 sm:w-72")}>
-            <div className="absolute inset-2 rounded-[48px] border border-white/80 bg-white/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] backdrop-blur" />
-            <div className="absolute inset-7 rounded-[38px] border border-black/5 bg-gradient-to-br from-white/95 to-white/35 shadow-[0_24px_60px_rgba(15,23,42,0.12)]" />
-            <div className={cx("absolute inset-x-10 bottom-12 h-24 rounded-full blur-2xl", accent.glow)} />
-            <div className="absolute inset-x-0 bottom-10 flex justify-center">
+          <div className={cx("relative", compact ? "h-72 w-56" : "h-[25rem] w-72")}>
+            <div className="absolute inset-0 rounded-[44px] border border-white/80 bg-white/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] backdrop-blur" />
+            <div className="absolute inset-x-5 bottom-5 top-8 rounded-[36px] border border-black/5 bg-gradient-to-br from-white/95 to-white/35 shadow-[0_24px_60px_rgba(15,23,42,0.12)]" />
+            <div className={cx("absolute inset-x-12 bottom-10 h-24 rounded-full blur-2xl", accent.glow)} />
+            <div className="absolute inset-x-0 bottom-7 flex justify-center">
               <FullBodyAvatar config={avatarConfig} compact={compact} />
             </div>
-            <div className={cx("absolute left-8 top-8 h-14 w-14 rounded-2xl border bg-white/80", accent.ring)} />
-            <div className={cx("absolute right-8 top-14 h-8 w-8 rounded-full", accent.glow)} />
+            <div className={cx("absolute left-8 top-8 h-10 w-10 rounded-2xl border bg-white/80", accent.ring)} />
+            <div className={cx("absolute right-8 top-12 h-7 w-7 rounded-full opacity-70", accent.glow)} />
             <div
               className={cx(
-                "absolute bottom-5 left-1/2 flex h-16 w-16 -translate-x-1/2 items-center justify-center rounded-2xl border text-lg font-semibold shadow-[0_16px_34px_rgba(15,23,42,0.12)]",
+                "absolute bottom-7 right-7 flex h-14 w-14 items-center justify-center rounded-2xl border text-base font-semibold shadow-[0_16px_34px_rgba(15,23,42,0.12)]",
                 accent.ring,
               )}
             >
