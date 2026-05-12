@@ -1,27 +1,168 @@
 create table if not exists public.achievements (
-  id uuid primary key default gen_random_uuid(),
-  code text not null unique,
-  title text not null,
-  description text not null,
-  sort_order integer not null default 1,
-  created_at timestamptz not null default timezone('utc', now())
+  id uuid default gen_random_uuid(),
+  code text,
+  title text,
+  description text,
+  sort_order integer default 1,
+  created_at timestamptz default timezone('utc', now())
 );
 
+alter table public.achievements
+  add column if not exists id uuid default gen_random_uuid(),
+  add column if not exists code text,
+  add column if not exists title text,
+  add column if not exists description text,
+  add column if not exists sort_order integer default 1,
+  add column if not exists created_at timestamptz default timezone('utc', now());
+
+update public.achievements
+set
+  id = coalesce(id, gen_random_uuid()),
+  code = coalesce(code, 'legacy_' || gen_random_uuid()::text),
+  title = coalesce(title, 'Legacy achievement'),
+  description = coalesce(description, 'Existing achievement preserved from an earlier schema.'),
+  sort_order = coalesce(sort_order, 1000),
+  created_at = coalesce(created_at, timezone('utc', now()));
+
+with duplicate_codes as (
+  select
+    id,
+    code,
+    row_number() over (partition by code order by created_at, id) as duplicate_position
+  from public.achievements
+)
+update public.achievements
+set code = public.achievements.code || '_' || public.achievements.id::text
+from duplicate_codes
+where public.achievements.id = duplicate_codes.id
+  and duplicate_codes.duplicate_position > 1;
+
+alter table public.achievements
+  alter column id set default gen_random_uuid(),
+  alter column id set not null,
+  alter column code set not null,
+  alter column title set not null,
+  alter column description set not null,
+  alter column sort_order set default 1,
+  alter column sort_order set not null,
+  alter column created_at set default timezone('utc', now()),
+  alter column created_at set not null;
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_constraint
+    where conrelid = 'public.achievements'::regclass
+      and contype = 'p'
+  ) then
+    alter table public.achievements
+      add constraint achievements_pkey primary key (id);
+  end if;
+end $$;
+
+create unique index if not exists achievements_code_key
+on public.achievements (code);
+
 create table if not exists public.employee_achievements (
-  id uuid primary key default gen_random_uuid(),
-  workspace_id uuid not null references public.workspaces(id) on delete cascade,
-  employee_id uuid not null references public.profiles(id) on delete cascade,
-  achievement_id uuid not null references public.achievements(id) on delete cascade,
-  unlocked_at timestamptz not null default timezone('utc', now()),
-  constraint employee_achievements_one_per_employee unique (
-    workspace_id,
-    employee_id,
-    achievement_id
-  )
+  id uuid default gen_random_uuid(),
+  workspace_id uuid,
+  employee_id uuid,
+  achievement_id uuid,
+  unlocked_at timestamptz default timezone('utc', now())
 );
+
+alter table public.employee_achievements
+  add column if not exists id uuid default gen_random_uuid(),
+  add column if not exists workspace_id uuid,
+  add column if not exists employee_id uuid,
+  add column if not exists achievement_id uuid,
+  add column if not exists unlocked_at timestamptz default timezone('utc', now());
+
+update public.employee_achievements
+set
+  id = coalesce(id, gen_random_uuid()),
+  unlocked_at = coalesce(unlocked_at, timezone('utc', now()));
+
+delete from public.employee_achievements duplicate_rows
+using public.employee_achievements kept_rows
+where duplicate_rows.ctid < kept_rows.ctid
+  and duplicate_rows.workspace_id = kept_rows.workspace_id
+  and duplicate_rows.employee_id = kept_rows.employee_id
+  and duplicate_rows.achievement_id = kept_rows.achievement_id
+  and duplicate_rows.workspace_id is not null
+  and duplicate_rows.employee_id is not null
+  and duplicate_rows.achievement_id is not null;
+
+alter table public.employee_achievements
+  alter column id set default gen_random_uuid(),
+  alter column id set not null,
+  alter column unlocked_at set default timezone('utc', now()),
+  alter column unlocked_at set not null;
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_constraint
+    where conrelid = 'public.employee_achievements'::regclass
+      and contype = 'p'
+  ) then
+    alter table public.employee_achievements
+      add constraint employee_achievements_pkey primary key (id);
+  end if;
+end $$;
 
 create index if not exists employee_achievements_workspace_employee_idx
 on public.employee_achievements (workspace_id, employee_id);
+
+create unique index if not exists employee_achievements_one_per_employee
+on public.employee_achievements (workspace_id, employee_id, achievement_id);
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_constraint
+    where conrelid = 'public.employee_achievements'::regclass
+      and conname = 'employee_achievements_workspace_id_fkey'
+  ) then
+    alter table public.employee_achievements
+      add constraint employee_achievements_workspace_id_fkey
+      foreign key (workspace_id)
+      references public.workspaces(id)
+      on delete cascade
+      not valid;
+  end if;
+
+  if not exists (
+    select 1
+    from pg_constraint
+    where conrelid = 'public.employee_achievements'::regclass
+      and conname = 'employee_achievements_employee_id_fkey'
+  ) then
+    alter table public.employee_achievements
+      add constraint employee_achievements_employee_id_fkey
+      foreign key (employee_id)
+      references public.profiles(id)
+      on delete cascade
+      not valid;
+  end if;
+
+  if not exists (
+    select 1
+    from pg_constraint
+    where conrelid = 'public.employee_achievements'::regclass
+      and conname = 'employee_achievements_achievement_id_fkey'
+  ) then
+    alter table public.employee_achievements
+      add constraint employee_achievements_achievement_id_fkey
+      foreign key (achievement_id)
+      references public.achievements(id)
+      on delete cascade
+      not valid;
+  end if;
+end $$;
 
 alter table public.achievements enable row level security;
 alter table public.employee_achievements enable row level security;
