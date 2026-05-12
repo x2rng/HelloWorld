@@ -1,7 +1,6 @@
 import Link from "next/link";
-import { createAssignment } from "@/app/admin/assignments/actions";
+import { CreateAssignmentForm } from "@/components/admin/create-assignment-form";
 import { BadgePill } from "@/components/ui/badge-pill";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { requireRole } from "@/lib/exp-auth";
 import type { EmployeeStatsRecord, OnboardingTrackRecord, ProfileRecord } from "@/lib/exp-types";
@@ -140,65 +139,7 @@ export default async function AdminAssignmentsPage() {
               ) : null}
             </div>
           ) : (
-            <form action={createAssignment} className="mt-5 space-y-5">
-              <div className="space-y-2">
-                <label htmlFor="assignment-employee" className="text-sm font-medium">
-                  Employee
-                </label>
-                <select
-                  id="assignment-employee"
-                  name="employee_id"
-                  required
-                  className="h-12 w-full rounded-2xl border border-black/8 bg-white px-4 outline-none"
-                >
-                  <option value="">Select employee</option>
-                  {employees.map((employee) => (
-                    <option key={employee.id} value={employee.id}>
-                      {employee.full_name ?? employee.email}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="space-y-2">
-                <label htmlFor="assignment-track" className="text-sm font-medium">
-                  Published track
-                </label>
-                <select
-                  id="assignment-track"
-                  name="track_id"
-                  required
-                  className="h-12 w-full rounded-2xl border border-black/8 bg-white px-4 outline-none"
-                >
-                  <option value="">Select track</option>
-                  {tracks.map((track) => (
-                    <option key={track.id} value={track.id}>
-                      {track.title} ({track.duration_days} days)
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="space-y-2">
-                <label htmlFor="assignment-start-date" className="text-sm font-medium">
-                  Start date
-                </label>
-                <input
-                  id="assignment-start-date"
-                  name="start_date"
-                  type="date"
-                  defaultValue={today()}
-                  className="h-12 w-full rounded-2xl border border-black/8 bg-white px-4 outline-none"
-                />
-                <p className="text-xs text-[var(--color-muted)]">
-                  Due date is calculated from the selected track duration.
-                </p>
-              </div>
-
-              <Button type="submit" className="w-full">
-                Create assignment
-              </Button>
-            </form>
+            <CreateAssignmentForm employees={employees} tracks={tracks} defaultStartDate={today()} />
           )}
         </Card>
 
