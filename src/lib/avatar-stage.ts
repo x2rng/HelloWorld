@@ -5,6 +5,7 @@ export type AvatarStage = {
   levelLabel: string;
   accent: "neutral" | "blue" | "green" | "amber" | "black";
   symbol: string;
+  motif: "dot" | "path" | "frame" | "check" | "crown";
   headline: string;
   description: string;
   gradient: string;
@@ -17,6 +18,7 @@ const avatarStages = [
     levelLabel: "Level 1",
     accent: "neutral",
     symbol: "01",
+    motif: "dot",
     headline: "Your onboarding identity is taking shape.",
     description: "Begin with the essentials and create steady early momentum.",
     gradient: "from-zinc-50 via-white to-zinc-200",
@@ -27,6 +29,7 @@ const avatarStages = [
     levelLabel: "Level 2",
     accent: "blue",
     symbol: "02",
+    motif: "path",
     headline: "You are learning the role with visible momentum.",
     description: "Keep discovering how the company, tools, and expectations connect.",
     gradient: "from-blue-50 via-white to-slate-200",
@@ -37,6 +40,7 @@ const avatarStages = [
     levelLabel: "Level 3",
     accent: "green",
     symbol: "03",
+    motif: "frame",
     headline: "You are building confidence through completed work.",
     description: "Your progress is becoming structured, repeatable, and measurable.",
     gradient: "from-emerald-50 via-white to-stone-200",
@@ -47,6 +51,7 @@ const avatarStages = [
     levelLabel: "Level 4",
     accent: "amber",
     symbol: "04",
+    motif: "check",
     headline: "You are showing ownership across the journey.",
     description: "The strongest onboarding signals are now turning into capability.",
     gradient: "from-amber-50 via-white to-zinc-200",
@@ -57,6 +62,7 @@ const avatarStages = [
     levelLabel: "Level 5+",
     accent: "black",
     symbol: "05",
+    motif: "crown",
     headline: "You are ready for the next growth path.",
     description: "Your onboarding profile reflects preparation, clarity, and progress.",
     gradient: "from-zinc-100 via-white to-neutral-300",
