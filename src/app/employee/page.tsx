@@ -2,7 +2,10 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { BadgePill } from "@/components/ui/badge-pill";
 import { Button } from "@/components/ui/button";
+import { ProgressBar } from "@/components/ui/progress-bar";
 import { requireRole } from "@/lib/exp-auth";
+import type { EmployeeStatsRecord } from "@/lib/exp-types";
+import { getLevelInfo } from "@/lib/levels";
 import { createClient } from "@/lib/supabase/server";
 
 type EmployeeAssignment = {
@@ -32,6 +35,19 @@ export default async function EmployeePage() {
     throw new Error(`Failed to load assignment: ${error.message}`);
   }
 
+  const { data: stats, error: statsError } = await supabase
+    .from("employee_stats")
+    .select("id, workspace_id, employee_id, total_xp, current_level, completed_tasks_count, created_at, updated_at")
+    .eq("workspace_id", profile.workspace_id)
+    .eq("employee_id", profile.id)
+    .maybeSingle<EmployeeStatsRecord>();
+
+  if (statsError) {
+    throw new Error(`Failed to load employee stats: ${statsError.message}`);
+  }
+
+  const level = getLevelInfo(stats?.total_xp ?? 0);
+
   return (
     <div className="grid gap-5 xl:grid-cols-[1.1fr_0.9fr]">
       <Card className="rounded-[36px] p-6 sm:p-8">
@@ -44,6 +60,23 @@ export default async function EmployeePage() {
         <div className="mt-6 flex flex-wrap gap-2">
           <BadgePill tone="blue">EMPLOYEE</BadgePill>
           <BadgePill tone="green">{profile.workspace?.name ?? "Workspace linked"}</BadgePill>
+        </div>
+        <div className="mt-6 rounded-3xl border border-black/6 bg-white/70 p-5">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="eyebrow">Progression</p>
+              <h3 className="mt-2 text-3xl">Level {level.level}</h3>
+            </div>
+            <BadgePill tone="amber">{level.totalXp} XP</BadgePill>
+          </div>
+          <div className="mt-4">
+            <ProgressBar value={level.progress} tone={level.nextLevel ? "amber" : "green"} />
+            <p className="mt-2 text-sm text-[var(--color-muted)]">
+              {level.nextLevel
+                ? `${level.xpToNextLevel} XP to Level ${level.nextLevel}`
+                : "Max V1 level reached"}
+            </p>
+          </div>
         </div>
       </Card>
 

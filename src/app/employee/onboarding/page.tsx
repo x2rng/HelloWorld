@@ -5,7 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { requireRole } from "@/lib/exp-auth";
-import type { MilestoneRecord, TaskProgressRecord, TaskRecord } from "@/lib/exp-types";
+import type {
+  EmployeeStatsRecord,
+  MilestoneRecord,
+  TaskProgressRecord,
+  TaskRecord,
+} from "@/lib/exp-types";
+import { getLevelInfo } from "@/lib/levels";
 import { createClient } from "@/lib/supabase/server";
 
 type AssignmentWithTrack = {
@@ -100,21 +106,35 @@ export default async function EmployeeOnboardingPage() {
     throw new Error(`Failed to load task progress: ${progressError.message}`);
   }
 
+  const { data: stats, error: statsError } = await supabase
+    .from("employee_stats")
+    .select("id, workspace_id, employee_id, total_xp, current_level, completed_tasks_count, created_at, updated_at")
+    .eq("workspace_id", profile.workspace_id)
+    .eq("employee_id", profile.id)
+    .maybeSingle<EmployeeStatsRecord>();
+
+  if (statsError) {
+    throw new Error(`Failed to load employee stats: ${statsError.message}`);
+  }
+
   const progressByTask = new Map(progressRows.map((row) => [row.task_id, row]));
   const tasksByMilestone = new Map<string, TaskWithProgress[]>();
 
   for (const task of tasks) {
-    const nextTask = {
-      ...task,
-      progress: progressByTask.get(task.id) ?? null,
-    };
     const current = tasksByMilestone.get(task.milestone_id) ?? [];
-    tasksByMilestone.set(task.milestone_id, [...current, nextTask]);
+    tasksByMilestone.set(task.milestone_id, [
+      ...current,
+      {
+        ...task,
+        progress: progressByTask.get(task.id) ?? null,
+      },
+    ]);
   }
 
   const completedTasks = progressRows.filter((row) => row.status === "COMPLETED").length;
   const totalTasks = tasks.length;
   const overallPercent = percent(completedTasks, totalTasks);
+  const level = getLevelInfo(stats?.total_xp ?? 0);
 
   return (
     <div className="space-y-5">
@@ -132,7 +152,7 @@ export default async function EmployeeOnboardingPage() {
           </BadgePill>
         </div>
 
-        <div className="mt-6 grid gap-3 md:grid-cols-3">
+        <div className="mt-6 grid gap-3 md:grid-cols-4">
           <div className="rounded-2xl border border-black/6 bg-white/70 p-4">
             <p className="eyebrow">Progress</p>
             <p className="mt-2 text-2xl font-semibold">
@@ -140,8 +160,12 @@ export default async function EmployeeOnboardingPage() {
             </p>
           </div>
           <div className="rounded-2xl border border-black/6 bg-white/70 p-4">
-            <p className="eyebrow">Start</p>
-            <p className="mt-2 font-medium">{assignment.start_date}</p>
+            <p className="eyebrow">Level</p>
+            <p className="mt-2 text-2xl font-semibold">{level.level}</p>
+          </div>
+          <div className="rounded-2xl border border-black/6 bg-white/70 p-4">
+            <p className="eyebrow">XP</p>
+            <p className="mt-2 text-2xl font-semibold">{level.totalXp}</p>
           </div>
           <div className="rounded-2xl border border-black/6 bg-white/70 p-4">
             <p className="eyebrow">Due</p>
@@ -153,14 +177,22 @@ export default async function EmployeeOnboardingPage() {
           <ProgressBar value={overallPercent} tone={overallPercent === 100 ? "green" : "blue"} />
           <p className="mt-2 text-sm text-[var(--color-muted)]">{overallPercent}% complete</p>
         </div>
+
+        <div className="mt-5 rounded-2xl border border-black/6 bg-white/70 p-4">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-sm font-medium">Level progress</p>
+            <p className="text-sm text-[var(--color-muted)]">
+              {level.nextLevel ? `${level.xpToNextLevel} XP to Level ${level.nextLevel}` : "Max V1 level"}
+            </p>
+          </div>
+          <ProgressBar value={level.progress} tone={level.nextLevel ? "amber" : "green"} className="mt-3" />
+        </div>
       </Card>
 
       <section className="space-y-4">
         {milestones.length === 0 ? (
           <Card className="rounded-[32px] p-6">
-            <p className="text-sm text-[var(--color-muted)]">
-              This track has no milestones yet.
-            </p>
+            <p className="text-sm text-[var(--color-muted)]">This track has no milestones yet.</p>
           </Card>
         ) : (
           milestones.map((milestone) => {
@@ -210,9 +242,11 @@ export default async function EmployeeOnboardingPage() {
                             </p>
                             {task.progress?.completed_at ? (
                               <p className="mt-2 text-xs text-[var(--color-green)]">
-                                Completed {new Date(task.progress.completed_at).toLocaleDateString()}
+                                Task completed. +10 XP
                               </p>
-                            ) : null}
+                            ) : (
+                              <p className="mt-2 text-xs text-[var(--color-amber)]">Reward: +10 XP</p>
+                            )}
                           </div>
 
                           {isCompleted ? (

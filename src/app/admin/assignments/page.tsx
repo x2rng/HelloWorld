@@ -4,7 +4,7 @@ import { BadgePill } from "@/components/ui/badge-pill";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { requireRole } from "@/lib/exp-auth";
-import type { OnboardingTrackRecord, ProfileRecord } from "@/lib/exp-types";
+import type { EmployeeStatsRecord, OnboardingTrackRecord, ProfileRecord } from "@/lib/exp-types";
 import { createClient } from "@/lib/supabase/server";
 
 type AssignmentRow = {
@@ -13,6 +13,7 @@ type AssignmentRow = {
   start_date: string;
   due_date: string;
   employee: {
+    id: string;
     full_name: string | null;
     email: string;
   } | null;
@@ -56,7 +57,7 @@ export default async function AdminAssignmentsPage() {
 
   const { data: assignments, error: assignmentsError } = await supabase
     .from("track_assignments")
-    .select("id, status, start_date, due_date, employee:profiles!track_assignments_employee_id_fkey(full_name, email), track:onboarding_tracks(title)")
+    .select("id, status, start_date, due_date, employee:profiles!track_assignments_employee_id_fkey(id, full_name, email), track:onboarding_tracks(title)")
     .eq("workspace_id", profile.workspace_id)
     .order("created_at", { ascending: false })
     .returns<AssignmentRow[]>();
@@ -95,6 +96,21 @@ export default async function AdminAssignmentsPage() {
       total: current.total + 1,
     });
   }
+
+  const { data: statsRows, error: statsError } =
+    employees.length > 0
+      ? await supabase
+          .from("employee_stats")
+          .select("id, workspace_id, employee_id, total_xp, current_level, completed_tasks_count, created_at, updated_at")
+          .eq("workspace_id", profile.workspace_id)
+          .returns<EmployeeStatsRecord[]>()
+      : { data: [] as EmployeeStatsRecord[], error: null };
+
+  if (statsError) {
+    throw new Error(`Failed to load employee stats: ${statsError.message}`);
+  }
+
+  const statsByEmployeeId = new Map(statsRows.map((stats) => [stats.employee_id, stats]));
 
   return (
     <div className="space-y-5">
@@ -206,6 +222,7 @@ export default async function AdminAssignmentsPage() {
                   completed: 0,
                   total: 0,
                 };
+                const stats = assignment.employee?.id ? statsByEmployeeId.get(assignment.employee.id) : null;
 
                 return (
                   <div key={assignment.id} className="rounded-2xl border border-black/6 bg-white/70 p-4">
@@ -227,6 +244,9 @@ export default async function AdminAssignmentsPage() {
                     </p>
                     <p className="mt-2 text-sm text-[var(--color-muted)]">
                       {progress.completed} / {progress.total} tasks completed
+                    </p>
+                    <p className="mt-2 text-sm text-[var(--color-muted)]">
+                      Level {stats?.current_level ?? 1} · {stats?.total_xp ?? 0} XP
                     </p>
                   </div>
                 );

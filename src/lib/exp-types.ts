@@ -89,3 +89,25 @@ export interface TaskProgressRecord {
   created_at: string;
   updated_at: string;
 }
+
+export interface XpEventRecord {
+  id: string;
+  workspace_id: string;
+  employee_id: string;
+  assignment_id: string;
+  task_id: string;
+  event_type: "TASK_COMPLETED";
+  xp_amount: number;
+  created_at: string;
+}
+
+export interface EmployeeStatsRecord {
+  id: string;
+  workspace_id: string;
+  employee_id: string;
+  total_xp: number;
+  current_level: number;
+  completed_tasks_count: number;
+  created_at: string;
+  updated_at: string;
+}
