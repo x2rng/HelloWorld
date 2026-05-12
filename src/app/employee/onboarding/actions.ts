@@ -25,10 +25,13 @@ export async function completeTask(assignmentId: string, taskId: string) {
     );
   }
 
-  const { error } = await supabase.rpc("complete_assignment_task", {
-    target_assignment_id: assignmentId,
-    target_task_id: taskId,
-  });
+  const { data: unlockedAchievements, error } = await supabase.rpc(
+    "complete_assignment_task",
+    {
+      target_assignment_id: assignmentId,
+      target_task_id: taskId,
+    },
+  );
 
   if (error) {
     redirectWithCompletionError(`Failed to complete task: ${error.message}`);
@@ -37,4 +40,16 @@ export async function completeTask(assignmentId: string, taskId: string) {
   revalidatePath("/employee");
   revalidatePath("/employee/onboarding");
   revalidatePath("/admin/assignments");
+
+  const achievementNames = Array.isArray(unlockedAchievements)
+    ? unlockedAchievements.filter((name): name is string => typeof name === "string")
+    : [];
+
+  if (achievementNames.length > 0) {
+    redirect(
+      `/employee/onboarding?achievementUnlocked=${encodeURIComponent(
+        achievementNames.join(", "),
+      )}`,
+    );
+  }
 }

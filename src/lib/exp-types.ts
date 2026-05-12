@@ -111,3 +111,20 @@ export interface EmployeeStatsRecord {
   created_at: string;
   updated_at: string;
 }
+
+export interface AchievementRecord {
+  id: string;
+  code: string;
+  title: string;
+  description: string;
+  sort_order: number;
+  created_at: string;
+}
+
+export interface EmployeeAchievementRecord {
+  id: string;
+  workspace_id: string;
+  employee_id: string;
+  achievement_id: string;
+  unlocked_at: string;
+}

@@ -1,11 +1,14 @@
 import Link from "next/link";
 import { completeTask } from "@/app/employee/onboarding/actions";
+import { AchievementList } from "@/components/employee/achievement-list";
 import { BadgePill } from "@/components/ui/badge-pill";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { requireRole } from "@/lib/exp-auth";
 import type {
+  AchievementRecord,
+  EmployeeAchievementRecord,
   EmployeeStatsRecord,
   MilestoneRecord,
   TaskProgressRecord,
@@ -43,9 +46,9 @@ export const dynamic = "force-dynamic";
 export default async function EmployeeOnboardingPage({
   searchParams,
 }: {
-  searchParams: Promise<{ completionError?: string }>;
+  searchParams: Promise<{ achievementUnlocked?: string; completionError?: string }>;
 }) {
-  const { completionError } = await searchParams;
+  const { achievementUnlocked, completionError } = await searchParams;
   const { profile } = await requireRole("EMPLOYEE");
   const supabase = await createClient();
   const { data: assignment, error: assignmentError } = await supabase
@@ -130,6 +133,28 @@ export default async function EmployeeOnboardingPage({
     throw new Error(`Failed to load employee stats: ${statsError.message}`);
   }
 
+  const { data: achievements, error: achievementsError } = await supabase
+    .from("achievements")
+    .select("id, code, title, description, sort_order, created_at")
+    .order("sort_order", { ascending: true })
+    .returns<AchievementRecord[]>();
+
+  if (achievementsError) {
+    throw new Error(`Failed to load achievements: ${achievementsError.message}`);
+  }
+
+  const { data: unlockedAchievements, error: unlockedAchievementsError } =
+    await supabase
+      .from("employee_achievements")
+      .select("id, workspace_id, employee_id, achievement_id, unlocked_at")
+      .eq("workspace_id", profile.workspace_id)
+      .eq("employee_id", profile.id)
+      .returns<EmployeeAchievementRecord[]>();
+
+  if (unlockedAchievementsError) {
+    throw new Error(`Failed to load unlocked achievements: ${unlockedAchievementsError.message}`);
+  }
+
   const progressByTask = new Map(progressRows.map((row) => [row.task_id, row]));
   const tasksByMilestone = new Map<string, TaskWithProgress[]>();
 
@@ -204,6 +229,12 @@ export default async function EmployeeOnboardingPage({
         {completionError ? (
           <p className="mt-5 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm leading-6 text-red-800">
             {completionError}
+          </p>
+        ) : null}
+
+        {achievementUnlocked ? (
+          <p className="mt-5 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm leading-6 text-emerald-800">
+            Achievement unlocked: {achievementUnlocked}
           </p>
         ) : null}
       </Card>
@@ -289,6 +320,11 @@ export default async function EmployeeOnboardingPage({
           })
         )}
       </section>
+
+      <AchievementList
+        achievements={achievements}
+        unlockedAchievements={unlockedAchievements}
+      />
     </div>
   );
 }
