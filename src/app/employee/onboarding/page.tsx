@@ -40,7 +40,12 @@ function percent(completed: number, total: number) {
 
 export const dynamic = "force-dynamic";
 
-export default async function EmployeeOnboardingPage() {
+export default async function EmployeeOnboardingPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ completionError?: string }>;
+}) {
+  const { completionError } = await searchParams;
   const { profile } = await requireRole("EMPLOYEE");
   const supabase = await createClient();
   const { data: assignment, error: assignmentError } = await supabase
@@ -195,6 +200,12 @@ export default async function EmployeeOnboardingPage() {
           </div>
           <ProgressBar value={level.progress} tone={level.nextLevel ? "amber" : "green"} className="mt-3" />
         </div>
+
+        {completionError ? (
+          <p className="mt-5 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm leading-6 text-red-800">
+            {completionError}
+          </p>
+        ) : null}
       </Card>
 
       <section className="space-y-4">

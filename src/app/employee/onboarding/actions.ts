@@ -1,8 +1,13 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { requireRole } from "@/lib/exp-auth";
 import { createClient } from "@/lib/supabase/server";
+
+function redirectWithCompletionError(message: string): never {
+  redirect(`/employee/onboarding?completionError=${encodeURIComponent(message)}`);
+}
 
 export async function completeTask(assignmentId: string, taskId: string) {
   await requireRole("EMPLOYEE");
@@ -15,7 +20,9 @@ export async function completeTask(assignmentId: string, taskId: string) {
   );
 
   if (syncProgressError) {
-    throw new Error(`Failed to initialize task progress: ${syncProgressError.message}`);
+    redirectWithCompletionError(
+      `Failed to initialize task progress: ${syncProgressError.message}`,
+    );
   }
 
   const { error } = await supabase.rpc("complete_assignment_task", {
@@ -24,7 +31,7 @@ export async function completeTask(assignmentId: string, taskId: string) {
   });
 
   if (error) {
-    throw new Error(`Failed to complete task: ${error.message}`);
+    redirectWithCompletionError(`Failed to complete task: ${error.message}`);
   }
 
   revalidatePath("/employee");
