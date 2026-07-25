@@ -1,3 +1,4 @@
+import { getColorScale, getSkinScale } from "@/components/avatar-v3/avatar-color";
 import type { AvatarConfig } from "@/lib/avatar-config";
 
 function facePath(shape: AvatarConfig["faceShape"]) {
@@ -25,6 +26,8 @@ function earMetrics(style: AvatarConfig["earStyle"]) {
 
 export function FaceBaseLayer({ config }: { config: AvatarConfig }) {
   const ears = earMetrics(config.earStyle);
+  const skin = getSkinScale(config.skinTone);
+
   return (
     <g>
       <ellipse
@@ -32,55 +35,137 @@ export function FaceBaseLayer({ config }: { config: AvatarConfig }) {
         cy="126"
         rx={ears.rx}
         ry={ears.ry}
-        fill={config.skinTone}
+        fill={skin.base}
       />
       <ellipse
         cx={206 - ears.offset}
-        cy="126"
+        cy="127"
         rx={ears.rx}
         ry={ears.ry}
-        fill={config.skinTone}
+        fill={skin.shadow}
       />
-      <path d={facePath(config.faceShape)} fill={config.skinTone} />
       <path
-        d="M113 176 Q150 194 187 176"
+        d={`M${91 + ears.offset} 124 Q${97 + ears.offset} 119 ${
+          99 + ears.offset
+        } 132`}
         fill="none"
-        stroke="rgba(88,48,34,0.08)"
-        strokeWidth="3"
+        stroke={skin.deepShadow}
+        strokeWidth="2"
         strokeLinecap="round"
+        opacity="0.34"
       />
+      <path
+        d={`M${209 - ears.offset} 124 Q${203 - ears.offset} 119 ${
+          201 - ears.offset
+        } 133`}
+        fill="none"
+        stroke={skin.deepShadow}
+        strokeWidth="2"
+        strokeLinecap="round"
+        opacity="0.4"
+      />
+
+      <path d={facePath(config.faceShape)} fill={skin.base} />
+      <path
+        d="M174 52 Q206 65 204 106 V139 Q199 180 164 198 Q183 168 181 130 Q185 84 174 52Z"
+        fill={skin.shadow}
+        opacity="0.46"
+      />
+      <path
+        d="M111 70 Q126 54 146 54 Q122 72 113 109 Q106 132 111 153 Q98 129 101 100 Q102 80 111 70Z"
+        fill={skin.highlight}
+        opacity="0.38"
+      />
+      <path
+        d="M115 168 Q128 195 151 201 Q174 197 187 175 Q178 204 150 209 Q120 202 108 176Z"
+        fill={skin.deepShadow}
+        opacity="0.17"
+      />
+      <ellipse cx="118" cy="151" rx="13" ry="8" fill={skin.blush} opacity="0.2" />
+      <ellipse cx="181" cy="152" rx="12" ry="7" fill={skin.blush} opacity="0.13" />
     </g>
   );
 }
 
+function eyePath(
+  x: number,
+  y: number,
+  shape: AvatarConfig["eyeShape"],
+) {
+  if (shape === "round")
+    return `M${x - 13} ${y} Q${x} ${y - 12} ${x + 13} ${y} Q${x} ${
+      y + 12
+    } ${x - 13} ${y}Z`;
+  if (shape === "narrow")
+    return `M${x - 15} ${y + 1} Q${x} ${y - 6} ${x + 15} ${y} Q${x} ${
+      y + 7
+    } ${x - 15} ${y + 1}Z`;
+  if (shape === "lifted")
+    return `M${x - 14} ${y + 4} Q${x} ${y - 10} ${x + 15} ${
+      y - 3
+    } Q${x} ${y + 10} ${x - 14} ${y + 4}Z`;
+  if (shape === "relaxed")
+    return `M${x - 14} ${y - 3} Q${x} ${y - 8} ${x + 14} ${y + 1} Q${x} ${
+      y + 10
+    } ${x - 14} ${y - 3}Z`;
+  if (shape === "soft")
+    return `M${x - 13} ${y} Q${x} ${y - 9} ${x + 13} ${y} Q${x} ${
+      y + 10
+    } ${x - 13} ${y}Z`;
+  return `M${x - 14} ${y} Q${x} ${y - 10} ${x + 14} ${y} Q${x} ${
+    y + 10
+  } ${x - 14} ${y}Z`;
+}
+
 function Eye({
   x,
+  y,
   shape,
   color,
+  mirror = false,
 }: {
   x: number;
+  y: number;
   shape: AvatarConfig["eyeShape"];
   color: string;
+  mirror?: boolean;
 }) {
-  const eyePath =
-    shape === "round"
-      ? `M${x - 14} 116 Q${x} 101 ${x + 14} 116 Q${x} 132 ${x - 14} 116Z`
-      : shape === "narrow"
-        ? `M${x - 16} 117 Q${x} 109 ${x + 16} 116 Q${x} 124 ${x - 16} 117Z`
-        : shape === "lifted"
-          ? `M${x - 15} 120 Q${x} 104 ${x + 16} 111 Q${x} 128 ${x - 15} 120Z`
-          : shape === "relaxed"
-            ? `M${x - 15} 113 Q${x} 106 ${x + 15} 116 Q${x} 128 ${x - 15} 113Z`
-            : shape === "soft"
-              ? `M${x - 14} 115 Q${x} 104 ${x + 14} 115 Q${x} 127 ${x - 14} 115Z`
-              : `M${x - 15} 116 Q${x} 103 ${x + 15} 116 Q${x} 128 ${x - 15} 116Z`;
+  const iris = getColorScale(color);
+  const path = eyePath(x, y, shape);
+  const irisRadius = shape === "narrow" ? 5 : 7;
 
   return (
     <g>
-      <path d={eyePath} fill="#f7f5f0" />
-      <circle cx={x} cy="116" r={shape === "narrow" ? 5 : 7} fill={color} />
-      <circle cx={x} cy="116" r="2.8" fill="#171717" />
-      <circle cx={x - 2} cy="113.5" r="1.3" fill="#fff" opacity="0.9" />
+      <path d={path} fill="#f8f4ed" />
+      <path
+        d={`M${x - 14} ${y} Q${x} ${y - 10} ${x + 14} ${y}`}
+        fill="none"
+        stroke="#3f302d"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        opacity="0.62"
+      />
+      <circle cx={x} cy={y + 0.5} r={irisRadius} fill={iris.base} />
+      <path
+        d={`M${x - 5} ${y - 2} Q${x} ${y - 7} ${x + 4} ${y - 2}`}
+        fill={iris.highlight}
+        opacity="0.68"
+      />
+      <circle cx={x} cy={y + 0.5} r="3.1" fill={iris.deepShadow} />
+      <circle
+        cx={x + (mirror ? 2 : -2)}
+        cy={y - 2.5}
+        r="1.5"
+        fill="#fff"
+        opacity="0.9"
+      />
+      <path
+        d={`M${x - 10} ${y + 7} Q${x} ${y + 10} ${x + 9} ${y + 6}`}
+        fill="none"
+        stroke="#6e514b"
+        strokeWidth="1.2"
+        opacity="0.22"
+      />
     </g>
   );
 }
@@ -88,85 +173,139 @@ function Eye({
 function eyebrowPath(
   style: AvatarConfig["eyebrowStyle"],
   x: number,
+  y: number,
   mirror = false,
 ) {
   const direction = mirror ? -1 : 1;
   if (style === "straight")
-    return `M${x - 14} 95 Q${x} 92 ${x + 14} 95`;
+    return `M${x - 14} ${y} Q${x} ${y - 3} ${x + 14} ${y}`;
   if (style === "arched")
-    return `M${x - 15} 98 Q${x} 84 ${x + 15} 96`;
+    return `M${x - 15} ${y + 3} Q${x} ${y - 11} ${x + 15} ${y + 1}`;
   if (style === "soft")
-    return `M${x - 14} 97 Q${x} 89 ${x + 14} 96`;
+    return `M${x - 14} ${y + 2} Q${x} ${y - 6} ${x + 14} ${y + 1}`;
   if (style === "bold")
-    return `M${x - 16} ${96 + direction} Q${x} 86 ${x + 16} 95`;
-  return `M${x - 15} 97 Q${x} 88 ${x + 15} 96`;
+    return `M${x - 16} ${y + direction} Q${x} ${y - 9} ${x + 16} ${y}`;
+  return `M${x - 15} ${y + 2} Q${x} ${y - 7} ${x + 15} ${y + 1}`;
 }
 
-function Nose({ style }: { style: AvatarConfig["noseStyle"] }) {
-  if (style === "straight")
-    return <path d="M150 121 V150 L158 154" {...noseStroke} />;
-  if (style === "rounded")
-    return <path d="M149 123 Q143 149 151 155 Q158 157 163 151" {...noseStroke} />;
-  if (style === "defined")
-    return <path d="M152 120 L143 151 Q150 160 162 153" {...noseStroke} />;
-  if (style === "small")
-    return <path d="M148 142 Q150 151 158 151" {...noseStroke} />;
-  return <path d="M150 126 Q144 148 153 153 Q158 154 161 151" {...noseStroke} />;
-}
-
-const noseStroke = {
-  fill: "none",
-  stroke: "rgba(70,43,35,0.3)",
-  strokeWidth: 2.4,
-  strokeLinecap: "round" as const,
-  strokeLinejoin: "round" as const,
-};
-
-function Mouth({ style }: { style: AvatarConfig["mouthStyle"] }) {
-  const paths: Record<AvatarConfig["mouthStyle"], string> = {
-    calm: "M137 171 Q150 174 163 171",
-    warm: "M136 169 Q150 181 164 169",
-    smile: "M134 167 Q150 185 166 167",
-    focused: "M138 172 H162",
-    soft: "M138 169 Q150 177 162 169 Q150 181 138 169Z",
-    confident: "M136 170 Q149 176 164 168",
+function Nose({
+  style,
+  skinTone,
+}: {
+  style: AvatarConfig["noseStyle"];
+  skinTone: string;
+}) {
+  const skin = getSkinScale(skinTone);
+  const paths: Record<AvatarConfig["noseStyle"], string> = {
+    straight: "M151 120 Q149 136 148 151 Q153 156 160 153",
+    rounded: "M150 122 Q143 147 151 155 Q159 158 164 151",
+    defined: "M153 120 L144 151 Q151 160 163 153",
+    small: "M149 138 Q149 151 158 152",
+    soft: "M151 125 Q145 147 153 154 Q159 155 162 151",
   };
+
   return (
-    <path
-      d={paths[style]}
-      fill={style === "soft" ? "rgba(145,70,72,0.36)" : "none"}
-      stroke="rgba(100,49,52,0.58)"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
+    <g>
+      <path
+        d={paths[style]}
+        fill="none"
+        stroke={skin.deepShadow}
+        strokeWidth="2.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity="0.46"
+      />
+      <path
+        d="M146 127 Q141 142 143 148"
+        fill="none"
+        stroke={skin.highlight}
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        opacity="0.48"
+      />
+      <ellipse cx="154" cy="155" rx="8" ry="3" fill={skin.shadow} opacity="0.16" />
+    </g>
+  );
+}
+
+function Mouth({
+  style,
+  skinTone,
+}: {
+  style: AvatarConfig["mouthStyle"];
+  skinTone: string;
+}) {
+  const skin = getSkinScale(skinTone);
+  const curves: Record<AvatarConfig["mouthStyle"], [string, string]> = {
+    calm: ["M137 170 Q150 173 163 169", "M138 171 Q150 178 162 170"],
+    warm: ["M136 168 Q150 176 164 168", "M138 171 Q150 182 163 170"],
+    smile: ["M134 166 Q150 177 166 166", "M136 169 Q150 186 164 169"],
+    focused: ["M138 171 Q150 169 162 171", "M139 173 Q150 176 161 172"],
+    soft: ["M137 168 Q150 174 163 168", "M138 170 Q150 180 162 170"],
+    confident: ["M136 169 Q149 175 164 167", "M138 171 Q150 179 163 169"],
+  };
+
+  return (
+    <g>
+      <path
+        d={curves[style][0]}
+        fill="none"
+        stroke={skin.deepShadow}
+        strokeWidth="2"
+        strokeLinecap="round"
+        opacity="0.63"
+      />
+      <path
+        d={curves[style][1]}
+        fill={skin.blush}
+        stroke={skin.blush}
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        opacity="0.48"
+      />
+      {style === "smile" ? (
+        <path
+          d="M140 171 Q150 177 160 171"
+          fill="none"
+          stroke="#fff7ee"
+          strokeWidth="2"
+          opacity="0.72"
+        />
+      ) : null}
+    </g>
   );
 }
 
 export function FaceFeatureLayer({ config }: { config: AvatarConfig }) {
+  const eyebrows = getColorScale(config.eyebrowColor);
   const eyebrowWidth = config.eyebrowStyle === "bold" ? 5 : 3.2;
+
   return (
     <g>
       <path
-        d={eyebrowPath(config.eyebrowStyle, 122)}
+        d={eyebrowPath(config.eyebrowStyle, 122, 96)}
         fill="none"
-        stroke={config.eyebrowColor}
+        stroke={eyebrows.base}
         strokeWidth={eyebrowWidth}
         strokeLinecap="round"
       />
       <path
-        d={eyebrowPath(config.eyebrowStyle, 178, true)}
+        d={eyebrowPath(config.eyebrowStyle, 178, 97, true)}
         fill="none"
-        stroke={config.eyebrowColor}
+        stroke={eyebrows.shadow}
         strokeWidth={eyebrowWidth}
         strokeLinecap="round"
       />
-      <Eye x={122} shape={config.eyeShape} color={config.eyeColor} />
-      <Eye x={178} shape={config.eyeShape} color={config.eyeColor} />
-      <Nose style={config.noseStyle} />
-      <Mouth style={config.mouthStyle} />
-      <circle cx="112" cy="151" r="8" fill="#d97b74" opacity="0.08" />
-      <circle cx="188" cy="151" r="8" fill="#d97b74" opacity="0.08" />
+      <Eye x={122} y={116} shape={config.eyeShape} color={config.eyeColor} />
+      <Eye
+        x={178}
+        y={117}
+        shape={config.eyeShape}
+        color={config.eyeColor}
+        mirror
+      />
+      <Nose style={config.noseStyle} skinTone={config.skinTone} />
+      <Mouth style={config.mouthStyle} skinTone={config.skinTone} />
     </g>
   );
 }
