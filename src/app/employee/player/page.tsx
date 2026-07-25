@@ -13,6 +13,7 @@ import type {
   EmployeeStatsRecord,
 } from "@/lib/exp-types";
 import { getLevelInfo } from "@/lib/levels";
+import { normalizePlayerSelections } from "@/lib/player-setup";
 import {
   getRoleFocusLabel,
   getRoleTemplateSkills,
@@ -25,6 +26,8 @@ type PlayerProfileRow = {
   avatar_config: unknown;
   role_focus: unknown;
   assigned_skills: unknown;
+  interests: unknown;
+  growth_priorities: unknown;
 };
 
 export const dynamic = "force-dynamic";
@@ -36,7 +39,9 @@ export default async function EmployeePlayerPage() {
     await Promise.all([
       supabase
         .from("profiles")
-        .select("avatar_config, role_focus, assigned_skills")
+        .select(
+          "avatar_config, role_focus, assigned_skills, interests, growth_priorities",
+        )
         .eq("id", profile.id)
         .maybeSingle<PlayerProfileRow>(),
       supabase
@@ -81,6 +86,11 @@ export default async function EmployeePlayerPage() {
   const overall = getLevelInfo(statsResult.data?.total_xp ?? 0);
   const stage = getAvatarStage(overall.level);
   const nextStage = getNextAvatarStage(overall.level);
+  const interests = normalizePlayerSelections(playerResult.data?.interests, 20);
+  const growthPriorities = normalizePlayerSelections(
+    playerResult.data?.growth_priorities,
+    5,
+  );
 
   return (
     <div className="space-y-6">
@@ -171,6 +181,72 @@ export default async function EmployeePlayerPage() {
           <p className="mt-5 text-xs text-[var(--color-muted)]">
             Avatar appearance remains separate from profession and assigned skills.
           </p>
+        </Card>
+      </div>
+
+      <div className="grid gap-5 lg:grid-cols-2">
+        <Card className="rounded-[32px] p-6 sm:p-7">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="eyebrow">Interests &amp; hobbies</p>
+              <h2 className="mt-2 text-3xl">Life beyond the role</h2>
+            </div>
+            <Link
+              href="/employee/setup?edit=interests"
+              className="text-sm font-semibold text-[var(--color-blue)]"
+            >
+              Edit
+            </Link>
+          </div>
+          <div className="mt-6 flex flex-wrap gap-2">
+            {interests.length > 0 ? (
+              interests.map((interest) => (
+                <span
+                  key={interest}
+                  className="rounded-full border border-blue-300/12 bg-blue-400/[0.07] px-3 py-2 text-xs font-medium text-blue-100"
+                >
+                  {interest}
+                </span>
+              ))
+            ) : (
+              <p className="text-sm leading-7 text-[var(--color-muted)]">
+                Add interests when you are ready to personalize future growth
+                prompts.
+              </p>
+            )}
+          </div>
+        </Card>
+
+        <Card className="rounded-[32px] p-6 sm:p-7">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="eyebrow">Growth priorities</p>
+              <h2 className="mt-2 text-3xl">Your current focus</h2>
+            </div>
+            <Link
+              href="/employee/setup?edit=priorities"
+              className="text-sm font-semibold text-[var(--color-blue)]"
+            >
+              Edit
+            </Link>
+          </div>
+          <div className="mt-6 flex flex-wrap gap-2">
+            {growthPriorities.length > 0 ? (
+              growthPriorities.map((priority) => (
+                <span
+                  key={priority}
+                  className="rounded-full border border-emerald-300/12 bg-emerald-400/[0.07] px-3 py-2 text-xs font-medium text-emerald-100"
+                >
+                  {priority}
+                </span>
+              ))
+            ) : (
+              <p className="text-sm leading-7 text-[var(--color-muted)]">
+                Choose up to five priorities to describe what you want to
+                strengthen.
+              </p>
+            )}
+          </div>
         </Card>
       </div>
 

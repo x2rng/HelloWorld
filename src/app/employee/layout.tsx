@@ -10,5 +10,12 @@ export default async function EmployeeLayout({
 }) {
   const { profile } = await requireRole("EMPLOYEE");
 
-  return <EmployeeGameShell profile={profile}>{children}</EmployeeGameShell>;
+  return (
+    <EmployeeGameShell
+      profile={profile}
+      playerSetupCompleted={profile.player_setup_completed !== false}
+    >
+      {children}
+    </EmployeeGameShell>
+  );
 }

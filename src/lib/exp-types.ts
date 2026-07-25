@@ -21,6 +21,9 @@ export interface ProfileRecord {
   avatar_config?: unknown;
   role_focus?: string | null;
   assigned_skills?: unknown;
+  player_setup_completed?: boolean;
+  interests?: unknown;
+  growth_priorities?: unknown;
   created_at: string;
   updated_at: string;
   workspace?: Pick<WorkspaceRecord, "id" | "name"> | null;

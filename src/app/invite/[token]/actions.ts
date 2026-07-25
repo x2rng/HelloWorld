@@ -33,5 +33,5 @@ export async function acceptInvite(token: string, formData: FormData) {
     throw new Error(`Failed to accept invite: ${error.message}`);
   }
 
-  redirect("/employee");
+  redirect("/employee/setup");
 }

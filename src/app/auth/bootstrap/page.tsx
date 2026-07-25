@@ -1,6 +1,9 @@
 import { redirect } from "next/navigation";
 import { Card } from "@/components/ui/card";
-import { getAuthenticatedAppContext } from "@/lib/exp-auth";
+import {
+  getAppDestination,
+  getAuthenticatedAppContext,
+} from "@/lib/exp-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -29,5 +32,5 @@ export default async function AuthBootstrapPage() {
     redirect("/login");
   }
 
-  redirect(context.profile.role === "ADMIN" ? "/admin" : "/employee");
+  redirect(getAppDestination(context.profile));
 }

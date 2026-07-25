@@ -32,7 +32,9 @@ async function fetchProfile(userId: string) {
 
   const { data, error } = await supabase
     .from("profiles")
-    .select("id, workspace_id, role, full_name, email, created_at, updated_at, workspace:workspaces(id, name)")
+    .select(
+      "id, workspace_id, role, full_name, email, player_setup_completed, interests, growth_priorities, created_at, updated_at, workspace:workspaces(id, name)",
+    )
     .eq("id", userId)
     .maybeSingle<ProfileRecord>();
 
@@ -166,7 +168,14 @@ export async function redirectIfAuthenticated() {
 
   if (!context) return;
 
-  redirect(context.profile.role === "ADMIN" ? "/admin" : "/employee");
+  redirect(getAppDestination(context.profile));
+}
+
+export function getAppDestination(profile: ProfileRecord) {
+  if (profile.role === "ADMIN") return "/admin";
+  return profile.player_setup_completed === false
+    ? "/employee/setup"
+    : "/employee";
 }
 
 export async function requireRole(role: AppRole) {
@@ -177,7 +186,7 @@ export async function requireRole(role: AppRole) {
   }
 
   if (context.profile.role !== role) {
-    redirect(context.profile.role === "ADMIN" ? "/admin" : "/employee");
+    redirect(getAppDestination(context.profile));
   }
 
   return context;

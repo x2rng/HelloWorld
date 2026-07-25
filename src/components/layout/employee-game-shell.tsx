@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import type { ProfileRecord } from "@/lib/exp-types";
 import { cx } from "@/lib/utils";
@@ -134,13 +135,35 @@ function DestinationLink({
 
 export function EmployeeGameShell({
   profile,
+  playerSetupCompleted,
   children,
 }: {
   profile: ProfileRecord;
+  playerSetupCompleted: boolean;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const firstName = (profile.full_name ?? profile.email).split(" ")[0];
+  const isSetupRoute = pathname.startsWith("/employee/setup");
+
+  useEffect(() => {
+    if (!playerSetupCompleted && !isSetupRoute) {
+      router.replace("/employee/setup");
+    }
+  }, [isSetupRoute, playerSetupCompleted, router]);
+
+  if (isSetupRoute) {
+    return children;
+  }
+
+  if (!playerSetupCompleted) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-[#07090e] text-white">
+        <p className="text-sm text-white/45">Preparing your player setup...</p>
+      </main>
+    );
+  }
 
   return (
     <main className="workspace-theme min-h-screen">
