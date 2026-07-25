@@ -25,7 +25,7 @@ export function GrowthActivityForm({ skillOptions }: { skillOptions: string[] })
       <div className="rounded-2xl border border-amber-400/15 bg-amber-400/[0.055] p-4 text-xs leading-6 text-[var(--color-muted)]">
         Submitted activities begin as pending and do not change your current EXP level or XP. Verified activity growth can be connected in a later phase.
       </div>
-      <Button type="submit" size="lg" className="w-full" disabled={pending}>{pending ? "Submitting..." : "Log growth activity"}</Button>
+      <Button type="submit" size="lg" className="w-full" disabled={pending}>{pending ? "Submitting..." : "Log activity"}</Button>
       {state.message ? <p className={`rounded-2xl border p-4 text-sm ${state.ok ? "border-emerald-400/20 bg-emerald-400/[0.07] text-[var(--color-green)]" : "border-red-400/20 bg-red-400/[0.07] text-[var(--color-red)]"}`} role="status">{state.message}</p> : null}
     </form>
   );

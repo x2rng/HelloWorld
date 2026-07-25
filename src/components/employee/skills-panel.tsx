@@ -69,10 +69,10 @@ export function SkillsPanel({
         onClick={() => setOpen(true)}
         aria-controls={panelId}
         aria-expanded={open}
-        className="fixed bottom-5 right-5 z-40 flex items-center gap-2 rounded-full border border-blue-300/20 bg-[#101722]/95 px-4 py-3 text-sm font-semibold text-white shadow-[0_14px_50px_rgba(20,80,210,0.3)] backdrop-blur transition hover:-translate-y-0.5 hover:border-blue-300/40 hover:bg-[#151f30] sm:bottom-7 sm:right-7"
+        className="fixed bottom-7 right-7 z-40 hidden items-center gap-2 rounded-full border border-blue-300/20 bg-[#101722]/95 px-4 py-3 text-sm font-semibold text-white shadow-[0_14px_50px_rgba(20,80,210,0.3)] backdrop-blur transition hover:-translate-y-0.5 hover:border-blue-300/40 hover:bg-[#151f30] lg:flex"
       >
         <span className="flex size-7 items-center justify-center rounded-full bg-blue-400/12 text-blue-200"><SkillGlyph icon="spark" /></span>
-        My EXP
+        Skills
       </button>
 
       <div
@@ -84,13 +84,13 @@ export function SkillsPanel({
         id={panelId}
         role="dialog"
         aria-modal="true"
-        aria-label="My EXP skills"
+        aria-label="Skills quick view"
         className={`fixed bottom-2 right-2 top-2 z-50 flex w-[calc(100%-1rem)] max-w-[28rem] flex-col overflow-hidden rounded-[30px] border border-white/10 bg-[#0a0e15] text-white shadow-[0_30px_120px_rgba(0,0,0,0.65)] transition duration-300 sm:bottom-3 sm:right-3 sm:top-3 ${open ? "translate-x-0 opacity-100" : "pointer-events-none translate-x-[105%] opacity-0"}`}
       >
         <div className="flex items-center justify-between border-b border-white/8 px-5 py-4">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-blue-300/70">Growth profile</p>
-            <p className="mt-1 text-sm font-semibold">My EXP skills</p>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-blue-300/70">Player progress</p>
+            <p className="mt-1 text-sm font-semibold">Skills quick view</p>
           </div>
           <button type="button" onClick={() => setOpen(false)} className="flex size-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.045] text-white/65 transition hover:text-white" aria-label="Close skills panel">
             <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>

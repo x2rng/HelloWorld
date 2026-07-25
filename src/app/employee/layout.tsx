@@ -1,5 +1,5 @@
 import { requireRole } from "@/lib/exp-auth";
-import { WorkspaceShell } from "@/components/layout/workspace-shell";
+import { EmployeeGameShell } from "@/components/layout/employee-game-shell";
 
 export const dynamic = "force-dynamic";
 
@@ -10,13 +10,5 @@ export default async function EmployeeLayout({
 }) {
   const { profile } = await requireRole("EMPLOYEE");
 
-  return (
-    <WorkspaceShell
-      profile={profile}
-      title="Growth workspace"
-      subtitle="Your onboarding journey, progress, and growth identity in one place."
-    >
-      {children}
-    </WorkspaceShell>
-  );
+  return <EmployeeGameShell profile={profile}>{children}</EmployeeGameShell>;
 }

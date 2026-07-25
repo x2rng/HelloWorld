@@ -85,7 +85,7 @@ export function AchievementList({
               <div className="rounded-3xl border border-white/8 bg-white/[0.035] p-4">
                 <p className="font-medium">Your first achievement is within reach.</p>
                 <p className="mt-1 text-sm leading-6 text-[var(--color-muted)]">
-                  Complete the next onboarding step to begin building your progress record.
+                  Complete the next growth step to begin building your progress record.
                 </p>
               </div>
             )}

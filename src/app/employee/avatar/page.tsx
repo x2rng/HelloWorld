@@ -26,10 +26,10 @@ export default async function EmployeeAvatarPage() {
   return (
     <div className="space-y-5">
       <Card className="rounded-[36px] p-6 sm:p-8">
-        <p className="eyebrow">Avatar identity</p>
-        <h2 className="mt-2 text-4xl">Create your EXP avatar.</h2>
+        <p className="eyebrow">Player appearance</p>
+        <h2 className="mt-2 text-4xl">Edit your player.</h2>
         <p className="mt-3 max-w-2xl text-sm leading-7 text-[var(--color-muted)]">
-          Choose a simple full-body identity. Your look stays yours while the
+          Customize your full-body avatar. Your look stays yours while the
           stage frame evolves as your level increases.
         </p>
       </Card>

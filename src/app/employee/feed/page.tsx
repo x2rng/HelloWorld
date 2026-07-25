@@ -93,7 +93,7 @@ export default async function EmployeeFeedPage({
         <div className="absolute -right-20 -top-24 size-72 rounded-full bg-purple-500/10 blur-3xl" />
         <div className="relative flex flex-col gap-7 lg:flex-row lg:items-end lg:justify-between">
           <div><div className="flex flex-wrap gap-2"><BadgePill tone="purple">Growth feed</BadgePill><BadgePill tone="cyan">{dailyRemaining} recognition points left today</BadgePill></div><h2 className="mt-5 max-w-3xl text-4xl leading-tight sm:text-6xl">See growth taking shape across your workplace.</h2><p className="mt-4 max-w-2xl text-sm leading-7 text-[var(--color-muted)] sm:text-base">A calm record of practice, learning, collaboration, and company contribution shared by your colleagues.</p></div>
-          <Link href="/employee/activities" className="inline-flex h-12 shrink-0 items-center justify-center rounded-full bg-white px-6 text-sm font-semibold text-slate-950 hover:-translate-y-0.5">Log growth activity</Link>
+          <Link href="/employee/activities" className="inline-flex h-12 shrink-0 items-center justify-center rounded-full bg-white px-6 text-sm font-semibold text-slate-950 hover:-translate-y-0.5">Log activity</Link>
         </div>
       </Card>
 

@@ -29,7 +29,7 @@ export default async function EmployeeActivitiesPage() {
     <div className="space-y-5">
       <Card className="relative overflow-hidden rounded-[38px] p-7 sm:p-10">
         <div className="absolute -right-20 -top-24 size-72 rounded-full bg-cyan-500/10 blur-3xl" />
-        <div className="relative"><BadgePill tone="cyan">Growth proof log</BadgePill><h2 className="mt-5 max-w-3xl text-4xl leading-tight sm:text-6xl">Turn real work into visible growth.</h2><p className="mt-4 max-w-2xl text-sm leading-7 text-[var(--color-muted)] sm:text-base">Log a growth activity and attach proof of progress. Verified activities can contribute to your EXP profile in a future phase.</p></div>
+        <div className="relative"><BadgePill tone="cyan">Log activity</BadgePill><h2 className="mt-5 max-w-3xl text-4xl leading-tight sm:text-6xl">Turn real work into visible growth.</h2><p className="mt-4 max-w-2xl text-sm leading-7 text-[var(--color-muted)] sm:text-base">Log an activity and attach proof of progress. Verified activities can contribute to your Player later.</p></div>
       </Card>
 
       <div className="grid gap-5 xl:grid-cols-[0.85fr_1.15fr]">

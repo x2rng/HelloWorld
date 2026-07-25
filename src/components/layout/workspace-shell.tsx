@@ -9,6 +9,7 @@ const navByRole: Record<AppRole, Array<{ href: string; label: string }>> = {
     { href: "/admin/tracks", label: "Tracks" },
     { href: "/admin/employees", label: "Employees" },
     { href: "/admin/assignments", label: "Assignments" },
+    { href: "/admin/activities", label: "Activities" },
   ],
   EMPLOYEE: [
     { href: "/employee", label: "My EXP" },

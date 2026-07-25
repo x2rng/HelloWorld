@@ -20,6 +20,7 @@ import type {
   AchievementRecord,
   EmployeeAchievementRecord,
   EmployeeStatsRecord,
+  GrowthActivityRecord,
   MilestoneRecord,
   TaskProgressRecord,
   TaskRecord,
@@ -58,6 +59,11 @@ type EmployeeAvatarProfile = {
   assigned_skills: unknown;
 };
 
+type HomeRecognitionRow = {
+  activity_id: string;
+  points: number;
+};
+
 const milestoneStatusCopy = {
   completed: "Completed",
   in_progress: "Active",
@@ -93,7 +99,13 @@ export default async function EmployeePage() {
     throw new Error(`Failed to load assignment: ${error.message}`);
   }
 
-  const [statsResult, achievementsResult, unlockedResult, avatarResult] =
+  const [
+    statsResult,
+    achievementsResult,
+    unlockedResult,
+    avatarResult,
+    recentActivitiesResult,
+  ] =
     await Promise.all([
       supabase
         .from("employee_stats")
@@ -119,6 +131,16 @@ export default async function EmployeePage() {
         .select("avatar_config, role_focus, assigned_skills")
         .eq("id", profile.id)
         .maybeSingle<EmployeeAvatarProfile>(),
+      supabase
+        .from("growth_activities")
+        .select(
+          "id, workspace_id, employee_id, title, description, category, skill_name, proof_type, proof_url, visibility, status, suggested_xp, created_at",
+        )
+        .eq("workspace_id", profile.workspace_id)
+        .eq("employee_id", profile.id)
+        .order("created_at", { ascending: false })
+        .limit(3)
+        .returns<GrowthActivityRecord[]>(),
     ]);
 
   if (statsResult.error) {
@@ -134,6 +156,9 @@ export default async function EmployeePage() {
   }
   if (avatarResult.error) {
     throw new Error(`Failed to load avatar: ${avatarResult.error.message}`);
+  }
+  if (recentActivitiesResult.error) {
+    throw new Error("Recent growth activity could not be loaded.");
   }
 
   let milestones: MilestoneRecord[] = [];
@@ -213,6 +238,33 @@ export default async function EmployeePage() {
     avatarResult.data?.assigned_skills,
   );
   const skillGroups = deriveSkillGroups(journeyMilestones, roleFocus, assignedSkills);
+  const roleSkillPreview =
+    skillGroups.find((group) => group.name === "Role Skills")?.skills.slice(0, 4) ??
+    [];
+  const recentActivityIds = recentActivitiesResult.data.map(
+    (activity) => activity.id,
+  );
+  const recentRecognitionResult =
+    recentActivityIds.length > 0
+      ? await supabase
+          .from("activity_recognitions")
+          .select("activity_id, points")
+          .in("activity_id", recentActivityIds)
+          .returns<HomeRecognitionRow[]>()
+      : { data: [] as HomeRecognitionRow[], error: null };
+
+  if (recentRecognitionResult.error) {
+    throw new Error("Recent recognition could not be loaded.");
+  }
+
+  const recognitionByActivity = new Map<string, number>();
+  for (const recognition of recentRecognitionResult.data) {
+    recognitionByActivity.set(
+      recognition.activity_id,
+      (recognitionByActivity.get(recognition.activity_id) ?? 0) +
+        recognition.points,
+    );
+  }
 
   return (
     <div className="space-y-5">
@@ -224,15 +276,21 @@ export default async function EmployeePage() {
           <div className="flex flex-col justify-between p-6 sm:p-9 lg:p-12">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/55">
-                My EXP
+                Home
               </p>
               <h2 className="mt-4 max-w-3xl text-4xl leading-[0.98] sm:text-6xl">
                 This is your growth identity, {firstName}.
               </h2>
               <p className="mt-5 max-w-xl text-base leading-7 text-white/65">
-                Every completed growth step adds experience, strengthens your profile,
+                Every completed growth step adds experience, strengthens your Player,
                 and moves your avatar toward its next stage.
               </p>
+              <Link
+                href="/employee/activities"
+                className="mt-6 inline-flex h-11 items-center justify-center rounded-full border border-white/12 bg-white/[0.07] px-5 text-sm font-semibold text-white/80 transition hover:bg-white/[0.12] hover:text-white"
+              >
+                Log activity
+              </Link>
             </div>
 
             <div className="mt-10 grid gap-4 sm:grid-cols-2">
@@ -310,7 +368,7 @@ export default async function EmployeePage() {
               href="/employee/avatar"
               className="absolute right-6 top-6 z-10 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white/80 backdrop-blur hover:bg-white/15 hover:text-white"
             >
-              {hasAvatarConfig ? "Edit avatar" : "Create avatar"}
+              {hasAvatarConfig ? "Edit player" : "Create player"}
             </Link>
           </div>
         </div>
@@ -345,7 +403,7 @@ export default async function EmployeePage() {
               </p>
               <Link
                 href={`/employee/onboarding#task-${nextTask.task.id}`}
-                className="mt-7 inline-flex h-12 items-center justify-center rounded-full bg-[var(--color-ink)] px-6 text-sm font-medium text-white hover:-translate-y-0.5 hover:bg-black"
+                className="mt-7 inline-flex h-12 items-center justify-center rounded-full bg-white px-6 text-sm font-semibold text-slate-950 transition hover:-translate-y-0.5 hover:bg-blue-50"
               >
                 Continue to next growth step
               </Link>
@@ -369,6 +427,12 @@ export default async function EmployeePage() {
               <p className="mt-2 text-sm leading-6 text-[var(--color-muted)]">
                 Your workspace admin can assign an onboarding track when it is ready.
               </p>
+              <Link
+                href="/employee/activities"
+                className="mt-5 inline-flex h-11 items-center justify-center rounded-full bg-white px-5 text-sm font-semibold text-slate-950"
+              >
+                Log activity
+              </Link>
             </div>
           )}
         </Card>
@@ -444,11 +508,113 @@ export default async function EmployeePage() {
         </Card>
       </div>
 
+      <div className="grid gap-5 xl:grid-cols-[0.9fr_1.1fr]">
+        <Card className="rounded-[34px] p-6 sm:p-7">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="eyebrow">Skills preview</p>
+              <h3 className="mt-2 text-3xl">Role skills in progress</h3>
+            </div>
+            <Link
+              href="/employee/skills"
+              className="text-sm font-semibold text-[var(--color-blue)]"
+            >
+              View Skills
+            </Link>
+          </div>
+          <div className="mt-6 space-y-3">
+            {roleSkillPreview.map((skill) => (
+              <div
+                key={skill.name}
+                className="rounded-[22px] border border-white/8 bg-white/[0.03] p-4"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="font-medium">{skill.name}</p>
+                    <p className="mt-1 text-xs text-[var(--color-muted)]">
+                      {skill.xp} skill XP
+                    </p>
+                  </div>
+                  <span className="text-xs font-semibold text-blue-200">
+                    Level {skill.level}
+                  </span>
+                </div>
+                <ProgressBar value={skill.progress} className="mt-3 h-1.5" />
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        <Card className="rounded-[34px] p-6 sm:p-7">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="eyebrow">Recent progress</p>
+              <h3 className="mt-2 text-3xl">Activity and recognition</h3>
+            </div>
+            <Link
+              href="/employee/feed?view=my"
+              className="text-sm font-semibold text-[var(--color-blue)]"
+            >
+              Open Feed
+            </Link>
+          </div>
+          <div className="mt-6 space-y-3">
+            {recentActivitiesResult.data.length > 0 ? (
+              recentActivitiesResult.data.map((activity) => (
+                <div
+                  key={activity.id}
+                  className="rounded-[22px] border border-white/8 bg-white/[0.03] p-4"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="font-medium">{activity.title}</p>
+                      <p className="mt-1 text-xs text-[var(--color-muted)]">
+                        {activity.skill_name} ·{" "}
+                        {new Intl.DateTimeFormat("en", {
+                          dateStyle: "medium",
+                        }).format(new Date(activity.created_at))}
+                      </p>
+                    </div>
+                    <BadgePill
+                      tone={
+                        activity.status === "approved"
+                          ? "green"
+                          : activity.status === "rejected"
+                            ? "red"
+                            : "amber"
+                      }
+                    >
+                      {activity.status}
+                    </BadgePill>
+                  </div>
+                  <p className="mt-3 text-xs text-purple-200">
+                    {recognitionByActivity.get(activity.id) ?? 0} recognition
+                  </p>
+                </div>
+              ))
+            ) : (
+              <div className="rounded-[22px] border border-white/8 bg-white/[0.03] p-5">
+                <p className="font-medium">No activity logged yet.</p>
+                <p className="mt-2 text-sm leading-6 text-[var(--color-muted)]">
+                  Log real progress to begin building your activity record.
+                </p>
+                <Link
+                  href="/employee/activities"
+                  className="mt-4 inline-flex text-sm font-semibold text-[var(--color-blue)]"
+                >
+                  Log activity
+                </Link>
+              </div>
+            )}
+          </div>
+        </Card>
+      </div>
+
       <Card className="rounded-[36px] p-6 sm:p-8">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="eyebrow">Growth areas</p>
-            <h3 className="mt-2 text-3xl">What your EXP profile is building</h3>
+            <h3 className="mt-2 text-3xl">What your Player is building</h3>
             <p className="mt-3 max-w-2xl text-sm leading-7 text-[var(--color-muted)]">
               Journey steps contribute to five practical areas of onboarding growth.
               Progress here is based on the steps already completed in your current journey.

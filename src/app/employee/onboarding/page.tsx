@@ -152,13 +152,13 @@ export default async function EmployeeOnboardingPage({
       <>
         <Card className="rounded-[36px] p-8">
           <BadgePill tone="amber">Awaiting assignment</BadgePill>
-          <h2 className="mt-4 text-4xl">Your onboarding journey is not assigned yet.</h2>
+          <h2 className="mt-4 text-4xl">Your Journey is not assigned yet.</h2>
           <p className="mt-3 max-w-xl text-sm leading-7 text-[var(--color-muted)]">
             Your workspace admin can assign a track when it is ready. Your progress
             view will appear here automatically.
           </p>
           <Link href="/employee" className="mt-6 inline-flex">
-            <Button variant="secondary">Back to dashboard</Button>
+            <Button variant="secondary">Back to Home</Button>
           </Link>
         </Card>
         <SkillsPanel
