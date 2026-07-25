@@ -10,10 +10,20 @@ type AuthenticatedAppContext = {
   profile: ProfileRecord;
 };
 
-function isMissingAuthSessionError(error: { message?: string; name?: string }) {
+function isInvalidAuthSessionError(error: {
+  code?: string;
+  message?: string;
+  name?: string;
+}) {
+  const message = error.message?.toLowerCase() ?? "";
+
   return (
     error.name === "AuthSessionMissingError" ||
-    error.message?.toLowerCase().includes("auth session missing")
+    error.code === "refresh_token_not_found" ||
+    error.code === "refresh_token_already_used" ||
+    message.includes("auth session missing") ||
+    message.includes("invalid refresh token") ||
+    message.includes("refresh token not found")
   );
 }
 
@@ -128,7 +138,7 @@ export async function getAuthenticatedAppContext(): Promise<AuthenticatedAppCont
   } = await supabase.auth.getUser();
 
   if (error) {
-    if (isMissingAuthSessionError(error)) {
+    if (isInvalidAuthSessionError(error)) {
       return null;
     }
 
