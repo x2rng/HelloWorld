@@ -2,7 +2,7 @@ import Link from "next/link";
 import { CreateAssignmentForm } from "@/components/admin/create-assignment-form";
 import { BadgePill } from "@/components/ui/badge-pill";
 import { Card } from "@/components/ui/card";
-import { requireRole } from "@/lib/exp-auth";
+import { requireAdminWorkspaceSetup } from "@/lib/admin-workspace";
 import type { EmployeeStatsRecord, OnboardingTrackRecord, ProfileRecord } from "@/lib/exp-types";
 import { createClient } from "@/lib/supabase/server";
 
@@ -28,7 +28,7 @@ function today() {
 export const dynamic = "force-dynamic";
 
 export default async function AdminAssignmentsPage() {
-  const { profile } = await requireRole("ADMIN");
+  const { profile } = await requireAdminWorkspaceSetup();
   const supabase = await createClient();
 
   const { data: employees, error: employeesError } = await supabase
@@ -166,7 +166,7 @@ export default async function AdminAssignmentsPage() {
                 const stats = assignment.employee?.id ? statsByEmployeeId.get(assignment.employee.id) : null;
 
                 return (
-                  <div key={assignment.id} className="rounded-2xl border border-black/6 bg-white/70 p-4">
+                  <div key={assignment.id} className="rounded-2xl border border-white/8 bg-white/[0.035] p-4">
                     <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                       <div>
                         <p className="font-medium">

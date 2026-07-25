@@ -6,6 +6,10 @@ export interface WorkspaceRecord {
   created_by: string;
   created_at: string;
   updated_at: string;
+  industry?: string | null;
+  company_size?: string | null;
+  setup_completed?: boolean;
+  setup_profile?: unknown;
 }
 
 export interface ProfileRecord {
@@ -15,6 +19,8 @@ export interface ProfileRecord {
   full_name: string | null;
   email: string;
   avatar_config?: unknown;
+  role_focus?: string | null;
+  assigned_skills?: unknown;
   created_at: string;
   updated_at: string;
   workspace?: Pick<WorkspaceRecord, "id" | "name"> | null;
@@ -30,6 +36,8 @@ export interface InviteRecord {
   invited_by: string;
   created_at: string;
   expires_at: string | null;
+  role_focus?: string;
+  assigned_skills?: unknown;
 }
 
 export interface OnboardingTrackRecord {
@@ -41,6 +49,7 @@ export interface OnboardingTrackRecord {
   created_by: string;
   created_at: string;
   updated_at: string;
+  skill_focus?: unknown;
 }
 
 export interface MilestoneRecord {
@@ -51,6 +60,7 @@ export interface MilestoneRecord {
   position: number;
   created_at: string;
   updated_at: string;
+  skill_focus?: unknown;
 }
 
 export interface TaskRecord {
@@ -61,6 +71,7 @@ export interface TaskRecord {
   position: number;
   created_at: string;
   updated_at: string;
+  skill_contributions?: unknown;
 }
 
 export type AssignmentStatus = "ASSIGNED" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
@@ -111,6 +122,22 @@ export interface EmployeeStatsRecord {
   completed_tasks_count: number;
   created_at: string;
   updated_at: string;
+}
+
+export interface GrowthActivityRecord {
+  id: string;
+  workspace_id: string;
+  employee_id: string;
+  title: string;
+  description: string;
+  category: import("@/lib/growth-activities").ActivityCategory;
+  skill_name: string;
+  proof_type: import("@/lib/growth-activities").ActivityProofType;
+  proof_url: string | null;
+  visibility: import("@/lib/growth-activities").ActivityVisibility;
+  status: import("@/lib/growth-activities").GrowthActivityStatus;
+  suggested_xp: number;
+  created_at: string;
 }
 
 export interface AchievementRecord {

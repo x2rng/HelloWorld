@@ -1,14 +1,19 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BadgePill } from "@/components/ui/badge-pill";
+import { SkillContributionEditor } from "@/components/admin/skill-contribution-editor";
+import { SkillFocusEditor } from "@/components/admin/skill-focus-editor";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
   createMilestone,
   createTask,
+  updateMilestoneSkillFocus,
+  updateTaskSkillContributions,
   updateTrack,
+  updateTrackSkillFocus,
 } from "@/app/admin/tracks/actions";
-import { requireRole } from "@/lib/exp-auth";
+import { requireAdminWorkspaceSetup } from "@/lib/admin-workspace";
 import type {
   MilestoneRecord,
   OnboardingTrackRecord,
@@ -28,12 +33,12 @@ export default async function TrackDetailPage({
   params: Promise<{ trackId: string }>;
 }) {
   const { trackId } = await params;
-  const { profile } = await requireRole("ADMIN");
+  const { profile } = await requireAdminWorkspaceSetup();
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("onboarding_tracks")
     .select(
-      "id, workspace_id, title, description, duration_days, created_by, created_at, updated_at, milestones(id, track_id, title, description, position, created_at, updated_at, tasks(id, milestone_id, title, description, position, created_at, updated_at))",
+      "id, workspace_id, title, description, duration_days, skill_focus, created_by, created_at, updated_at, milestones(id, track_id, title, description, position, skill_focus, created_at, updated_at, tasks(id, milestone_id, title, description, position, skill_contributions, created_at, updated_at))",
     )
     .eq("id", trackId)
     .eq("workspace_id", profile.workspace_id)
@@ -119,6 +124,13 @@ export default async function TrackDetailPage({
             </div>
             <Button type="submit">Save track</Button>
           </form>
+          <div className="mt-5 border-t border-white/8 pt-5">
+            <SkillFocusEditor
+              initialSkills={track.skill_focus}
+              action={updateTrackSkillFocus.bind(null, track.id)}
+              label="Track skill focus"
+            />
+          </div>
         </Card>
 
         <Card className="rounded-[36px] p-6 sm:p-8">
@@ -192,16 +204,24 @@ export default async function TrackDetailPage({
                   <BadgePill tone="blue">{milestone.tasks.length} tasks</BadgePill>
                 </div>
 
+                <div className="mt-4">
+                  <SkillFocusEditor
+                    initialSkills={milestone.skill_focus}
+                    action={updateMilestoneSkillFocus.bind(null, track.id, milestone.id)}
+                    label="Milestone skill focus"
+                  />
+                </div>
+
                 <div className="mt-5 space-y-2">
                   {milestone.tasks.length === 0 ? (
-                    <p className="rounded-2xl border border-black/6 bg-white/60 px-4 py-3 text-sm text-[var(--color-muted)]">
+                    <p className="rounded-2xl border border-white/8 bg-white/[0.03] px-4 py-3 text-sm text-[var(--color-muted)]">
                       No tasks inside this milestone yet.
                     </p>
                   ) : (
                     milestone.tasks.map((task) => (
                       <div
                         key={task.id}
-                        className="grid gap-2 rounded-2xl border border-black/6 bg-white/70 px-4 py-3 text-sm sm:grid-cols-[80px_1fr]"
+                        className="grid gap-2 rounded-2xl border border-white/8 bg-white/[0.035] px-4 py-3 text-sm sm:grid-cols-[80px_1fr]"
                       >
                         <span className="font-medium text-[var(--color-muted)]">#{task.position}</span>
                         <div>
@@ -209,6 +229,10 @@ export default async function TrackDetailPage({
                           {task.description ? (
                             <p className="mt-1 text-[var(--color-muted)]">{task.description}</p>
                           ) : null}
+                          <SkillContributionEditor
+                            initialContributions={task.skill_contributions}
+                            action={updateTaskSkillContributions.bind(null, track.id, milestone.id, task.id)}
+                          />
                         </div>
                       </div>
                     ))

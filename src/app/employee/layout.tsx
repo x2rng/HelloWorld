@@ -13,8 +13,8 @@ export default async function EmployeeLayout({
   return (
     <WorkspaceShell
       profile={profile}
-      title="Employee workspace"
-      subtitle="You are authenticated as an employee. The onboarding journey will be attached in the next phase."
+      title="Growth workspace"
+      subtitle="Your onboarding journey, progress, and growth identity in one place."
     >
       {children}
     </WorkspaceShell>

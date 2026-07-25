@@ -11,8 +11,10 @@ const navByRole: Record<AppRole, Array<{ href: string; label: string }>> = {
     { href: "/admin/assignments", label: "Assignments" },
   ],
   EMPLOYEE: [
-    { href: "/employee", label: "Employee" },
-    { href: "/employee/onboarding", label: "Onboarding" },
+    { href: "/employee", label: "My EXP" },
+    { href: "/employee/onboarding", label: "Journey" },
+    { href: "/employee/activities", label: "Activities" },
+    { href: "/employee/feed", label: "Feed" },
   ],
 };
 
@@ -30,13 +32,13 @@ export function WorkspaceShell({
   const navItems = navByRole[profile.role];
 
   return (
-    <main className="min-h-screen px-4 py-4 md:px-6">
+    <main className="workspace-theme min-h-screen px-4 py-4 md:px-6">
       <div className="mx-auto max-w-7xl space-y-5">
         <header className="glass-panel sticky top-4 z-20 rounded-[32px] px-5 py-4 sm:px-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex items-center gap-3">
               <Link href="/" className="flex items-center gap-3">
-                <span className="flex size-10 items-center justify-center rounded-full bg-[var(--color-ink)] text-sm font-semibold text-white">
+                <span className="flex size-10 items-center justify-center rounded-full bg-white text-sm font-semibold text-slate-950 shadow-[0_0_30px_rgba(120,151,255,0.22)]">
                   E
                 </span>
                 <div>

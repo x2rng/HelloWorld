@@ -62,6 +62,22 @@ pnpm build
 - `supabase/migrations/202604290001_exp_foundation.sql`
   Initial database foundation for workspaces, profiles, and invites.
 
+## Password recovery redirects
+
+Password recovery uses `/auth/callback?next=/reset-password` so the server can
+exchange Supabase's PKCE code before the user chooses a new password.
+
+In Supabase Dashboard, open **Authentication → URL Configuration** and set:
+
+- **Site URL** to the production app URL.
+- **Redirect URLs** to include
+  `https://<production-domain>/auth/callback?next=/reset-password` and
+  `http://localhost:3000/auth/callback?next=/reset-password`.
+- If Vercel preview deployments need password recovery, add an appropriate
+  Vercel preview wildcard redirect URL as well.
+
+Keep `NEXT_PUBLIC_APP_URL` set to the canonical production app URL in Vercel.
+
 ## How to extend this later
 
 - Add onboarding tracks, milestones, tasks, assignments, and XP events on top of the workspace/profile foundation.

@@ -3,6 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { getAppUrl } from "@/lib/env";
 import { requireRole } from "@/lib/exp-auth";
+import {
+  getRoleTemplateSkills,
+  isRoleFocus,
+  normalizeAssignedSkills,
+} from "@/lib/skills";
 import { createClient } from "@/lib/supabase/server";
 
 export type InviteEmployeeState = {
@@ -27,6 +32,21 @@ export async function inviteEmployee(
     const { profile } = await requireRole("ADMIN");
     const supabase = await createClient();
     const email = normalizeEmail(formData.get("email"));
+    const roleFocus = formData.get("role_focus");
+    if (!isRoleFocus(roleFocus)) {
+      throw new Error("Choose a valid role template.");
+    }
+
+    let submittedSkills: unknown = [];
+    try {
+      submittedSkills = JSON.parse(String(formData.get("assigned_skills") ?? "[]"));
+    } catch {
+      throw new Error("The assigned skill list is not valid.");
+    }
+    const normalizedSkills = normalizeAssignedSkills(submittedSkills);
+    const assignedSkills = normalizedSkills.length > 0
+      ? normalizedSkills
+      : getRoleTemplateSkills(roleFocus);
 
     const { data, error } = await supabase
       .from("invites")
@@ -34,6 +54,8 @@ export async function inviteEmployee(
         workspace_id: profile.workspace_id,
         email,
         role: "EMPLOYEE",
+        role_focus: roleFocus,
+        assigned_skills: assignedSkills,
         invited_by: profile.id,
         expires_at: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
       })

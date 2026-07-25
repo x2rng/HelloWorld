@@ -91,8 +91,8 @@ export function CreateAssignmentForm({
           className={cx(
             "rounded-2xl border px-4 py-3 text-sm leading-6",
             state.ok
-              ? "border-emerald-200 bg-emerald-50 text-emerald-800"
-              : "border-red-200 bg-red-50 text-red-800",
+              ? "border-emerald-400/20 bg-emerald-400/10 text-[var(--color-green)]"
+              : "border-red-400/20 bg-red-400/10 text-[var(--color-red)]",
           )}
           role="status"
         >

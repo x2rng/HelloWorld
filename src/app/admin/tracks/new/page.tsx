@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { requireRole } from "@/lib/exp-auth";
+import { requireAdminWorkspaceSetup } from "@/lib/admin-workspace";
 import { createTrack } from "@/app/admin/tracks/actions";
 
 export const dynamic = "force-dynamic";
 
 export default async function NewTrackPage() {
-  await requireRole("ADMIN");
+  await requireAdminWorkspaceSetup();
 
   return (
     <div className="space-y-5">

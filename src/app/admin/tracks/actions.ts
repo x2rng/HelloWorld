@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireRole } from "@/lib/exp-auth";
+import { normalizeSkillContributions, normalizeSkillFocus } from "@/lib/skill-attribution";
 import { createClient } from "@/lib/supabase/server";
 
 function requiredText(formData: FormData, key: string) {
@@ -34,6 +35,12 @@ function positiveInt(formData: FormData, key: string, fallback: number) {
   }
 
   return parsed;
+}
+
+function jsonField(formData: FormData, key: string): unknown {
+  const value = formData.get(key);
+  if (typeof value !== "string") return [];
+  try { return JSON.parse(value); } catch { throw new Error(`${key} is not valid JSON.`); }
 }
 
 async function assertTrackWorkspace(trackId: string, workspaceId: string) {
@@ -70,6 +77,49 @@ async function assertMilestoneTrack(milestoneId: string, trackId: string) {
   if (!data) {
     throw new Error("Milestone was not found in this onboarding track.");
   }
+}
+
+async function assertTaskMilestone(taskId: string, milestoneId: string) {
+  const supabase = await createClient();
+  const { data, error } = await supabase.from("tasks").select("id").eq("id", taskId).eq("milestone_id", milestoneId).maybeSingle();
+  if (error) throw new Error(`Failed to verify task: ${error.message}`);
+  if (!data) throw new Error("Task was not found in this milestone.");
+}
+
+export async function updateTrackSkillFocus(trackId: string, formData: FormData) {
+  const { profile } = await requireRole("ADMIN");
+  await assertTrackWorkspace(trackId, profile.workspace_id);
+  const supabase = await createClient();
+  const { error } = await supabase.from("onboarding_tracks").update({ skill_focus: normalizeSkillFocus(jsonField(formData, "skill_focus")) }).eq("id", trackId).eq("workspace_id", profile.workspace_id);
+  if (error) throw new Error(`Failed to update track skills: ${error.message}`);
+  revalidatePath(`/admin/tracks/${trackId}`);
+  revalidatePath("/employee");
+  revalidatePath("/employee/onboarding");
+}
+
+export async function updateMilestoneSkillFocus(trackId: string, milestoneId: string, formData: FormData) {
+  const { profile } = await requireRole("ADMIN");
+  await assertTrackWorkspace(trackId, profile.workspace_id);
+  await assertMilestoneTrack(milestoneId, trackId);
+  const supabase = await createClient();
+  const { error } = await supabase.from("milestones").update({ skill_focus: normalizeSkillFocus(jsonField(formData, "skill_focus")) }).eq("id", milestoneId);
+  if (error) throw new Error(`Failed to update milestone skills: ${error.message}`);
+  revalidatePath(`/admin/tracks/${trackId}`);
+  revalidatePath("/employee");
+  revalidatePath("/employee/onboarding");
+}
+
+export async function updateTaskSkillContributions(trackId: string, milestoneId: string, taskId: string, formData: FormData) {
+  const { profile } = await requireRole("ADMIN");
+  await assertTrackWorkspace(trackId, profile.workspace_id);
+  await assertMilestoneTrack(milestoneId, trackId);
+  await assertTaskMilestone(taskId, milestoneId);
+  const supabase = await createClient();
+  const { error } = await supabase.from("tasks").update({ skill_contributions: normalizeSkillContributions(jsonField(formData, "skill_contributions")) }).eq("id", taskId).eq("milestone_id", milestoneId);
+  if (error) throw new Error(`Failed to update task skill contributions: ${error.message}`);
+  revalidatePath(`/admin/tracks/${trackId}`);
+  revalidatePath("/employee");
+  revalidatePath("/employee/onboarding");
 }
 
 export async function createTrack(formData: FormData) {

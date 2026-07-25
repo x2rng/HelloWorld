@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -50,9 +51,17 @@ export function LoginForm() {
         />
       </div>
       <div className="space-y-2">
-        <label htmlFor="login-password" className="text-sm font-medium">
-          Password
-        </label>
+        <div className="flex items-center justify-between gap-4">
+          <label htmlFor="login-password" className="text-sm font-medium">
+            Password
+          </label>
+          <Link
+            href="/forgot-password"
+            className="text-sm font-semibold text-[var(--color-blue)]"
+          >
+            Forgot password?
+          </Link>
+        </div>
         <input
           id="login-password"
           type="password"
@@ -63,11 +72,23 @@ export function LoginForm() {
         />
       </div>
       {searchParams.get("auth_error") ? (
-        <p className="text-sm text-[var(--color-red)]">
+        <p role="alert" className="text-sm text-[var(--color-red)]">
           Sign-in could not be completed. Please try again.
         </p>
       ) : null}
-      {error ? <p className="text-sm text-[var(--color-red)]">{error}</p> : null}
+      {searchParams.get("password_reset") === "success" ? (
+        <div
+          role="status"
+          className="rounded-3xl border border-[var(--color-green)]/20 bg-[var(--color-green-soft)] px-4 py-3 text-sm text-[var(--color-green)]"
+        >
+          Your password has been updated. Sign in with your new password.
+        </div>
+      ) : null}
+      {error ? (
+        <p role="alert" className="text-sm text-[var(--color-red)]">
+          {error}
+        </p>
+      ) : null}
       <Button type="submit" size="lg" className="w-full" disabled={loading}>
         {loading ? "Signing in..." : "Continue"}
       </Button>

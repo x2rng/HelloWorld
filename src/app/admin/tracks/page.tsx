@@ -2,14 +2,14 @@ import Link from "next/link";
 import { BadgePill } from "@/components/ui/badge-pill";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { requireRole } from "@/lib/exp-auth";
+import { requireAdminWorkspaceSetup } from "@/lib/admin-workspace";
 import type { OnboardingTrackRecord } from "@/lib/exp-types";
 import { createClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminTracksPage() {
-  const { profile } = await requireRole("ADMIN");
+  const { profile } = await requireAdminWorkspaceSetup();
   const supabase = await createClient();
   const { data: tracks, error } = await supabase
     .from("onboarding_tracks")

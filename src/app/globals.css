@@ -15,6 +15,20 @@
   --color-amber-soft: rgba(199, 147, 44, 0.13);
   --color-red: #c95f5f;
   --color-red-soft: rgba(201, 95, 95, 0.12);
+  --color-purple: #7f62d9;
+  --color-purple-soft: rgba(127, 98, 217, 0.12);
+  --color-cyan: #248da1;
+  --color-cyan-soft: rgba(36, 141, 161, 0.12);
+  --color-orange: #d77b3f;
+  --color-orange-soft: rgba(215, 123, 63, 0.13);
+  --button-primary-bg: var(--color-ink);
+  --button-primary-fg: #ffffff;
+  --button-primary-hover: #000000;
+  --button-secondary-bg: rgba(255, 255, 255, 0.8);
+  --button-secondary-hover: #ffffff;
+  --badge-neutral-bg: rgba(0, 0, 0, 0.04);
+  --badge-neutral-text: var(--color-muted);
+  --progress-track: rgba(15, 23, 42, 0.06);
   --shadow-soft: 0 24px 90px rgba(15, 23, 42, 0.08);
 }
 
@@ -80,8 +94,60 @@ textarea {
 
   .surface-panel {
     background: var(--color-panel-strong);
-    box-shadow: var(--shadow-soft);
+    box-shadow: var(--shadow-soft), inset 0 1px 0 rgba(255, 255, 255, 0.05);
     border: 1px solid var(--color-border);
+  }
+
+  .workspace-theme {
+    --color-panel: rgba(13, 17, 24, 0.86);
+    --color-panel-strong: rgba(17, 22, 31, 0.92);
+    --color-border: rgba(255, 255, 255, 0.09);
+    --color-ink: #f4f7fb;
+    --color-muted: #a8b0bd;
+    --color-blue: #7897ff;
+    --color-blue-soft: rgba(86, 124, 255, 0.15);
+    --color-green: #64d99a;
+    --color-green-soft: rgba(66, 196, 126, 0.14);
+    --color-amber: #f4bd61;
+    --color-amber-soft: rgba(235, 165, 54, 0.14);
+    --color-red: #ff8585;
+    --color-red-soft: rgba(255, 100, 100, 0.13);
+    --color-purple: #b296ff;
+    --color-purple-soft: rgba(151, 116, 255, 0.15);
+    --color-cyan: #65dcec;
+    --color-cyan-soft: rgba(63, 201, 221, 0.14);
+    --color-orange: #ffad6e;
+    --color-orange-soft: rgba(244, 137, 67, 0.15);
+    --button-primary-bg: #f4f7fb;
+    --button-primary-fg: #0a0d12;
+    --button-primary-hover: #ffffff;
+    --button-secondary-bg: rgba(255, 255, 255, 0.065);
+    --button-secondary-hover: rgba(255, 255, 255, 0.11);
+    --badge-neutral-bg: rgba(255, 255, 255, 0.07);
+    --badge-neutral-text: #b5bdc9;
+    --progress-track: rgba(255, 255, 255, 0.09);
+    --shadow-soft: 0 30px 100px rgba(0, 0, 0, 0.34);
+    min-height: 100vh;
+    color: var(--color-ink);
+    color-scheme: dark;
+    background:
+      radial-gradient(circle at 12% 0%, rgba(78, 111, 255, 0.16), transparent 28rem),
+      radial-gradient(circle at 88% 18%, rgba(134, 85, 255, 0.1), transparent 26rem),
+      radial-gradient(circle at 50% 100%, rgba(41, 180, 128, 0.07), transparent 32rem),
+      #07090e;
+  }
+
+  .workspace-theme input,
+  .workspace-theme select,
+  .workspace-theme textarea {
+    color: var(--color-ink);
+    border-color: var(--color-border) !important;
+    background: rgba(255, 255, 255, 0.055) !important;
+  }
+
+  .workspace-theme input::placeholder,
+  .workspace-theme textarea::placeholder {
+    color: #737d8c;
   }
 
   .eyebrow {

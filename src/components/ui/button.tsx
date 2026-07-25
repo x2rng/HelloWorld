@@ -18,9 +18,10 @@ export function Button({
       type={type}
       className={cx(
         "inline-flex items-center justify-center rounded-full font-medium outline-none ring-0 disabled:pointer-events-none disabled:opacity-45",
-        variant === "primary" && "bg-[var(--color-ink)] text-white hover:-translate-y-0.5 hover:bg-black",
+        variant === "primary" &&
+          "bg-[var(--button-primary-bg)] text-[var(--button-primary-fg)] hover:-translate-y-0.5 hover:bg-[var(--button-primary-hover)]",
         variant === "secondary" &&
-          "border border-[var(--color-border)] bg-white/80 text-[var(--color-ink)] hover:-translate-y-0.5 hover:bg-white",
+          "border border-[var(--color-border)] bg-[var(--button-secondary-bg)] text-[var(--color-ink)] hover:-translate-y-0.5 hover:bg-[var(--button-secondary-hover)]",
         variant === "ghost" &&
           "border border-transparent bg-transparent text-[var(--color-muted)] hover:text-[var(--color-ink)]",
         variant === "reward" &&

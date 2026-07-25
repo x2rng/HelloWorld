@@ -3,9 +3,10 @@ import { InviteEmployeeForm } from "@/components/admin/invite-employee-form";
 import { BadgePill } from "@/components/ui/badge-pill";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { requireRole } from "@/lib/exp-auth";
+import { requireAdminWorkspaceSetup } from "@/lib/admin-workspace";
 import { getAppUrl } from "@/lib/env";
 import type { InviteRecord, ProfileRecord } from "@/lib/exp-types";
+import { getRoleFocusLabel, normalizeRoleFocus } from "@/lib/skills";
 import { createClient } from "@/lib/supabase/server";
 
 type EmployeeAssignmentRow = {
@@ -22,11 +23,11 @@ type EmployeeAssignmentRow = {
 export const dynamic = "force-dynamic";
 
 export default async function AdminEmployeesPage() {
-  const { profile } = await requireRole("ADMIN");
+  const { profile } = await requireAdminWorkspaceSetup();
   const supabase = await createClient();
   const { data: employees, error: employeesError } = await supabase
     .from("profiles")
-    .select("id, workspace_id, role, full_name, email, created_at, updated_at")
+    .select("id, workspace_id, role, full_name, email, role_focus, assigned_skills, created_at, updated_at")
     .eq("workspace_id", profile.workspace_id)
     .eq("role", "EMPLOYEE")
     .order("created_at", { ascending: false })
@@ -49,7 +50,7 @@ export default async function AdminEmployeesPage() {
   const assignmentByEmployee = new Map(assignments.map((assignment) => [assignment.employee_id, assignment]));
   const { data: invites, error: invitesError } = await supabase
     .from("invites")
-    .select("id, workspace_id, email, role, token, status, invited_by, created_at, expires_at")
+    .select("id, workspace_id, email, role, token, status, invited_by, role_focus, assigned_skills, created_at, expires_at")
     .eq("workspace_id", profile.workspace_id)
     .eq("role", "EMPLOYEE")
     .order("created_at", { ascending: false })
@@ -102,10 +103,13 @@ export default async function AdminEmployeesPage() {
               </p>
             ) : (
               invites.map((invite) => (
-                <div key={invite.id} className="rounded-2xl border border-black/6 bg-white/70 p-4">
+                <div key={invite.id} className="rounded-2xl border border-white/8 bg-white/[0.035] p-4">
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                     <div>
                       <p className="font-medium">{invite.email}</p>
+                      <p className="mt-1 text-xs text-[var(--color-muted)]">
+                        {getRoleFocusLabel(normalizeRoleFocus(invite.role_focus))} · {Array.isArray(invite.assigned_skills) ? invite.assigned_skills.length : 0} skills
+                      </p>
                       <input
                         readOnly
                         value={`${getAppUrl()}/invite/${invite.token}`}
@@ -142,6 +146,9 @@ export default async function AdminEmployeesPage() {
                   <div>
                     <h3 className="text-2xl">{employee.full_name ?? employee.email}</h3>
                     <p className="mt-2 text-sm text-[var(--color-muted)]">{employee.email}</p>
+                    <p className="mt-1 text-xs font-medium text-[var(--color-blue)]">
+                      {getRoleFocusLabel(normalizeRoleFocus(employee.role_focus))}
+                    </p>
                   </div>
                   <BadgePill tone={assignment ? "green" : "neutral"}>
                     {assignment ? assignment.status : "Unassigned"}
@@ -149,7 +156,7 @@ export default async function AdminEmployeesPage() {
                 </div>
 
                 {assignment ? (
-                  <div className="mt-5 rounded-2xl border border-black/6 bg-white/70 p-4 text-sm">
+                  <div className="mt-5 rounded-2xl border border-white/8 bg-white/[0.035] p-4 text-sm">
                     <p className="font-medium">{assignment.track?.title ?? "Assigned track"}</p>
                     <p className="mt-2 text-[var(--color-muted)]">
                       {assignment.start_date} to {assignment.due_date}
