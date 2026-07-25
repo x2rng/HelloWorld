@@ -5,14 +5,11 @@ import {
   completePlayerSetup,
   type CompletePlayerSetupState,
 } from "@/app/employee/setup/actions";
+import { AvatarCreator } from "@/components/avatar-v3/avatar-creator";
 import { FullBodyAvatar } from "@/components/employee/full-body-avatar";
 import { BadgePill } from "@/components/ui/badge-pill";
 import { Button } from "@/components/ui/button";
-import {
-  avatarOptions,
-  defaultAvatarConfig,
-  type AvatarConfig,
-} from "@/lib/avatar-config";
+import type { AvatarConfig } from "@/lib/avatar-config";
 import {
   growthPriorityOptions,
   playerInterestOptions,
@@ -55,10 +52,6 @@ type PlayerSetupFlowProps = {
   editing?: boolean;
 };
 
-function pick<T>(values: readonly T[]) {
-  return values[Math.floor(Math.random() * values.length)];
-}
-
 function SelectionButton({
   label,
   selected,
@@ -86,49 +79,6 @@ function SelectionButton({
     >
       {label}
     </button>
-  );
-}
-
-function ColorChoices({
-  label,
-  options,
-  value,
-  onChange,
-}: {
-  label: string;
-  options: ReadonlyArray<{ label: string; value: string }>;
-  value: string;
-  onChange: (value: string) => void;
-}) {
-  return (
-    <div>
-      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/42">
-        {label}
-      </p>
-      <div className="mt-3 flex flex-wrap gap-2">
-        {options.map((option) => (
-          <button
-            key={option.value}
-            type="button"
-            aria-label={`${label}: ${option.label}`}
-            aria-pressed={value === option.value}
-            onClick={() => onChange(option.value)}
-            className={cx(
-              "flex items-center gap-2 rounded-full border py-2 pl-2 pr-3 text-xs transition",
-              value === option.value
-                ? "border-white/40 bg-white/12 text-white"
-                : "border-white/8 bg-white/[0.025] text-white/52 hover:text-white/80",
-            )}
-          >
-            <span
-              className="size-6 rounded-full border border-white/15"
-              style={{ backgroundColor: option.value }}
-            />
-            {option.label}
-          </button>
-        ))}
-      </div>
-    </div>
   );
 }
 
@@ -199,17 +149,6 @@ export function PlayerSetupFlow({
     );
   }
 
-  function randomizeAvatar() {
-    setAvatarConfig({
-      skinTone: pick(avatarOptions.skinTones).value,
-      hairStyle: pick(avatarOptions.hairStyles).value,
-      hairColor: pick(avatarOptions.hairColors).value,
-      topColor: pick(avatarOptions.topColors).value,
-      bottomColor: pick(avatarOptions.bottomColors).value,
-      glasses: Math.random() > 0.6,
-    });
-  }
-
   const canContinue =
     step !== 1 ||
     hasCompanyAssignedIdentity ||
@@ -224,12 +163,11 @@ export function PlayerSetupFlow({
         name="growth_priorities"
         value={JSON.stringify(priorities)}
       />
-      <input type="hidden" name="skinTone" value={avatarConfig.skinTone} />
-      <input type="hidden" name="hairStyle" value={avatarConfig.hairStyle} />
-      <input type="hidden" name="hairColor" value={avatarConfig.hairColor} />
-      <input type="hidden" name="topColor" value={avatarConfig.topColor} />
-      <input type="hidden" name="bottomColor" value={avatarConfig.bottomColor} />
-      <input type="hidden" name="glasses" value={String(avatarConfig.glasses)} />
+      <input
+        type="hidden"
+        name="avatar_config"
+        value={JSON.stringify(avatarConfig)}
+      />
 
       <header className="border-b border-white/8 px-4 py-4 sm:px-8">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
@@ -458,103 +396,18 @@ export function PlayerSetupFlow({
           ) : null}
 
           {step === 4 ? (
-            <section className="grid gap-5 lg:grid-cols-[0.85fr_1.15fr]">
-              <div className="relative flex min-h-[34rem] items-end justify-center overflow-hidden rounded-[36px] border border-white/9 bg-gradient-to-br from-blue-500/10 via-white/[0.035] to-purple-500/8 p-6">
-                <div className="absolute left-6 top-6">
-                  <p className="eyebrow">Live player preview</p>
-                  <h1 className="mt-2 text-3xl">Create your player.</h1>
-                </div>
-                <div className="absolute bottom-10 size-64 rounded-full bg-blue-400/15 blur-3xl" />
-                <FullBodyAvatar
-                  config={avatarConfig}
-                  className="relative translate-y-5 scale-110 sm:scale-125"
-                />
+            <section>
+              <div className="mb-5">
+                <p className="eyebrow">Create your player</p>
+                <h1 className="mt-2 text-4xl sm:text-5xl">
+                  Make your identity feel personal.
+                </h1>
               </div>
-              <div className="space-y-7 rounded-[36px] border border-white/9 bg-[#0d1119] p-6 sm:p-8">
-                <div className="flex flex-wrap gap-2">
-                  <Button type="button" variant="secondary" onClick={randomizeAvatar}>
-                    Randomize
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    onClick={() => setAvatarConfig(defaultAvatarConfig)}
-                  >
-                    Reset
-                  </Button>
-                </div>
-                <ColorChoices
-                  label="Skin tone"
-                  options={avatarOptions.skinTones}
-                  value={avatarConfig.skinTone}
-                  onChange={(skinTone) =>
-                    setAvatarConfig((current) => ({ ...current, skinTone }))
-                  }
-                />
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/42">
-                    Hairstyle
-                  </p>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {avatarOptions.hairStyles.map((option) => (
-                      <SelectionButton
-                        key={option.value}
-                        label={option.label}
-                        selected={avatarConfig.hairStyle === option.value}
-                        onClick={() =>
-                          setAvatarConfig((current) => ({
-                            ...current,
-                            hairStyle: option.value,
-                          }))
-                        }
-                      />
-                    ))}
-                  </div>
-                </div>
-                <ColorChoices
-                  label="Hair color"
-                  options={avatarOptions.hairColors}
-                  value={avatarConfig.hairColor}
-                  onChange={(hairColor) =>
-                    setAvatarConfig((current) => ({ ...current, hairColor }))
-                  }
-                />
-                <ColorChoices
-                  label="Top color"
-                  options={avatarOptions.topColors}
-                  value={avatarConfig.topColor}
-                  onChange={(topColor) =>
-                    setAvatarConfig((current) => ({ ...current, topColor }))
-                  }
-                />
-                <ColorChoices
-                  label="Bottom color"
-                  options={avatarOptions.bottomColors}
-                  value={avatarConfig.bottomColor}
-                  onChange={(bottomColor) =>
-                    setAvatarConfig((current) => ({ ...current, bottomColor }))
-                  }
-                />
-                <button
-                  type="button"
-                  aria-pressed={avatarConfig.glasses}
-                  onClick={() =>
-                    setAvatarConfig((current) => ({
-                      ...current,
-                      glasses: !current.glasses,
-                    }))
-                  }
-                  className={cx(
-                    "flex w-full items-center justify-between rounded-2xl border px-4 py-3 text-sm font-medium",
-                    avatarConfig.glasses
-                      ? "border-blue-300/35 bg-blue-400/12"
-                      : "border-white/9 bg-white/[0.035]",
-                  )}
-                >
-                  Glasses
-                  <span>{avatarConfig.glasses ? "On" : "Off"}</span>
-                </button>
-              </div>
+              <AvatarCreator
+                config={avatarConfig}
+                onChange={setAvatarConfig}
+                setupMode
+              />
             </section>
           ) : null}
 
@@ -636,7 +489,7 @@ export function PlayerSetupFlow({
           </p>
         ) : null}
 
-        <footer className="mt-6 flex items-center justify-between gap-3">
+        <footer className="sticky bottom-3 z-30 mt-6 flex items-center justify-between gap-3 rounded-[24px] border border-white/9 bg-[#0d1119]/94 p-3 shadow-[0_24px_70px_rgba(0,0,0,0.42)] backdrop-blur-xl">
           <Button
             type="button"
             variant="ghost"

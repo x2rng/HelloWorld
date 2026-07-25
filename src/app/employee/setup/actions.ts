@@ -2,7 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { avatarOptions, normalizeAvatarConfig } from "@/lib/avatar-config";
+import {
+  isCompleteAvatarConfig,
+  normalizeAvatarConfig,
+} from "@/lib/avatar-config";
 import { requireRole } from "@/lib/exp-auth";
 import {
   growthPriorityOptions,
@@ -36,9 +39,15 @@ function parseArray(formData: FormData, key: string) {
   }
 }
 
-function requiredOption(formData: FormData, key: string) {
+function parseObject(formData: FormData, key: string) {
   const value = formData.get(key);
-  return typeof value === "string" ? value : "";
+  if (typeof value !== "string") return null;
+
+  try {
+    return JSON.parse(value) as unknown;
+  } catch {
+    return null;
+  }
 }
 
 export async function completePlayerSetup(
@@ -72,25 +81,12 @@ export async function completePlayerSetup(
       priority as (typeof growthPriorityOptions)[number],
     ),
   );
-  const avatarConfig = normalizeAvatarConfig({
-    skinTone: requiredOption(formData, "skinTone"),
-    hairStyle: requiredOption(formData, "hairStyle"),
-    hairColor: requiredOption(formData, "hairColor"),
-    topColor: requiredOption(formData, "topColor"),
-    bottomColor: requiredOption(formData, "bottomColor"),
-    glasses: formData.get("glasses") === "true",
-  });
-  const hasValidAvatar =
-    avatarOptions.skinTones.some(
-      (option) => option.value === avatarConfig.skinTone,
-    ) &&
-    avatarOptions.hairStyles.some(
-      (option) => option.value === avatarConfig.hairStyle,
-    );
+  const avatarInput = parseObject(formData, "avatar_config");
 
-  if (!hasValidAvatar) {
+  if (!isCompleteAvatarConfig(avatarInput)) {
     return { ok: false, message: "Choose a valid player appearance." };
   }
+  const avatarConfig = normalizeAvatarConfig(avatarInput);
 
   const update: Record<string, unknown> = {
     interests,

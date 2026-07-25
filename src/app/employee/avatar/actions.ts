@@ -3,7 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireRole } from "@/lib/exp-auth";
-import { avatarOptions, normalizeAvatarConfig } from "@/lib/avatar-config";
+import {
+  isCompleteAvatarConfig,
+  normalizeAvatarConfig,
+} from "@/lib/avatar-config";
 import { createClient } from "@/lib/supabase/server";
 
 export type SaveAvatarState = {
@@ -11,9 +14,15 @@ export type SaveAvatarState = {
   ok: boolean;
 };
 
-function requiredOption(formData: FormData, key: string) {
-  const value = formData.get(key);
-  return typeof value === "string" ? value : "";
+function parseAvatarConfig(formData: FormData) {
+  const value = formData.get("avatar_config");
+  if (typeof value !== "string") return null;
+
+  try {
+    return JSON.parse(value) as unknown;
+  } catch {
+    return null;
+  }
 }
 
 export async function saveAvatarConfig(
@@ -22,25 +31,15 @@ export async function saveAvatarConfig(
 ): Promise<SaveAvatarState> {
   const { profile } = await requireRole("EMPLOYEE");
   const supabase = await createClient();
-  const avatarConfig = normalizeAvatarConfig({
-    skinTone: requiredOption(formData, "skinTone"),
-    hairStyle: requiredOption(formData, "hairStyle"),
-    hairColor: requiredOption(formData, "hairColor"),
-    topColor: requiredOption(formData, "topColor"),
-    bottomColor: requiredOption(formData, "bottomColor"),
-    glasses: formData.get("glasses") === "on",
-  });
+  const input = parseAvatarConfig(formData);
 
-  const hasValidSelection =
-    avatarOptions.skinTones.some((option) => option.value === avatarConfig.skinTone) &&
-    avatarOptions.hairStyles.some((option) => option.value === avatarConfig.hairStyle);
-
-  if (!hasValidSelection) {
+  if (!isCompleteAvatarConfig(input)) {
     return {
       ok: false,
-      message: "Please choose a valid avatar setup.",
+      message: "Your avatar contains an invalid selection. Review it and try again.",
     };
   }
+  const avatarConfig = normalizeAvatarConfig(input);
 
   const { error } = await supabase
     .from("profiles")
@@ -57,6 +56,8 @@ export async function saveAvatarConfig(
   revalidatePath("/employee");
   revalidatePath("/employee/avatar");
   revalidatePath("/employee/onboarding");
+  revalidatePath("/employee/player");
+  revalidatePath("/employee/skills");
 
-  redirect("/employee");
+  redirect("/employee/player");
 }
