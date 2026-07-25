@@ -19,9 +19,11 @@ function isInvalidAuthSessionError(error: {
 
   return (
     error.name === "AuthSessionMissingError" ||
+    error.code === "bad_jwt" ||
     error.code === "refresh_token_not_found" ||
     error.code === "refresh_token_already_used" ||
     message.includes("auth session missing") ||
+    message.includes("invalid jwt") ||
     message.includes("invalid refresh token") ||
     message.includes("refresh token not found")
   );
