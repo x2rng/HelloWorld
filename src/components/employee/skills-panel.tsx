@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useState } from "react";
 import { FullBodyAvatar } from "@/components/employee/full-body-avatar";
-import type { AvatarConfig } from "@/lib/avatar-config";
+import type { StoredAvatarConfig } from "@/components/avatar-3d/config/avatar-v4-parser";
 import type { AvatarStage } from "@/lib/avatar-stage";
 import type { DerivedSkillGroup, RoleFocus, SkillIcon } from "@/lib/skills";
 import { getRoleFocusLabel } from "@/lib/skills";
@@ -18,7 +18,7 @@ type OverallProgress = {
 type SkillsPanelProps = {
   employeeName: string;
   roleFocus: RoleFocus;
-  avatarConfig: AvatarConfig;
+  avatarConfig: StoredAvatarConfig;
   stage: AvatarStage;
   nextStage: AvatarStage | null;
   overall: OverallProgress;

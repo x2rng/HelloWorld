@@ -1,10 +1,10 @@
 import Link from "next/link";
+import { createAvatarV4FromStored } from "@/components/avatar-3d/config/avatar-v4-parser";
+import { ProceduralAvatarPresentation } from "@/components/avatar-3d/procedural-avatar-presentation";
 import { AchievementList } from "@/components/employee/achievement-list";
-import { FullBodyAvatar } from "@/components/employee/full-body-avatar";
 import { BadgePill } from "@/components/ui/badge-pill";
 import { Card } from "@/components/ui/card";
 import { ProgressBar } from "@/components/ui/progress-bar";
-import { normalizeAvatarConfig } from "@/lib/avatar-config";
 import { getAvatarStage, getNextAvatarStage } from "@/lib/avatar-stage";
 import { requireRole } from "@/lib/exp-auth";
 import type {
@@ -82,7 +82,9 @@ export default async function EmployeePlayerPage() {
     assignedSkills.length > 0
       ? assignedSkills
       : getRoleTemplateSkills(roleFocus);
-  const avatarConfig = normalizeAvatarConfig(playerResult.data?.avatar_config);
+  const avatarConfig = createAvatarV4FromStored(
+    playerResult.data?.avatar_config,
+  );
   const overall = getLevelInfo(statsResult.data?.total_xp ?? 0);
   const stage = getAvatarStage(overall.level);
   const nextStage = getNextAvatarStage(overall.level);
@@ -101,7 +103,10 @@ export default async function EmployeePlayerPage() {
               <BadgePill tone="purple">Player</BadgePill>
             </div>
             <div className="absolute bottom-8 size-56 rounded-full bg-blue-500/15 blur-3xl" />
-            <FullBodyAvatar config={avatarConfig} className="relative translate-y-7" />
+            <ProceduralAvatarPresentation
+              config={avatarConfig}
+              className="h-full min-h-[28rem] w-full rounded-none border-0"
+            />
           </div>
 
           <div className="flex flex-col justify-between p-7 sm:p-10">

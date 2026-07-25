@@ -1,7 +1,7 @@
 import { AvatarEditorForm } from "@/components/employee/avatar-editor-form";
 import { Card } from "@/components/ui/card";
+import { createAvatarV4FromStored } from "@/components/avatar-3d/config/avatar-v4-parser";
 import { requireRole } from "@/lib/exp-auth";
-import { normalizeAvatarConfig } from "@/lib/avatar-config";
 import { createClient } from "@/lib/supabase/server";
 
 type ProfileAvatarRow = {
@@ -34,7 +34,9 @@ export default async function EmployeeAvatarPage() {
         </p>
       </Card>
 
-      <AvatarEditorForm initialConfig={normalizeAvatarConfig(data?.avatar_config)} />
+      <AvatarEditorForm
+        initialConfig={createAvatarV4FromStored(data?.avatar_config)}
+      />
     </div>
   );
 }

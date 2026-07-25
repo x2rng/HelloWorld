@@ -1,0 +1,31 @@
+import { avatarV4Catalogue } from "@/components/avatar-3d/config/avatar-v4-catalogue";
+import type { AvatarV4Config } from "@/components/avatar-3d/config/avatar-v4-types";
+
+export const defaultAvatarV4Config: AvatarV4Config = {
+  version: 4,
+  renderer: "procedural-3d",
+  facePresetId: "balanced-oval",
+  jawPresetId: "balanced",
+  eyeShapeId: "almond",
+  eyeColour: avatarV4Catalogue.eyeColours[0].value,
+  eyebrowStyleId: "natural",
+  nosePresetId: "soft",
+  mouthPresetId: "soft-smile",
+  earPresetId: "classic",
+  skinTone: avatarV4Catalogue.skinTones[1].value,
+  hairStyleId: "textured-crop",
+  hairColour: avatarV4Catalogue.hairColours[1].value,
+  facialHairStyleId: "none",
+  facialHairColour: avatarV4Catalogue.hairColours[1].value,
+  topStyleId: "crew-sweater",
+  topColour: avatarV4Catalogue.clothingColours[1].value,
+  outerwearStyleId: "none",
+  outerwearColour: avatarV4Catalogue.clothingColours[0].value,
+  bottomStyleId: "straight-trousers",
+  bottomColour: avatarV4Catalogue.bottomColours[0].value,
+  shoeStyleId: "casual-shoes",
+  shoeColour: avatarV4Catalogue.shoeColours[0].value,
+  glassesStyleId: "none",
+  accessoryIds: [],
+  expressionId: "warm",
+};

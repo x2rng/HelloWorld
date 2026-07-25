@@ -1,8 +1,11 @@
 import { AvatarRenderer } from "@/components/avatar-v3/avatar-renderer";
-import type { AvatarConfig } from "@/lib/avatar-config";
+import {
+  avatarV4ToV3,
+  type StoredAvatarConfig,
+} from "@/components/avatar-3d/config/avatar-v4-parser";
 
 type FullBodyAvatarProps = {
-  config?: AvatarConfig | null;
+  config?: StoredAvatarConfig | null;
   className?: string;
   compact?: boolean;
   large?: boolean;
@@ -16,9 +19,12 @@ export function FullBodyAvatar({
   large = false,
   showStage = false,
 }: FullBodyAvatarProps) {
+  const legacyConfig =
+    config?.version === 4 ? avatarV4ToV3(config) : config;
+
   return (
     <AvatarRenderer
-      config={config}
+      config={legacyConfig}
       className={className}
       size={compact ? "compact" : large ? "large" : "standard"}
       showStage={showStage}

@@ -1,5 +1,5 @@
-import type { AvatarConfig } from "@/lib/avatar-config";
-import { normalizeAvatarConfig } from "@/lib/avatar-config";
+import { createAvatarV4FromStored } from "@/components/avatar-3d/config/avatar-v4-parser";
+import type { AvatarV4Config } from "@/components/avatar-3d/config/avatar-v4-types";
 import {
   getRoleTemplateSkills,
   isRoleFocus,
@@ -60,7 +60,7 @@ export type PlayerSetupProfile = {
   hasCompanyAssignedIdentity: boolean;
   interests: string[];
   growthPriorities: string[];
-  avatarConfig: AvatarConfig;
+  avatarConfig: AvatarV4Config;
 };
 
 export function normalizePlayerSetupProfile(value: {
@@ -84,6 +84,6 @@ export function normalizePlayerSetupProfile(value: {
     hasCompanyAssignedIdentity,
     interests: normalizePlayerSelections(value.interests, 20),
     growthPriorities: normalizePlayerSelections(value.growth_priorities, 5),
-    avatarConfig: normalizeAvatarConfig(value.avatar_config),
+    avatarConfig: createAvatarV4FromStored(value.avatar_config),
   };
 }

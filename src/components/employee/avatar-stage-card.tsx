@@ -3,7 +3,7 @@ import { FullBodyAvatar } from "@/components/employee/full-body-avatar";
 import { BadgePill } from "@/components/ui/badge-pill";
 import { Button } from "@/components/ui/button";
 import { ProgressBar } from "@/components/ui/progress-bar";
-import type { AvatarConfig } from "@/lib/avatar-config";
+import type { StoredAvatarConfig } from "@/components/avatar-3d/config/avatar-v4-parser";
 import { getAvatarStage, getNextAvatarStage } from "@/lib/avatar-stage";
 import { cx } from "@/lib/utils";
 
@@ -12,7 +12,7 @@ type AvatarStageCardProps = {
   progress: number;
   totalXp: number;
   xpToNextLevel: number;
-  avatarConfig?: AvatarConfig | null;
+  avatarConfig?: StoredAvatarConfig | null;
   className?: string;
   compact?: boolean;
   showEditAction?: boolean;

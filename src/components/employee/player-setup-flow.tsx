@@ -5,11 +5,11 @@ import {
   completePlayerSetup,
   type CompletePlayerSetupState,
 } from "@/app/employee/setup/actions";
-import { AvatarCreator } from "@/components/avatar-v3/avatar-creator";
+import { ProceduralAvatarCreator } from "@/components/avatar-3d/procedural-avatar-creator";
 import { FullBodyAvatar } from "@/components/employee/full-body-avatar";
 import { BadgePill } from "@/components/ui/badge-pill";
 import { Button } from "@/components/ui/button";
-import type { AvatarConfig } from "@/lib/avatar-config";
+import type { AvatarV4Config } from "@/components/avatar-3d/config/avatar-v4-types";
 import {
   growthPriorityOptions,
   playerInterestOptions,
@@ -44,7 +44,7 @@ type PlayerSetupFlowProps = {
   hasCompanyAssignedIdentity: boolean;
   initialInterests: string[];
   initialGrowthPriorities: string[];
-  initialAvatarConfig: AvatarConfig;
+  initialAvatarConfig: AvatarV4Config;
   assignmentTitle: string | null;
   startingLevel: number;
   avatarStage: string;
@@ -403,7 +403,7 @@ export function PlayerSetupFlow({
                   Make your identity feel personal.
                 </h1>
               </div>
-              <AvatarCreator
+              <ProceduralAvatarCreator
                 config={avatarConfig}
                 onChange={setAvatarConfig}
                 setupMode

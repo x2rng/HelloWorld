@@ -4,9 +4,9 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireRole } from "@/lib/exp-auth";
 import {
-  isCompleteAvatarConfig,
-  normalizeAvatarConfig,
-} from "@/lib/avatar-config";
+  isCompleteStoredAvatarConfig,
+  normalizeStoredAvatarConfig,
+} from "@/components/avatar-3d/config/avatar-v4-parser";
 import { createClient } from "@/lib/supabase/server";
 
 export type SaveAvatarState = {
@@ -33,13 +33,13 @@ export async function saveAvatarConfig(
   const supabase = await createClient();
   const input = parseAvatarConfig(formData);
 
-  if (!isCompleteAvatarConfig(input)) {
+  if (!isCompleteStoredAvatarConfig(input)) {
     return {
       ok: false,
       message: "Your avatar contains an invalid selection. Review it and try again.",
     };
   }
-  const avatarConfig = normalizeAvatarConfig(input);
+  const avatarConfig = normalizeStoredAvatarConfig(input);
 
   const { error } = await supabase
     .from("profiles")

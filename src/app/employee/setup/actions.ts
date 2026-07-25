@@ -3,9 +3,9 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import {
-  isCompleteAvatarConfig,
-  normalizeAvatarConfig,
-} from "@/lib/avatar-config";
+  isCompleteStoredAvatarConfig,
+  normalizeStoredAvatarConfig,
+} from "@/components/avatar-3d/config/avatar-v4-parser";
 import { requireRole } from "@/lib/exp-auth";
 import {
   growthPriorityOptions,
@@ -83,10 +83,10 @@ export async function completePlayerSetup(
   );
   const avatarInput = parseObject(formData, "avatar_config");
 
-  if (!isCompleteAvatarConfig(avatarInput)) {
+  if (!isCompleteStoredAvatarConfig(avatarInput)) {
     return { ok: false, message: "Choose a valid player appearance." };
   }
-  const avatarConfig = normalizeAvatarConfig(avatarInput);
+  const avatarConfig = normalizeStoredAvatarConfig(avatarInput);
 
   const update: Record<string, unknown> = {
     interests,

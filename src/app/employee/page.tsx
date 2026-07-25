@@ -6,7 +6,7 @@ import { SkillsPanel } from "@/components/employee/skills-panel";
 import { BadgePill } from "@/components/ui/badge-pill";
 import { Card } from "@/components/ui/card";
 import { ProgressBar } from "@/components/ui/progress-bar";
-import { normalizeAvatarConfig } from "@/lib/avatar-config";
+import { normalizeStoredAvatarConfig } from "@/components/avatar-3d/config/avatar-v4-parser";
 import { getAvatarStage, getNextAvatarStage } from "@/lib/avatar-stage";
 import {
   buildJourneyMilestones,
@@ -229,7 +229,9 @@ export default async function EmployeePage() {
   const nextStage = getNextAvatarStage(level.level);
   const growthAreaProgress = getJourneyGrowthAreaProgress(journeyMilestones);
   const hasAvatarConfig = avatarResult.data?.avatar_config != null;
-  const avatarConfig = normalizeAvatarConfig(avatarResult.data?.avatar_config);
+  const avatarConfig = normalizeStoredAvatarConfig(
+    avatarResult.data?.avatar_config,
+  );
   const firstName = (profile.full_name ?? profile.email).split(" ")[0];
   const roleFocus = normalizeRoleFocus(avatarResult.data?.role_focus);
   const assignedSkills = normalizeAssignedSkills(avatarResult.data?.assigned_skills);

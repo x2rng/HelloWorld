@@ -6,9 +6,9 @@ import {
   saveAvatarConfig,
   type SaveAvatarState,
 } from "@/app/employee/avatar/actions";
-import { AvatarCreator } from "@/components/avatar-v3/avatar-creator";
+import { ProceduralAvatarCreator } from "@/components/avatar-3d/procedural-avatar-creator";
+import type { AvatarV4Config } from "@/components/avatar-3d/config/avatar-v4-types";
 import { Button } from "@/components/ui/button";
-import type { AvatarConfig } from "@/lib/avatar-config";
 
 const initialState: SaveAvatarState = {
   ok: false,
@@ -16,7 +16,7 @@ const initialState: SaveAvatarState = {
 };
 
 type AvatarEditorFormProps = {
-  initialConfig: AvatarConfig;
+  initialConfig: AvatarV4Config;
 };
 
 export function AvatarEditorForm({ initialConfig }: AvatarEditorFormProps) {
@@ -24,7 +24,7 @@ export function AvatarEditorForm({ initialConfig }: AvatarEditorFormProps) {
     saveAvatarConfig,
     initialState,
   );
-  const [config, setConfig] = useState<AvatarConfig>(initialConfig);
+  const [config, setConfig] = useState<AvatarV4Config>(initialConfig);
 
   return (
     <form action={formAction} className="space-y-5">
@@ -33,7 +33,7 @@ export function AvatarEditorForm({ initialConfig }: AvatarEditorFormProps) {
         name="avatar_config"
         value={JSON.stringify(config)}
       />
-      <AvatarCreator config={config} onChange={setConfig} />
+      <ProceduralAvatarCreator config={config} onChange={setConfig} />
 
       {state.message ? (
         <p

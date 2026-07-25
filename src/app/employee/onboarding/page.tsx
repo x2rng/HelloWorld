@@ -7,7 +7,7 @@ import { BadgePill } from "@/components/ui/badge-pill";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ProgressBar } from "@/components/ui/progress-bar";
-import { normalizeAvatarConfig } from "@/lib/avatar-config";
+import { normalizeStoredAvatarConfig } from "@/components/avatar-3d/config/avatar-v4-parser";
 import { getAvatarStage, getNextAvatarStage } from "@/lib/avatar-stage";
 import {
   buildJourneyMilestones,
@@ -164,7 +164,9 @@ export default async function EmployeeOnboardingPage({
         <SkillsPanel
           employeeName={profile.full_name ?? profile.email}
           roleFocus={emptyRoleFocus}
-          avatarConfig={normalizeAvatarConfig(emptyAvatarResult.data?.avatar_config)}
+          avatarConfig={normalizeStoredAvatarConfig(
+            emptyAvatarResult.data?.avatar_config,
+          )}
           stage={emptyStage}
           nextStage={getNextAvatarStage(emptyLevel.level)}
           overall={emptyLevel}
@@ -281,7 +283,9 @@ export default async function EmployeeOnboardingPage({
   const level = getLevelInfo(statsResult.data?.total_xp ?? 0);
   const stage = getAvatarStage(level.level);
   const nextStage = getNextAvatarStage(level.level);
-  const avatarConfig = normalizeAvatarConfig(avatarResult.data?.avatar_config);
+  const avatarConfig = normalizeStoredAvatarConfig(
+    avatarResult.data?.avatar_config,
+  );
   const roleFocus = normalizeRoleFocus(avatarResult.data?.role_focus);
   const assignedSkills = normalizeAssignedSkills(avatarResult.data?.assigned_skills);
   const skillGroups = deriveSkillGroups(journeyMilestones, roleFocus, assignedSkills);
