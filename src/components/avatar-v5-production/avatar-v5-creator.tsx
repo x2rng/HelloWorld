@@ -6,10 +6,17 @@ import { AvatarWebGLBoundary } from "@/components/avatar-3d/avatar-webgl-boundar
 import { ProceduralAvatarCreator } from "@/components/avatar-3d/procedural-avatar-creator";
 import type { AvatarV4Config } from "@/components/avatar-3d/config/avatar-v4-types";
 import {
+  avatarV5Accessories,
+  avatarV5BodyPresets,
   avatarV5BottomStyles,
   avatarV5ColourVariants,
+  avatarV5EarPresets,
   avatarV5EyeColours,
+  avatarV5EyeShapes,
+  avatarV5FacePresets,
   avatarV5FacialHairStyles,
+  avatarV5Frames,
+  avatarV5GlassesStyles,
   avatarV5HairColours,
   avatarV5HairStyles,
   avatarV5ShoeStyles,
@@ -33,7 +40,7 @@ const AvatarV5Studio = dynamic(
       <div className="flex h-[34rem] items-center justify-center rounded-[32px] border border-white/10 bg-[#0b1018]">
         <div className="text-center">
           <div className="mx-auto size-10 animate-pulse rounded-full border border-blue-300/25 bg-blue-400/12" />
-          <p className="mt-4 text-sm text-white/48">Preparing the V5 studio…</p>
+          <p className="mt-4 text-sm text-white/48">Preparing your avatar studio...</p>
         </div>
       </div>
     ),
@@ -41,16 +48,15 @@ const AvatarV5Studio = dynamic(
 );
 
 const categories = [
-  { value: "skin", label: "Skin" },
-  { value: "eyes", label: "Eyes" },
+  { value: "body", label: "Body" },
+  { value: "face", label: "Face" },
   { value: "hair", label: "Hair" },
-  { value: "facial-hair", label: "Facial hair" },
   { value: "tops", label: "Tops" },
   { value: "bottoms", label: "Bottoms" },
   { value: "shoes", label: "Shoes" },
+  { value: "accessories", label: "Accessories" },
   { value: "colours", label: "Colours" },
 ] as const;
-
 type Category = (typeof categories)[number]["value"];
 
 export type AvatarV5CreatorProps = {
@@ -76,9 +82,7 @@ function StyleOptions<T extends string>({
 }) {
   return (
     <fieldset>
-      <legend className="text-xs font-semibold uppercase tracking-[0.15em] text-white/42">
-        {label}
-      </legend>
+      <legend className="text-xs font-semibold uppercase tracking-[0.15em] text-white/42">{label}</legend>
       <div className="mt-3 grid grid-cols-2 gap-2">
         {options.map((option, index) => {
           const selected = option.value === value;
@@ -89,7 +93,7 @@ function StyleOptions<T extends string>({
               aria-pressed={selected}
               onClick={() => onChange(option.value)}
               className={cx(
-                "relative min-h-28 rounded-[20px] border p-4 text-left outline-none transition focus-visible:ring-2 focus-visible:ring-blue-300",
+                "relative min-h-20 rounded-[18px] border p-3 text-left outline-none transition focus-visible:ring-2 focus-visible:ring-blue-300",
                 selected
                   ? "border-blue-300/45 bg-blue-400/13 text-white"
                   : "border-white/8 bg-white/[0.028] text-white/58 hover:border-white/18 hover:text-white/84",
@@ -97,22 +101,18 @@ function StyleOptions<T extends string>({
             >
               <span
                 className={cx(
-                  "mb-3 block h-10 rounded-xl border border-white/8",
+                  "mb-2 block h-5 rounded-lg border border-white/8",
                   index % 2 === 0
-                    ? "bg-gradient-to-br from-white/16 to-white/[0.025]"
-                    : "bg-gradient-to-br from-blue-300/15 to-purple-300/[0.04]",
+                    ? "bg-gradient-to-r from-white/16 to-white/[0.025]"
+                    : "bg-gradient-to-r from-blue-300/15 to-purple-300/[0.04]",
                 )}
               />
               <span className="block text-sm font-semibold">{option.label}</span>
               {option.description ? (
-                <span className="mt-1.5 block text-[11px] leading-4 text-white/38">
-                  {option.description}
-                </span>
+                <span className="mt-1 block text-[11px] leading-4 text-white/38">{option.description}</span>
               ) : null}
               {selected ? (
-                <span className="absolute right-3 top-3 flex size-5 items-center justify-center rounded-full bg-blue-400 text-[10px] font-bold">
-                  ✓
-                </span>
+                <span className="absolute right-2.5 top-2.5 flex size-5 items-center justify-center rounded-full bg-blue-400 text-[10px] font-bold">✓</span>
               ) : null}
             </button>
           );
@@ -135,9 +135,7 @@ function Swatches<T extends string>({
 }) {
   return (
     <fieldset>
-      <legend className="text-xs font-semibold uppercase tracking-[0.15em] text-white/42">
-        {label}
-      </legend>
+      <legend className="text-xs font-semibold uppercase tracking-[0.15em] text-white/42">{label}</legend>
       <div className="mt-3 flex flex-wrap gap-2">
         {options.map((option) => {
           const selected = option.value === value;
@@ -150,10 +148,8 @@ function Swatches<T extends string>({
               aria-pressed={selected}
               onClick={() => onChange(option.value)}
               className={cx(
-                "relative size-12 rounded-full border p-1 outline-none transition focus-visible:ring-2 focus-visible:ring-blue-300",
-                selected
-                  ? "scale-105 border-white/75 bg-white/10"
-                  : "border-white/12 hover:scale-105 hover:border-white/35",
+                "relative size-11 rounded-full border p-1 outline-none transition focus-visible:ring-2 focus-visible:ring-blue-300",
+                selected ? "scale-105 border-white/75 bg-white/10" : "border-white/12 hover:scale-105 hover:border-white/35",
               )}
             >
               <span
@@ -161,10 +157,53 @@ function Swatches<T extends string>({
                 style={{ backgroundColor: option.colour }}
               />
               {selected ? (
-                <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-blue-400 text-[10px] font-bold">
-                  ✓
-                </span>
+                <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-blue-400 text-[10px] font-bold">✓</span>
               ) : null}
+            </button>
+          );
+        })}
+      </div>
+    </fieldset>
+  );
+}
+
+function ToggleOptions<T extends string>({
+  label,
+  options,
+  values,
+  onChange,
+}: {
+  label: string;
+  options: ReadonlyArray<AvatarV5Option<T>>;
+  values: T[];
+  onChange: (values: T[]) => void;
+}) {
+  return (
+    <fieldset>
+      <legend className="text-xs font-semibold uppercase tracking-[0.15em] text-white/42">{label}</legend>
+      <div className="mt-3 grid grid-cols-2 gap-2">
+        {options.map((option) => {
+          const selected = values.includes(option.value);
+          return (
+            <button
+              key={option.value}
+              type="button"
+              aria-pressed={selected}
+              onClick={() =>
+                onChange(
+                  selected
+                    ? values.filter((item) => item !== option.value)
+                    : [...values, option.value],
+                )
+              }
+              className={cx(
+                "rounded-2xl border px-4 py-3 text-left text-sm font-semibold transition",
+                selected
+                  ? "border-blue-300/40 bg-blue-400/14 text-white"
+                  : "border-white/8 bg-white/[0.028] text-white/55 hover:text-white",
+              )}
+            >
+              {option.label}
             </button>
           );
         })}
@@ -178,27 +217,17 @@ function FallbackEditor({
   onFallbackChange,
   retry,
   setupMode,
-}: Pick<
-  AvatarV5CreatorProps,
-  "fallbackConfig" | "onFallbackChange" | "setupMode"
-> & { retry?: () => void }) {
+}: Pick<AvatarV5CreatorProps, "fallbackConfig" | "onFallbackChange" | "setupMode"> & {
+  retry?: () => void;
+}) {
   return (
     <div className="space-y-4">
       <div className="flex flex-col gap-3 rounded-[24px] border border-amber-300/18 bg-amber-300/[0.07] p-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-sm font-semibold text-amber-100">
-            The imported 3D studio is unavailable on this device.
-          </p>
-          <p className="mt-1 text-xs leading-5 text-amber-100/60">
-            The reliable existing creator remains available, so setup is never
-            blocked.
-          </p>
+          <p className="text-sm font-semibold text-amber-100">The 3D studio is unavailable on this device.</p>
+          <p className="mt-1 text-xs leading-5 text-amber-100/60">The lightweight creator remains available, so setup is never blocked.</p>
         </div>
-        {retry ? (
-          <Button type="button" variant="secondary" onClick={retry}>
-            Retry 3D
-          </Button>
-        ) : null}
+        {retry ? <Button type="button" variant="secondary" onClick={retry}>Retry 3D</Button> : null}
       </div>
       <ProceduralAvatarCreator
         config={fallbackConfig}
@@ -215,24 +244,16 @@ function CreatorContent({
   className,
   setupMode,
 }: AvatarV5CreatorProps) {
-  const [category, setCategory] = useState<Category>("skin");
-
-  function setField<K extends keyof AvatarV5Config>(
-    field: K,
-    value: AvatarV5Config[K],
-  ) {
+  const [category, setCategory] = useState<Category>("body");
+  function setField<K extends keyof AvatarV5Config>(field: K, value: AvatarV5Config[K]) {
     onChange({ ...config, [field]: value });
   }
 
   return (
     <div className={cx("grid min-w-0 gap-5 xl:grid-cols-[minmax(0,1fr)_23rem]", className)}>
       <div className="min-w-0 xl:sticky xl:top-5 xl:self-start">
-        <AvatarV5Studio
-          config={config}
-          className={setupMode ? "lg:h-[39rem]" : undefined}
-        />
+        <AvatarV5Studio config={config} className={setupMode ? "lg:h-[39rem]" : undefined} />
       </div>
-
       <aside className="min-w-0 rounded-[30px] border border-white/9 bg-[#0d1119] p-4 sm:p-5">
         <div className="flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {categories.map((item) => (
@@ -252,115 +273,52 @@ function CreatorContent({
             </button>
           ))}
         </div>
-
         <div className="mt-5 max-h-[31rem] space-y-7 overflow-y-auto pr-1">
-          {category === "skin" ? (
-            <Swatches
-              label="Skin tone"
-              options={avatarV5SkinTones}
-              value={config.skinToneId}
-              onChange={(value) => setField("skinToneId", value)}
-            />
+          {category === "body" ? (
+            <>
+              <StyleOptions label="Frame" options={avatarV5Frames} value={config.frameId} onChange={(value) => setField("frameId", value)} />
+              <StyleOptions label="Body shape" options={avatarV5BodyPresets} value={config.bodyPresetId} onChange={(value) => setField("bodyPresetId", value)} />
+              <Swatches label="Skin tone" options={avatarV5SkinTones} value={config.skinToneId} onChange={(value) => setField("skinToneId", value)} />
+            </>
           ) : null}
-          {category === "eyes" ? (
-            <Swatches
-              label="Eye colour"
-              options={avatarV5EyeColours}
-              value={config.eyeColourId}
-              onChange={(value) => setField("eyeColourId", value)}
-            />
+          {category === "face" ? (
+            <>
+              <StyleOptions label="Face" options={avatarV5FacePresets} value={config.facePresetId} onChange={(value) => setField("facePresetId", value)} />
+              <StyleOptions label="Eye shape" options={avatarV5EyeShapes} value={config.eyeShapeId} onChange={(value) => setField("eyeShapeId", value)} />
+              <Swatches label="Eye colour" options={avatarV5EyeColours} value={config.eyeColourId} onChange={(value) => setField("eyeColourId", value)} />
+              <StyleOptions label="Ears" options={avatarV5EarPresets} value={config.earPresetId} onChange={(value) => setField("earPresetId", value)} />
+              <StyleOptions label="Facial hair" options={avatarV5FacialHairStyles} value={config.facialHairStyleId} onChange={(value) => setField("facialHairStyleId", value)} />
+            </>
           ) : null}
           {category === "hair" ? (
             <>
-              <StyleOptions
-                label="Hairstyle"
-                options={avatarV5HairStyles}
-                value={config.hairStyleId}
-                onChange={(value) => setField("hairStyleId", value)}
-              />
-              <Swatches
-                label="Hair colour"
-                options={avatarV5HairColours}
-                value={config.hairColourId}
-                onChange={(value) => setField("hairColourId", value)}
-              />
+              <StyleOptions label="Hairstyle" options={avatarV5HairStyles} value={config.hairStyleId} onChange={(value) => setField("hairStyleId", value)} />
+              <Swatches label="Hair colour" options={avatarV5HairColours} value={config.hairColourId} onChange={(value) => setField("hairColourId", value)} />
             </>
           ) : null}
-          {category === "facial-hair" ? (
-            <StyleOptions
-              label="Facial hair"
-              options={avatarV5FacialHairStyles}
-              value={config.facialHairStyleId}
-              onChange={(value) => setField("facialHairStyleId", value)}
-            />
-          ) : null}
-          {category === "tops" ? (
-            <StyleOptions
-              label="Fitted top"
-              options={avatarV5TopStyles}
-              value={config.topStyleId}
-              onChange={(value) => setField("topStyleId", value)}
-            />
-          ) : null}
-          {category === "bottoms" ? (
-            <StyleOptions
-              label="Bottoms"
-              options={avatarV5BottomStyles}
-              value={config.bottomStyleId}
-              onChange={(value) => setField("bottomStyleId", value)}
-            />
-          ) : null}
-          {category === "shoes" ? (
-            <StyleOptions
-              label="Shoes"
-              options={avatarV5ShoeStyles}
-              value={config.shoeStyleId}
-              onChange={(value) => setField("shoeStyleId", value)}
-            />
+          {category === "tops" ? <StyleOptions label="Top" options={avatarV5TopStyles} value={config.topStyleId} onChange={(value) => setField("topStyleId", value)} /> : null}
+          {category === "bottoms" ? <StyleOptions label="Bottoms" options={avatarV5BottomStyles} value={config.bottomStyleId} onChange={(value) => setField("bottomStyleId", value)} /> : null}
+          {category === "shoes" ? <StyleOptions label="Shoes" options={avatarV5ShoeStyles} value={config.shoeStyleId} onChange={(value) => setField("shoeStyleId", value)} /> : null}
+          {category === "accessories" ? (
+            <>
+              <StyleOptions label="Glasses" options={avatarV5GlassesStyles} value={config.glassesStyleId} onChange={(value) => setField("glassesStyleId", value)} />
+              <ToggleOptions label="Details" options={avatarV5Accessories} values={config.accessoryIds} onChange={(value) => setField("accessoryIds", value)} />
+            </>
           ) : null}
           {category === "colours" ? (
             <>
-              <Swatches
-                label="Top palette"
-                options={avatarV5ColourVariants}
-                value={config.topColourId}
-                onChange={(value) => setField("topColourId", value)}
-              />
-              <Swatches
-                label="Bottom palette"
-                options={avatarV5ColourVariants}
-                value={config.bottomColourId}
-                onChange={(value) => setField("bottomColourId", value)}
-              />
-              <Swatches
-                label="Shoe palette"
-                options={avatarV5ColourVariants}
-                value={config.shoeColourId}
-                onChange={(value) => setField("shoeColourId", value)}
-              />
+              <Swatches label="Top palette" options={avatarV5ColourVariants} value={config.topColourId} onChange={(value) => setField("topColourId", value)} />
+              <Swatches label="Bottom palette" options={avatarV5ColourVariants} value={config.bottomColourId} onChange={(value) => setField("bottomColourId", value)} />
+              <Swatches label="Shoe palette" options={avatarV5ColourVariants} value={config.shoeColourId} onChange={(value) => setField("shoeColourId", value)} />
               <p className="rounded-2xl border border-white/8 bg-white/[0.025] p-3 text-xs leading-5 text-white/38">
-                These palettes use the artist-authored colour textures. Surface
-                shading, normal detail, and roughness remain intact.
+                Curated palettes preserve the original fabric shading, seams, normal detail, and surface depth.
               </p>
             </>
           ) : null}
         </div>
-
         <div className="mt-5 grid grid-cols-2 gap-2 border-t border-white/8 pt-4">
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={() => onChange(randomAvatarV5Config())}
-          >
-            Randomize
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={() => onChange({ ...defaultAvatarV5Config })}
-          >
-            Reset
-          </Button>
+          <Button type="button" variant="secondary" onClick={() => onChange(randomAvatarV5Config())}>Randomize</Button>
+          <Button type="button" variant="ghost" onClick={() => onChange({ ...defaultAvatarV5Config, accessoryIds: [] })}>Reset</Button>
         </div>
       </aside>
     </div>
@@ -369,7 +327,6 @@ function CreatorContent({
 
 export function AvatarV5Creator(props: AvatarV5CreatorProps) {
   const { onAvailabilityChange } = props;
-
   useEffect(() => {
     onAvailabilityChange?.(true);
   }, [onAvailabilityChange]);

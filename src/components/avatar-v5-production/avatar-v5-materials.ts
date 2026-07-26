@@ -22,6 +22,8 @@ export type AvatarV5MaterialOptions = {
   skinEligible?: boolean;
   mapOverride?: Texture;
   eyeMapOverride?: Texture;
+  faceScale?: [number, number, number];
+  eyeScale?: [number, number, number];
 };
 
 function isMaterialOwner(object: Object3D): object is MaterialOwner {
@@ -48,6 +50,10 @@ export function prepareAvatarV5Scene(
   options: AvatarV5MaterialOptions,
 ) {
   const ownedMaterials: Material[] = [];
+  const head = root.getObjectByName("Head");
+  if (head && options.faceScale) head.scale.set(...options.faceScale);
+  const eyes = root.getObjectByName("Eyes");
+  if (eyes && options.eyeScale) eyes.scale.set(...options.eyeScale);
 
   root.traverse((object) => {
     if (!isMaterialOwner(object)) return;
@@ -65,7 +71,9 @@ export function prepareAvatarV5Scene(
       if (
         options.clipBelowWorldY !== undefined &&
         (material.name === "MI_Superhero_Female" ||
-          material.name === "MI_Regular_Female")
+          material.name === "MI_Regular_Female" ||
+          material.name === "MI_Superhero_Male" ||
+          material.name === "MI_Regular_Male")
       ) {
         material.clippingPlanes = [
           new Plane(new Vector3(0, 1, 0), -options.clipBelowWorldY),
@@ -103,7 +111,10 @@ export function prepareAvatarV5Scene(
         options.skinEligible &&
         options.skinColour &&
         material instanceof MeshStandardMaterial &&
-        material.name === "MI_Superhero_Female"
+        (material.name === "MI_Superhero_Female" ||
+          material.name === "MI_Superhero_Male" ||
+          material.name === "MI_Regular_Female" ||
+          material.name === "MI_Regular_Male")
       ) {
         applySkinTint(
           material,

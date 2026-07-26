@@ -74,8 +74,8 @@ export function useAvatarQualityController() {
           ? ([1, 1.8] as [number, number])
           : quality === "medium"
             ? ([1, 1.5] as [number, number])
-            : ([1, 1.15] as [number, number]),
-      shadowSize: quality === "high" ? 2048 : quality === "medium" ? 1024 : 512,
+            : ([1, 1.4] as [number, number]),
+      shadowSize: quality === "high" ? 2048 : quality === "medium" ? 1024 : 768,
     }),
     [pageVisible, quality, reducedMotion, visible],
   );

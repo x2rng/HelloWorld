@@ -411,7 +411,8 @@ export function createAvatarV4FromStored(value: unknown): AvatarV4Config {
     value &&
     typeof value === "object" &&
     !Array.isArray(value) &&
-    (value as Record<string, unknown>).version === 5
+    ((value as Record<string, unknown>).version === 5 ||
+      (value as Record<string, unknown>).version === 6)
   ) {
     return upgradeAvatarV3ToV4(avatarV5ToV3(parseAvatarV5Config(value)));
   }
@@ -433,7 +434,8 @@ export function normalizeStoredAvatarConfig(value: unknown): StoredAvatarConfig 
     value &&
     typeof value === "object" &&
     !Array.isArray(value) &&
-    (value as Record<string, unknown>).version === 5
+    ((value as Record<string, unknown>).version === 5 ||
+      (value as Record<string, unknown>).version === 6)
   ) {
     return parseAvatarV5Config(value);
   }

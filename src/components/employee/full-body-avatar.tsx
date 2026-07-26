@@ -21,7 +21,7 @@ export function FullBodyAvatar({
   showStage = false,
 }: FullBodyAvatarProps) {
   const legacyConfig =
-    config?.version === 5
+    config?.version === 6
       ? avatarV5ToV3(config)
       : config?.version === 4
         ? avatarV4ToV3(config)

@@ -35,17 +35,67 @@ export type AvatarV5EyeColourId =
 
 export type AvatarV5FacialHairStyleId = "none" | "short-beard";
 
+export type AvatarV5FrameId = "sculpted" | "structured";
+
+export type AvatarV5BodyPresetId =
+  | "slim"
+  | "balanced"
+  | "athletic"
+  | "broad"
+  | "tall";
+
+export type AvatarV5FacePresetId =
+  | "balanced"
+  | "soft"
+  | "defined"
+  | "long";
+
+export type AvatarV5EyeShapeId =
+  | "balanced"
+  | "almond"
+  | "round"
+  | "focused";
+
+export type AvatarV5EarPresetId = "natural" | "compact" | "defined";
+
 export type AvatarV5TopStyleId =
   | "heritage-fitted"
-  | "ranger-structured";
+  | "ranger-structured"
+  | "fitted-tee"
+  | "relaxed-tee"
+  | "oxford-shirt"
+  | "polo-shirt"
+  | "crew-sweater"
+  | "hoodie"
+  | "blazer"
+  | "bomber";
 
 export type AvatarV5BottomStyleId =
   | "heritage-trousers"
-  | "ranger-trousers";
+  | "ranger-trousers"
+  | "straight-trousers"
+  | "slim-trousers"
+  | "jeans"
+  | "relaxed-trousers"
+  | "utility-trousers"
+  | "sport-trousers";
 
 export type AvatarV5ShoeStyleId =
   | "heritage-boots"
-  | "ranger-boots";
+  | "ranger-boots"
+  | "trainers"
+  | "casual-shoes"
+  | "formal-shoes"
+  | "modern-boots"
+  | "sport-shoes";
+
+export type AvatarV5GlassesStyleId =
+  | "none"
+  | "round"
+  | "rectangular"
+  | "sunglasses";
+
+export type AvatarV5AccessoryId = "watch" | "necklace";
 
 export type AvatarV5ColourVariantId =
   | "original"
@@ -53,12 +103,23 @@ export type AvatarV5ColourVariantId =
   | "navy"
   | "forest"
   | "burgundy"
-  | "charcoal";
+  | "charcoal"
+  | "modern-ocean"
+  | "modern-sage"
+  | "modern-wine"
+  | "modern-sand"
+  | "modern-graphite"
+  | "modern-cloud";
 
 export type AvatarV5Config = {
-  version: 5;
+  version: 6;
   renderer: "modular-gltf";
   assetFamily: "quaternius-universal";
+  frameId: AvatarV5FrameId;
+  bodyPresetId: AvatarV5BodyPresetId;
+  facePresetId: AvatarV5FacePresetId;
+  eyeShapeId: AvatarV5EyeShapeId;
+  earPresetId: AvatarV5EarPresetId;
   skinToneId: AvatarV5SkinToneId;
   eyeColourId: AvatarV5EyeColourId;
   hairStyleId: AvatarV5HairStyleId;
@@ -70,6 +131,8 @@ export type AvatarV5Config = {
   bottomColourId: AvatarV5ColourVariantId;
   shoeStyleId: AvatarV5ShoeStyleId;
   shoeColourId: AvatarV5ColourVariantId;
+  glassesStyleId: AvatarV5GlassesStyleId;
+  accessoryIds: AvatarV5AccessoryId[];
 };
 
 export type AvatarV5Option<T extends string> = {

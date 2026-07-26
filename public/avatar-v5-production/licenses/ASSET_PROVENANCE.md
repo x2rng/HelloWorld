@@ -32,6 +32,8 @@ Retained base:
 
 - `base/Superhero_Female_FullBody.gltf`
 - `base/Superhero_Female_FullBody.bin`
+- `base/Superhero_Male_FullBody.gltf`
+- `base/Superhero_Male_FullBody.bin`
 - the eye, eyebrow/hair, skin normal, skin base-colour, and skin roughness
   textures referenced by that glTF
 
@@ -85,6 +87,14 @@ Retained modular fitted parts:
 - `Female_Ranger_Arms`
 - `Female_Ranger_Legs`
 - `Female_Ranger_Feet`
+- `Male_Peasant_Body`
+- `Male_Peasant_Arms`
+- `Male_Peasant_Legs`
+- `Male_Peasant_Feet`
+- `Male_Ranger_Body`
+- `Male_Ranger_Arms`
+- `Male_Ranger_Legs`
+- `Male_Ranger_Feet_Boots`
 
 Each name above retains its matching `.gltf` and `.bin` file. The original and
 alternate artist-authored base-colour textures are retained for the Peasant and
@@ -125,6 +135,16 @@ The source assets are CC0 and permit these modifications:
   generated from the artist-authored base-colour maps. UV detail, normal maps,
   ORM maps, seams, material depth, and shadows remain intact; palettes do not
   replace textured materials with flat colours.
+- Avatar V6 adds six more restrained derived fabric palettes: ocean, sage,
+  wine, sand, graphite, and cloud. These are generated from the same CC0
+  base-colour maps while retaining the source UV layout, normal maps, ORM maps,
+  painted seams, and material response.
+- Modern collars, plackets, ribbing, lapels, fasteners, soles, laces, glasses,
+  ears, a watch, and a necklace are original repository code geometry. They do
+  not introduce external artwork or additional licence obligations.
+- `scripts/avatar-v5/build-avatar-v6-assets.mjs` reproducibly adds the second
+  compatible base frame, its matching fitted modular garments, redirects shared
+  textures, and generates the V6 fabric palettes.
 - `scripts/avatar-v5/promote-approved-v5-expansion.mjs` reproducibly copies the
   approved compatible assets and generates the derived eye and outfit textures.
 

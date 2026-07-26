@@ -68,7 +68,7 @@ export function AvatarV5ProductionScene({
 
       <AvatarV5ProductionModel
         config={config}
-        animate={!reducedMotion && quality !== "low"}
+        animate={!reducedMotion}
       />
 
       <mesh position={[0, -3.17, 0]} rotation-x={-Math.PI / 2} receiveShadow>
@@ -82,7 +82,7 @@ export function AvatarV5ProductionScene({
         blur={quality === "high" ? 2.5 : 3.4}
         far={5}
         resolution={
-          quality === "high" ? 1024 : quality === "medium" ? 512 : 256
+          quality === "high" ? 1024 : quality === "medium" ? 512 : 384
         }
         frames={1}
         color="#02040a"

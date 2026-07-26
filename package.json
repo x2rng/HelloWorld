@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "avatar:audit-wardrobe": "node scripts/avatar-v5/build-wardrobe-lab-assets.mjs",
-    "avatar:promote-v5": "node scripts/avatar-v5/promote-approved-v5-expansion.mjs"
+    "avatar:promote-v5": "node scripts/avatar-v5/promote-approved-v5-expansion.mjs",
+    "avatar:build-v6": "node scripts/avatar-v5/build-avatar-v6-assets.mjs"
   },
   "dependencies": {
     "@react-three/drei": "10.7.7",

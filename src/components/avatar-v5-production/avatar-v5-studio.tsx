@@ -5,7 +5,6 @@ import { useProgress } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import {
   ACESFilmicToneMapping,
-  CineonToneMapping,
   SRGBColorSpace,
 } from "three";
 import { useAvatarQualityController } from "@/components/avatar-3d/avatar-quality-controller";
@@ -63,22 +62,19 @@ export default function AvatarV5ProductionStudio({
       <Canvas
         dpr={dpr}
         shadows
-        frameloop={
-          active && !reducedMotion && quality !== "low" ? "always" : "demand"
-        }
+        frameloop={active && !reducedMotion ? "always" : "demand"}
         camera={{ position: [0, 0.1, 10.8], fov: 36, near: 0.1, far: 40 }}
         gl={{
-          antialias: quality !== "low",
+          antialias: true,
           alpha: false,
-          powerPreference: quality === "low" ? "low-power" : "high-performance",
+          powerPreference: "high-performance",
           preserveDrawingBuffer: false,
           localClippingEnabled: true,
         }}
         onCreated={({ gl }) => {
           gl.outputColorSpace = SRGBColorSpace;
           gl.localClippingEnabled = true;
-          gl.toneMapping =
-            quality === "low" ? CineonToneMapping : ACESFilmicToneMapping;
+          gl.toneMapping = ACESFilmicToneMapping;
           gl.toneMappingExposure = quality === "high" ? 1.02 : 1;
         }}
       >
@@ -112,7 +108,7 @@ export default function AvatarV5ProductionStudio({
         <>
           <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between gap-3 p-4 sm:p-5">
             <div className="rounded-full border border-white/10 bg-black/30 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/55 backdrop-blur">
-              {quality} quality · imported glTF
+              {quality === "low" ? "mobile optimized" : "studio quality"} · Avatar V6
             </div>
             <p className="max-w-44 text-right text-[11px] leading-5 text-white/45">
               Drag to rotate · Pinch or scroll to zoom
@@ -134,7 +130,7 @@ export default function AvatarV5ProductionStudio({
               type="button"
               aria-pressed={autoRotate}
               onClick={() => setAutoRotate((current) => !current)}
-              disabled={reducedMotion || quality === "low"}
+              disabled={reducedMotion}
               className="rounded-full border border-white/12 bg-black/38 px-3 py-2 text-xs font-semibold text-white/72 backdrop-blur transition hover:border-white/25 hover:text-white disabled:cursor-not-allowed disabled:opacity-35"
             >
               {autoRotate ? "Stop rotation" : "Auto rotate"}

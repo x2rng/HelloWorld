@@ -4,7 +4,10 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { AvatarWebGLBoundary } from "@/components/avatar-3d/avatar-webgl-boundary";
 import { AvatarRenderer as AvatarV3Renderer } from "@/components/avatar-v3/avatar-renderer";
-import { avatarV5ToV3 } from "@/components/avatar-v5-production/config/avatar-v5-parser";
+import {
+  avatarV5ToV3,
+  parseAvatarV5Config,
+} from "@/components/avatar-v5-production/config/avatar-v5-parser";
 import type { AvatarV5Config } from "@/components/avatar-v5-production/config/avatar-v5-types";
 import { cx } from "@/lib/utils";
 
@@ -58,6 +61,7 @@ export function AvatarV5Presentation({
   config: AvatarV5Config;
   className?: string;
 }) {
+  const normalizedConfig = parseAvatarV5Config(config);
   const [available, setAvailable] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -68,17 +72,19 @@ export function AvatarV5Presentation({
   }, []);
 
   if (available !== true) {
-    return <PresentationFallback config={config} className={className} />;
+    return (
+      <PresentationFallback config={normalizedConfig} className={className} />
+    );
   }
 
   return (
     <AvatarWebGLBoundary
       fallback={() => (
-        <PresentationFallback config={config} className={className} />
+        <PresentationFallback config={normalizedConfig} className={className} />
       )}
     >
       <AvatarV5Studio
-        config={config}
+        config={normalizedConfig}
         presentation
         className={className}
       />
