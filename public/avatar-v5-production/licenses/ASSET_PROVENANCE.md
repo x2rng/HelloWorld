@@ -39,11 +39,29 @@ Retained rigged hairstyles:
 
 - `hair/Hair_Long.gltf` and `Hair_Long.bin`
 - `hair/Hair_Buns.gltf` and `Hair_Buns.bin`
+- `hair/Hair_Buzzed.gltf` and `Hair_Buzzed.bin`
+- `hair/Hair_BuzzedFemale.gltf` and `Hair_BuzzedFemale.bin`
+- `hair/Hair_SimpleParted.gltf` and `Hair_SimpleParted.bin`
 
-Both hairstyles come from the pack's `Rigged to Head Bone` glTF export. Two
-additional source-pack candidates were tested and rejected because their
-silhouettes did not read correctly on the approved head. They are not included
-in the production repository.
+All five hairstyles come from the pack's `Rigged to Head Bone` glTF export.
+They use the approved Universal rig and were reviewed from front, side, and
+rear views before production integration.
+
+Retained compatible facial hair:
+
+- `hair/Hair_Beard.gltf` and `Hair_Beard.bin`
+
+The beard uses the same Universal head rig and follows the existing idle
+animation. The matching Hair 1 colour and normal textures are retained in the
+shared production texture directory.
+
+## Eye colour variants
+
+The free Standard archive provides the artist-authored brown eye texture.
+Production also includes blue, green, hazel, and grey variants generated from
+that source texture with a strict iris mask. The process preserves the pupil,
+highlights, eye whites, surrounding face pixels, UV layout, and original eye
+normal map. No replacement eye geometry or floating overlay is used.
 
 ## Modular Character Outfits - Fantasy
 
@@ -103,16 +121,22 @@ The source assets are CC0 and permit these modifications:
 - Geometry, rig weights, UVs, normal maps, ORM maps, and the approved character
   proportions were not redesigned or procedurally replaced.
 - Clothing colour options switch between artist-authored texture variants.
-  They do not replace textured materials with flat colours.
+  Four additional curated palettes (navy, forest, burgundy, and charcoal) are
+  generated from the artist-authored base-colour maps. UV detail, normal maps,
+  ORM maps, seams, material depth, and shadows remain intact; palettes do not
+  replace textured materials with flat colours.
+- `scripts/avatar-v5/promote-approved-v5-expansion.mjs` reproducibly copies the
+  approved compatible assets and generates the derived eye and outfit textures.
 
 ## Payload
 
 - Approved proof asset directory before production optimization:
   60,092,962 bytes (57.31 MiB)
-- Production runtime asset library (licence documents excluded):
-  16,907,519 bytes (16.12 MiB)
+- Production runtime asset library after the approved customization expansion
+  (licence documents excluded): 28,246,506 bytes (26.94 MiB)
 - Default initially selected visible avatar:
   8,746,446 bytes (8.34 MiB)
 
-Alternative hair and garment assets load only when selected. Browser and Three
-asset caches reuse textures and geometry within the session.
+The default initial payload is unchanged. Alternative hair, eye, and garment
+palette assets load only when selected. Browser and Three asset caches reuse
+textures and geometry within the session.

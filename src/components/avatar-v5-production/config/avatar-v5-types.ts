@@ -9,7 +9,10 @@ export type AvatarV5SkinToneId =
 
 export type AvatarV5HairStyleId =
   | "approved-long"
-  | "double-buns";
+  | "double-buns"
+  | "close-buzz"
+  | "soft-close-crop"
+  | "simple-side-part";
 
 export type AvatarV5HairColourId =
   | "soft-black"
@@ -17,7 +20,20 @@ export type AvatarV5HairColourId =
   | "chestnut"
   | "auburn"
   | "golden-brown"
-  | "silver";
+  | "silver"
+  | "blue-black"
+  | "ash-brown"
+  | "copper"
+  | "platinum";
+
+export type AvatarV5EyeColourId =
+  | "brown"
+  | "blue"
+  | "green"
+  | "hazel"
+  | "grey";
+
+export type AvatarV5FacialHairStyleId = "none" | "short-beard";
 
 export type AvatarV5TopStyleId =
   | "heritage-fitted"
@@ -31,15 +47,23 @@ export type AvatarV5ShoeStyleId =
   | "heritage-boots"
   | "ranger-boots";
 
-export type AvatarV5ColourVariantId = "original" | "alternate";
+export type AvatarV5ColourVariantId =
+  | "original"
+  | "alternate"
+  | "navy"
+  | "forest"
+  | "burgundy"
+  | "charcoal";
 
 export type AvatarV5Config = {
   version: 5;
   renderer: "modular-gltf";
   assetFamily: "quaternius-universal";
   skinToneId: AvatarV5SkinToneId;
+  eyeColourId: AvatarV5EyeColourId;
   hairStyleId: AvatarV5HairStyleId;
   hairColourId: AvatarV5HairColourId;
+  facialHairStyleId: AvatarV5FacialHairStyleId;
   topStyleId: AvatarV5TopStyleId;
   topColourId: AvatarV5ColourVariantId;
   bottomStyleId: AvatarV5BottomStyleId;

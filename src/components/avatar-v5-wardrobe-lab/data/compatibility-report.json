@@ -1,0 +1,2137 @@
+{
+  "generatedAt": "2026-07-26T15:28:20.502Z",
+  "approvedSkeleton": {
+    "family": "Quaternius Universal Base Characters",
+    "jointCount": 65,
+    "protected": true
+  },
+  "advertisedUniversalHairstyles": 20,
+  "freelyDistributedUniversalHairMeshes": 5,
+  "freelyDistributedFacialHairMeshes": 1,
+  "freeUniversalHairMeshNames": [
+    "Hair_Buns",
+    "Hair_Buzzed",
+    "Hair_BuzzedFemale",
+    "Hair_Long",
+    "Hair_SimpleParted"
+  ],
+  "hair": [
+    {
+      "id": "approved-long",
+      "label": "Approved long",
+      "source": "Hair_Long",
+      "asset": "/avatar-v5-production/hair/Hair_Long.gltf",
+      "status": "approved",
+      "reason": "Current production hairstyle; exact approved Universal rig.",
+      "transform": {
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": 1
+      }
+    },
+    {
+      "id": "double-buns",
+      "label": "Double buns",
+      "source": "Hair_Buns",
+      "asset": "/avatar-v5-production/hair/Hair_Buns.gltf",
+      "status": "approved",
+      "reason": "Current production option; exact approved Universal rig.",
+      "transform": {
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": 1
+      }
+    },
+    {
+      "id": "buzzed",
+      "label": "Close buzz",
+      "source": "Hair_Buzzed",
+      "asset": "/avatar-v5-wardrobe-lab/hair/Hair_Buzzed.gltf",
+      "status": "needs-adjustment",
+      "reason": "Rig-compatible; scalp coverage and silhouette need visual approval.",
+      "transform": {
+        "position": [
+          0,
+          0.003,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": 1.012
+      }
+    },
+    {
+      "id": "buzzed-female",
+      "label": "Soft close crop",
+      "source": "Hair_BuzzedFemale",
+      "asset": "/avatar-v5-wardrobe-lab/hair/Hair_BuzzedFemale.gltf",
+      "status": "needs-adjustment",
+      "reason": "Rig-compatible; intentionally close silhouette needs visual approval.",
+      "transform": {
+        "position": [
+          0,
+          0.004,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": 1.014
+      }
+    },
+    {
+      "id": "simple-parted",
+      "label": "Simple side part",
+      "source": "Hair_SimpleParted",
+      "asset": "/avatar-v5-wardrobe-lab/hair/Hair_SimpleParted.gltf",
+      "status": "needs-adjustment",
+      "reason": "Rig-compatible; thin crown coverage needs visual approval.",
+      "transform": {
+        "position": [
+          0,
+          0.004,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": 1.015
+      }
+    }
+  ],
+  "accessories": [
+    {
+      "id": "hair-beard",
+      "label": "Short beard",
+      "source": "Hair_Beard",
+      "asset": "/avatar-v5-wardrobe-lab/hair/Hair_Beard.gltf",
+      "status": "needs-adjustment",
+      "reason": "Exact Universal head rig, but face fit must be reviewed with V5.",
+      "transform": {
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": 1
+      }
+    }
+  ],
+  "wardrobe": [
+    {
+      "id": "women-adventurer",
+      "label": "Women · Adventurer",
+      "family": "women",
+      "source": "Adventurer",
+      "asset": "/avatar-v5-wardrobe-lab/legacy-families/women/Adventurer.glb",
+      "status": "rejected",
+      "reason": "Adventure styling does not meet workplace priority.",
+      "outputBytes": 1228624,
+      "sourceFile": "Adventurer.gltf",
+      "sourceBytes": 2077733,
+      "skeleton": {
+        "jointCount": 62,
+        "exactApprovedBoneMatches": 1,
+        "approvedBonesCompared": 23,
+        "compatible": false,
+        "note": "Legacy 62-bone rig differs from the approved 65-bone Universal rig."
+      },
+      "meshNodes": [
+        "Adventurer_Body",
+        "Adventurer_Feet",
+        "Adventurer_Head",
+        "Adventurer_Legs"
+      ],
+      "materials": [
+        "Skin",
+        "White",
+        "Brown2",
+        "LightGreen",
+        "Gold",
+        "Green",
+        "Brown_02",
+        "Hair_Brown",
+        "Brown"
+      ],
+      "animationCount": 24,
+      "bounds": {
+        "min": [
+          -0.8246226906776428,
+          -0.0005078905960544944,
+          -0.20117786526679993
+        ],
+        "max": [
+          0.8246226906776428,
+          1.8275761604309082,
+          0.2592366337776184
+        ],
+        "size": [
+          1.6492453813552856,
+          1.8280840510269627,
+          0.46041449904441833
+        ]
+      }
+    },
+    {
+      "id": "women-casual",
+      "label": "Women · Casual",
+      "family": "women",
+      "source": "Casual",
+      "asset": "/avatar-v5-wardrobe-lab/legacy-families/women/Casual.glb",
+      "status": "incompatible",
+      "reason": "Modern casual silhouette; complete legacy body only.",
+      "outputBytes": 1187140,
+      "sourceFile": "Casual.gltf",
+      "sourceBytes": 2014131,
+      "skeleton": {
+        "jointCount": 62,
+        "exactApprovedBoneMatches": 1,
+        "approvedBonesCompared": 23,
+        "compatible": false,
+        "note": "Legacy 62-bone rig differs from the approved 65-bone Universal rig."
+      },
+      "meshNodes": [
+        "Casual_Body",
+        "Casual_Feet",
+        "Casual_Head",
+        "Casual_Legs"
+      ],
+      "materials": [
+        "Skin",
+        "White",
+        "Grey",
+        "Hair_Brown",
+        "Brown",
+        "Hair_Blond",
+        "Orange"
+      ],
+      "animationCount": 24,
+      "bounds": {
+        "min": [
+          -0.8250574469566345,
+          -0.008566934615373611,
+          -0.09946297109127045
+        ],
+        "max": [
+          0.8250574469566345,
+          1.8434743881225586,
+          0.2708127796649933
+        ],
+        "size": [
+          1.650114893913269,
+          1.8520413227379322,
+          0.37027575075626373
+        ]
+      }
+    },
+    {
+      "id": "women-formal",
+      "label": "Women · Formal",
+      "family": "women",
+      "source": "Formal",
+      "asset": "/avatar-v5-wardrobe-lab/legacy-families/women/Formal.glb",
+      "status": "incompatible",
+      "reason": "Formal dress silhouette; complete legacy body only.",
+      "outputBytes": 1156040,
+      "sourceFile": "Formal.gltf",
+      "sourceBytes": 1964814,
+      "skeleton": {
+        "jointCount": 62,
+        "exactApprovedBoneMatches": 1,
+        "approvedBonesCompared": 23,
+        "compatible": false,
+        "note": "Legacy 62-bone rig differs from the approved 65-bone Universal rig."
+      },
+      "meshNodes": [
+        "Formad_Head",
+        "Formal_Body",
+        "Formal_Feet",
+        "Formal_Legs"
+      ],
+      "materials": [
+        "Skin",
+        "Brown",
+        "Red",
+        "LimeGreen",
+        "Gold"
+      ],
+      "animationCount": 24,
+      "bounds": {
+        "min": [
+          -0.824622631072998,
+          0.0010581016540527344,
+          -0.11697254329919815
+        ],
+        "max": [
+          0.824622631072998,
+          1.8435581922531128,
+          0.2554730176925659
+        ],
+        "size": [
+          1.649245262145996,
+          1.84250009059906,
+          0.37244556099176407
+        ]
+      }
+    },
+    {
+      "id": "women-medieval",
+      "label": "Women · Medieval",
+      "family": "women",
+      "source": "Medieval",
+      "asset": "/avatar-v5-wardrobe-lab/legacy-families/women/Medieval.glb",
+      "status": "rejected",
+      "reason": "Medieval styling duplicates the existing fantasy direction.",
+      "outputBytes": 1188440,
+      "sourceFile": "Medieval.gltf",
+      "sourceBytes": 2078800,
+      "skeleton": {
+        "jointCount": 62,
+        "exactApprovedBoneMatches": 1,
+        "approvedBonesCompared": 23,
+        "compatible": false,
+        "note": "Legacy 62-bone rig differs from the approved 65-bone Universal rig."
+      },
+      "meshNodes": [
+        "Sword",
+        "Medieval_Body",
+        "Medieval_Feet",
+        "Medieval_Head",
+        "Medieval_Legs"
+      ],
+      "materials": [
+        "Skin",
+        "DarkBrown",
+        "Gold",
+        "LightBrown",
+        "Black",
+        "Metal",
+        "Metal_Dark",
+        "Brown2",
+        "White",
+        "Brown"
+      ],
+      "animationCount": 24,
+      "bounds": {
+        "min": [
+          -0.8246226906776428,
+          -0.02075040712952614,
+          -0.13011807203292847
+        ],
+        "max": [
+          0.8246226906776428,
+          1.8774540424346924,
+          0.7364333868026733
+        ],
+        "size": [
+          1.6492453813552856,
+          1.8982044495642185,
+          0.8665514588356018
+        ]
+      }
+    },
+    {
+      "id": "women-punk",
+      "label": "Women · Punk",
+      "family": "women",
+      "source": "Punk",
+      "asset": "/avatar-v5-wardrobe-lab/legacy-families/women/Punk.glb",
+      "status": "rejected",
+      "reason": "Visual direction is not suitable for the professional V5 set.",
+      "outputBytes": 1141816,
+      "sourceFile": "Punk.gltf",
+      "sourceBytes": 1942702,
+      "skeleton": {
+        "jointCount": 62,
+        "exactApprovedBoneMatches": 1,
+        "approvedBonesCompared": 23,
+        "compatible": false,
+        "note": "Legacy 62-bone rig differs from the approved 65-bone Universal rig."
+      },
+      "meshNodes": [
+        "Punk_Body",
+        "Punk_Feet",
+        "Punk_Head",
+        "Punk_Legs"
+      ],
+      "materials": [
+        "Skin",
+        "Pink",
+        "Black",
+        "Grey",
+        "Hair_Brown",
+        "Brown"
+      ],
+      "animationCount": 24,
+      "bounds": {
+        "min": [
+          -0.8246226906776428,
+          0.0017639514990150928,
+          -0.12408371269702911
+        ],
+        "max": [
+          0.8246226906776428,
+          1.959575891494751,
+          0.25889721512794495
+        ],
+        "size": [
+          1.6492453813552856,
+          1.9578119399957359,
+          0.38298092782497406
+        ]
+      }
+    },
+    {
+      "id": "women-scifi",
+      "label": "Women · SciFi",
+      "family": "women",
+      "source": "SciFi",
+      "asset": "/avatar-v5-wardrobe-lab/legacy-families/women/SciFi.glb",
+      "status": "rejected",
+      "reason": "Sci-fi styling is outside this workplace wardrobe phase.",
+      "outputBytes": 1245960,
+      "sourceFile": "SciFi.gltf",
+      "sourceBytes": 2181134,
+      "skeleton": {
+        "jointCount": 62,
+        "exactApprovedBoneMatches": 1,
+        "approvedBonesCompared": 23,
+        "compatible": false,
+        "note": "Legacy 62-bone rig differs from the approved 65-bone Universal rig."
+      },
+      "meshNodes": [
+        "Pistol",
+        "SciFi_Body",
+        "SciFi_Feet",
+        "SciFi_Head",
+        "SciFi_Legs"
+      ],
+      "materials": [
+        "Skin",
+        "Black",
+        "Metal",
+        "LightBlue",
+        "Blue",
+        "DarkBrown",
+        "Grey",
+        "Brown",
+        "Hair_Black"
+      ],
+      "animationCount": 24,
+      "bounds": {
+        "min": [
+          -0.8246226906776428,
+          -0.02292622998356819,
+          -0.09888793528079987
+        ],
+        "max": [
+          0.8246226906776428,
+          1.854073405265808,
+          0.2554730176925659
+        ],
+        "size": [
+          1.6492453813552856,
+          1.8769996352493763,
+          0.3543609529733658
+        ]
+      }
+    },
+    {
+      "id": "women-soldier",
+      "label": "Women · Soldier",
+      "family": "women",
+      "source": "Soldier",
+      "asset": "/avatar-v5-wardrobe-lab/legacy-families/women/Soldier.glb",
+      "status": "rejected",
+      "reason": "Military styling is outside this workplace wardrobe phase.",
+      "outputBytes": 1324716,
+      "sourceFile": "Soldier.gltf",
+      "sourceBytes": 2229965,
+      "skeleton": {
+        "jointCount": 62,
+        "exactApprovedBoneMatches": 1,
+        "approvedBonesCompared": 23,
+        "compatible": false,
+        "note": "Legacy 62-bone rig differs from the approved 65-bone Universal rig."
+      },
+      "meshNodes": [
+        "Soldier_Body",
+        "Soldier_Feet",
+        "Soldier_Head",
+        "Soldier_Legs"
+      ],
+      "materials": [
+        "Black",
+        "Swat",
+        "Skin",
+        "Grey",
+        "Hair_Brown",
+        "Brown"
+      ],
+      "animationCount": 24,
+      "bounds": {
+        "min": [
+          -0.8246226906776428,
+          -0.0005078905960544944,
+          -0.06774181127548218
+        ],
+        "max": [
+          0.8246226906776428,
+          1.8292977809906006,
+          0.2592366337776184
+        ],
+        "size": [
+          1.6492453813552856,
+          1.829805671586655,
+          0.3269784450531006
+        ]
+      }
+    },
+    {
+      "id": "women-suit",
+      "label": "Women · Suit",
+      "family": "women",
+      "source": "Suit",
+      "asset": "/avatar-v5-wardrobe-lab/legacy-families/women/Suit.glb",
+      "status": "incompatible",
+      "reason": "Professional suit silhouette; complete legacy body only.",
+      "outputBytes": 1193144,
+      "sourceFile": "Suit.gltf",
+      "sourceBytes": 2023470,
+      "skeleton": {
+        "jointCount": 62,
+        "exactApprovedBoneMatches": 1,
+        "approvedBonesCompared": 23,
+        "compatible": false,
+        "note": "Legacy 62-bone rig differs from the approved 65-bone Universal rig."
+      },
+      "meshNodes": [
+        "Suit_Body",
+        "Suit_Feet",
+        "Suit_Head",
+        "Suit_Legs"
+      ],
+      "materials": [
+        "Skin",
+        "Black",
+        "White",
+        "Hair_Brown",
+        "Brown",
+        "Hair_Blond"
+      ],
+      "animationCount": 24,
+      "bounds": {
+        "min": [
+          -0.8246226906776428,
+          -0.0018691833829507232,
+          -0.09976670891046524
+        ],
+        "max": [
+          0.8246226906776428,
+          1.8433116674423218,
+          0.2714686095714569
+        ],
+        "size": [
+          1.6492453813552856,
+          1.8451808508252725,
+          0.37123531848192215
+        ]
+      }
+    },
+    {
+      "id": "women-witch",
+      "label": "Women · Witch",
+      "family": "women",
+      "source": "Witch",
+      "asset": "/avatar-v5-wardrobe-lab/legacy-families/women/Witch.glb",
+      "status": "rejected",
+      "reason": "Fantasy styling is outside this workplace wardrobe phase.",
+      "outputBytes": 1232892,
+      "sourceFile": "Witch.gltf",
+      "sourceBytes": 2085484,
+      "skeleton": {
+        "jointCount": 62,
+        "exactApprovedBoneMatches": 1,
+        "approvedBonesCompared": 23,
+        "compatible": false,
+        "note": "Legacy 62-bone rig differs from the approved 65-bone Universal rig."
+      },
+      "meshNodes": [
+        "Witch_Body",
+        "Witch_Feet",
+        "Witch_Head",
+        "Witch_Legs"
+      ],
+      "materials": [
+        "Skin",
+        "Brown2",
+        "Purple",
+        "Gold",
+        "Brown",
+        "Hair_Black"
+      ],
+      "animationCount": 24,
+      "bounds": {
+        "min": [
+          -0.8246949911117554,
+          0.00009123949712375179,
+          -0.23227205872535706
+        ],
+        "max": [
+          0.8246949911117554,
+          2.0452044010162354,
+          0.3158798813819885
+        ],
+        "size": [
+          1.6493899822235107,
+          2.0451131615191116,
+          0.5481519401073456
+        ]
+      }
+    },
+    {
+      "id": "women-worker",
+      "label": "Women · Worker",
+      "family": "women",
+      "source": "Worker",
+      "asset": "/avatar-v5-wardrobe-lab/legacy-families/women/Worker.glb",
+      "status": "incompatible",
+      "reason": "Workwear silhouette; complete legacy body only.",
+      "outputBytes": 1161472,
+      "sourceFile": "Worker.gltf",
+      "sourceBytes": 1973116,
+      "skeleton": {
+        "jointCount": 62,
+        "exactApprovedBoneMatches": 1,
+        "approvedBonesCompared": 23,
+        "compatible": false,
+        "note": "Legacy 62-bone rig differs from the approved 65-bone Universal rig."
+      },
+      "meshNodes": [
+        "Worker_Body",
+        "Worker_Feet",
+        "Worker_Head",
+        "Worker_Legs"
+      ],
+      "materials": [
+        "Skin",
+        "Worker_Vest",
+        "White",
+        "Worker_Yellow",
+        "Black",
+        "DarkBrown",
+        "Brown",
+        "Brown_02",
+        "Brown2"
+      ],
+      "animationCount": 24,
+      "bounds": {
+        "min": [
+          -0.8246226906776428,
+          -0.0018691833829507232,
+          -0.09190116077661514
+        ],
+        "max": [
+          0.8246226906776428,
+          1.858777403831482,
+          0.2714686095714569
+        ],
+        "size": [
+          1.6492453813552856,
+          1.8606465872144327,
+          0.36336977034807205
+        ]
+      }
+    },
+    {
+      "id": "men-adventurer",
+      "label": "Men · Adventurer",
+      "family": "men",
+      "source": "Adventurer",
+      "asset": "/avatar-v5-wardrobe-lab/legacy-families/men/Adventurer.glb",
+      "status": "rejected",
+      "reason": "Adventure styling does not meet workplace priority.",
+      "outputBytes": 1552404,
+      "sourceFile": "Adventurer.gltf",
+      "sourceBytes": 2545794,
+      "skeleton": {
+        "jointCount": 62,
+        "exactApprovedBoneMatches": 1,
+        "approvedBonesCompared": 23,
+        "compatible": false,
+        "note": "Legacy 62-bone rig differs from the approved 65-bone Universal rig."
+      },
+      "meshNodes": [
+        "Adventurer_Body",
+        "Adventurer_Feet",
+        "Adventurer_Head",
+        "Adventurer_Legs",
+        "Backpack"
+      ],
+      "materials": [
+        "Skin",
+        "Green",
+        "LightGreen",
+        "Grey",
+        "Black",
+        "Eyebrows",
+        "Hair",
+        "Eye",
+        "Brown",
+        "Brown2",
+        "Gold"
+      ],
+      "animationCount": 24,
+      "bounds": {
+        "min": [
+          -0.8377335071563721,
+          -0.001223093713633716,
+          -0.26301610469818115
+        ],
+        "max": [
+          0.8377335071563721,
+          1.8559409379959106,
+          0.2866884469985962
+        ],
+        "size": [
+          1.6754670143127441,
+          1.8571640317095444,
+          0.5497045516967773
+        ]
+      }
+    },
+    {
+      "id": "men-beach",
+      "label": "Men · Beach",
+      "family": "men",
+      "source": "Beach",
+      "asset": "/avatar-v5-wardrobe-lab/legacy-families/men/Beach.glb",
+      "status": "rejected",
+      "reason": "Beachwear is not a workplace wardrobe priority.",
+      "outputBytes": 1207680,
+      "sourceFile": "Beach.gltf",
+      "sourceBytes": 2044441,
+      "skeleton": {
+        "jointCount": 62,
+        "exactApprovedBoneMatches": 1,
+        "approvedBonesCompared": 23,
+        "compatible": false,
+        "note": "Legacy 62-bone rig differs from the approved 65-bone Universal rig."
+      },
+      "meshNodes": [
+        "Beach_Body",
+        "Beach_Feet",
+        "Beach_Head",
+        "Beach_Legs"
+      ],
+      "materials": [
+        "Skin",
+        "LightBrown",
+        "Red_Dark",
+        "Eyebrows",
+        "Eye",
+        "Hair",
+        "Earrings",
+        "White"
+      ],
+      "animationCount": 24,
+      "bounds": {
+        "min": [
+          -0.8377335071563721,
+          -0.005412522237747908,
+          -0.0860561802983284
+        ],
+        "max": [
+          0.8377335071563721,
+          1.8776534795761108,
+          0.2879813611507416
+        ],
+        "size": [
+          1.6754670143127441,
+          1.8830660018138587,
+          0.37403754144907
+        ]
+      }
+    },
+    {
+      "id": "men-casual-2",
+      "label": "Men · Casual 2",
+      "family": "men",
+      "source": "Casual_2",
+      "asset": "/avatar-v5-wardrobe-lab/legacy-families/men/Casual_2.glb",
+      "status": "incompatible",
+      "reason": "Modern casual silhouette; complete legacy body only.",
+      "outputBytes": 1141668,
+      "sourceFile": "Casual_2.gltf",
+      "sourceBytes": 1938499,
+      "skeleton": {
+        "jointCount": 62,
+        "exactApprovedBoneMatches": 1,
+        "approvedBonesCompared": 23,
+        "compatible": false,
+        "note": "Legacy 62-bone rig differs from the approved 65-bone Universal rig."
+      },
+      "meshNodes": [
+        "Casual2_Body",
+        "Casual2_Feet",
+        "Casual2_Head",
+        "Casual2_Legs"
+      ],
+      "materials": [
+        "Skin",
+        "LightBrown",
+        "Red_Dark",
+        "White",
+        "Skin_Darker",
+        "Eyebrows",
+        "Hair",
+        "Eye",
+        "LightBlue"
+      ],
+      "animationCount": 24,
+      "bounds": {
+        "min": [
+          -0.8377335071563721,
+          -0.0013974867761135101,
+          -0.1680048406124115
+        ],
+        "max": [
+          0.8377335071563721,
+          1.856579065322876,
+          0.2866884469985962
+        ],
+        "size": [
+          1.6754670143127441,
+          1.8579765520989895,
+          0.4546932876110077
+        ]
+      }
+    },
+    {
+      "id": "men-casual-hoodie",
+      "label": "Men · Casual Hoodie",
+      "family": "men",
+      "source": "Casual_Hoodie",
+      "asset": "/avatar-v5-wardrobe-lab/legacy-families/men/Casual_Hoodie.glb",
+      "status": "incompatible",
+      "reason": "Useful hoodie silhouette; complete legacy body only.",
+      "outputBytes": 1170680,
+      "sourceFile": "Casual_Hoodie.gltf",
+      "sourceBytes": 1985059,
+      "skeleton": {
+        "jointCount": 62,
+        "exactApprovedBoneMatches": 1,
+        "approvedBonesCompared": 23,
+        "compatible": false,
+        "note": "Legacy 62-bone rig differs from the approved 65-bone Universal rig."
+      },
+      "meshNodes": [
+        "Casual_Body",
+        "Casual_Feet",
+        "Casual_Head",
+        "Casual_Legs"
+      ],
+      "materials": [
+        "Skin",
+        "Purple",
+        "White",
+        "Eyebrows",
+        "Eye",
+        "Hair",
+        "LightBlue"
+      ],
+      "animationCount": 24,
+      "bounds": {
+        "min": [
+          -0.8377335071563721,
+          -0.004176006652414799,
+          -0.09113743901252747
+        ],
+        "max": [
+          0.8377335071563721,
+          1.8661867380142212,
+          0.2866884469985962
+        ],
+        "size": [
+          1.6754670143127441,
+          1.870362744666636,
+          0.37782588601112366
+        ]
+      }
+    },
+    {
+      "id": "men-farmer",
+      "label": "Men · Farmer",
+      "family": "men",
+      "source": "Farmer",
+      "asset": "/avatar-v5-wardrobe-lab/legacy-families/men/Farmer.glb",
+      "status": "rejected",
+      "reason": "Farm styling is not a modern workplace fit.",
+      "outputBytes": 1101440,
+      "sourceFile": "Farmer.gltf",
+      "sourceBytes": 1876417,
+      "skeleton": {
+        "jointCount": 62,
+        "exactApprovedBoneMatches": 1,
+        "approvedBonesCompared": 23,
+        "compatible": false,
+        "note": "Legacy 62-bone rig differs from the approved 65-bone Universal rig."
+      },
+      "meshNodes": [
+        "Farmer_Body",
+        "Farmer_Feet",
+        "Farmer_Head",
+        "Farmer_Pants"
+      ],
+      "materials": [
+        "Skin",
+        "LightBlue",
+        "Brown",
+        "Beige",
+        "Brown2",
+        "Eyebrows",
+        "Red",
+        "Eye"
+      ],
+      "animationCount": 24,
+      "bounds": {
+        "min": [
+          -0.8377335071563721,
+          -0.0003736833459697664,
+          -0.11325963586568832
+        ],
+        "max": [
+          0.8377335071563721,
+          1.8556039333343506,
+          0.2866884469985962
+        ],
+        "size": [
+          1.6754670143127441,
+          1.8559776166803204,
+          0.3999480828642845
+        ]
+      }
+    },
+    {
+      "id": "men-king",
+      "label": "Men · King",
+      "family": "men",
+      "source": "King",
+      "asset": "/avatar-v5-wardrobe-lab/legacy-families/men/King.glb",
+      "status": "rejected",
+      "reason": "Royal fantasy styling is outside this phase.",
+      "outputBytes": 1606768,
+      "sourceFile": "King.gltf",
+      "sourceBytes": 2666959,
+      "skeleton": {
+        "jointCount": 62,
+        "exactApprovedBoneMatches": 1,
+        "approvedBonesCompared": 23,
+        "compatible": false,
+        "note": "Legacy 62-bone rig differs from the approved 65-bone Universal rig."
+      },
+      "meshNodes": [
+        "King_Body",
+        "King_Feet",
+        "King_Head",
+        "King_Legs"
+      ],
+      "materials": [
+        "Skin",
+        "Blue",
+        "Metal",
+        "Beige",
+        "Metal_Dark",
+        "Hair_White",
+        "Gold",
+        "Eye",
+        "DarkBrown"
+      ],
+      "animationCount": 24,
+      "bounds": {
+        "min": [
+          -0.8377335071563721,
+          -0.0011520972475409508,
+          -0.08215702325105667
+        ],
+        "max": [
+          0.8377335071563721,
+          1.9030406475067139,
+          0.28288137912750244
+        ],
+        "size": [
+          1.6754670143127441,
+          1.9041927447542548,
+          0.3650384023785591
+        ]
+      }
+    },
+    {
+      "id": "men-punk",
+      "label": "Men · Punk",
+      "family": "men",
+      "source": "Punk",
+      "asset": "/avatar-v5-wardrobe-lab/legacy-families/men/Punk.glb",
+      "status": "rejected",
+      "reason": "Visual direction is not suitable for the professional V5 set.",
+      "outputBytes": 1102880,
+      "sourceFile": "Punk.gltf",
+      "sourceBytes": 1880122,
+      "skeleton": {
+        "jointCount": 62,
+        "exactApprovedBoneMatches": 1,
+        "approvedBonesCompared": 23,
+        "compatible": false,
+        "note": "Legacy 62-bone rig differs from the approved 65-bone Universal rig."
+      },
+      "meshNodes": [
+        "Punk_Body",
+        "Punk_Feet",
+        "Punk_Head",
+        "Punk_Legs"
+      ],
+      "materials": [
+        "Skin",
+        "White",
+        "Black",
+        "Eye",
+        "Eyebrows",
+        "Red_Dark",
+        "Red",
+        "Earrings",
+        "LightBlue"
+      ],
+      "animationCount": 24,
+      "bounds": {
+        "min": [
+          -0.8377335071563721,
+          -0.004176006652414799,
+          -0.15946418046951294
+        ],
+        "max": [
+          0.8377335071563721,
+          1.9654122591018677,
+          0.2866884469985962
+        ],
+        "size": [
+          1.6754670143127441,
+          1.9695882657542825,
+          0.44615262746810913
+        ]
+      }
+    },
+    {
+      "id": "men-spacesuit",
+      "label": "Men · Spacesuit",
+      "family": "men",
+      "source": "Spacesuit",
+      "asset": "/avatar-v5-wardrobe-lab/legacy-families/men/Spacesuit.glb",
+      "status": "rejected",
+      "reason": "Sci-fi styling is outside this workplace wardrobe phase.",
+      "outputBytes": 1559152,
+      "sourceFile": "Spacesuit.gltf",
+      "sourceBytes": 2593143,
+      "skeleton": {
+        "jointCount": 62,
+        "exactApprovedBoneMatches": 1,
+        "approvedBonesCompared": 23,
+        "compatible": false,
+        "note": "Legacy 62-bone rig differs from the approved 65-bone Universal rig."
+      },
+      "meshNodes": [
+        "SpaceSuit_Body",
+        "SpaceSuit_Feet",
+        "SpaceSuit_Head",
+        "SpaceSuit_Legs"
+      ],
+      "materials": [
+        "SciFi_Light",
+        "SciFi_Light_Accent",
+        "SciFi_Main",
+        "SciFi_MainDark",
+        "Grey"
+      ],
+      "animationCount": 24,
+      "bounds": {
+        "min": [
+          -0.8377335071563721,
+          -0.00043093456770293415,
+          -0.13995470106601715
+        ],
+        "max": [
+          0.8377335071563721,
+          1.8858587741851807,
+          0.2728757858276367
+        ],
+        "size": [
+          1.6754670143127441,
+          1.8862897087528836,
+          0.41283048689365387
+        ]
+      }
+    },
+    {
+      "id": "men-suit",
+      "label": "Men · Suit",
+      "family": "men",
+      "source": "Suit",
+      "asset": "/avatar-v5-wardrobe-lab/legacy-families/men/Suit.glb",
+      "status": "incompatible",
+      "reason": "Professional suit silhouette; complete legacy body only.",
+      "outputBytes": 1220276,
+      "sourceFile": "Suit.gltf",
+      "sourceBytes": 2192089,
+      "skeleton": {
+        "jointCount": 62,
+        "exactApprovedBoneMatches": 1,
+        "approvedBonesCompared": 23,
+        "compatible": false,
+        "note": "Legacy 62-bone rig differs from the approved 65-bone Universal rig."
+      },
+      "meshNodes": [
+        "Pistol",
+        "Suit_Body",
+        "Suit_Feet",
+        "Suit_Head",
+        "Suit_Legs"
+      ],
+      "materials": [
+        "DarkBrown",
+        "Grey",
+        "Black",
+        "Skin",
+        "Tie",
+        "Suit",
+        "White",
+        "Eyebrows",
+        "Hair",
+        "Eye"
+      ],
+      "animationCount": 24,
+      "bounds": {
+        "min": [
+          -0.9205142855644226,
+          -0.0012994315475225449,
+          -0.08488751947879791
+        ],
+        "max": [
+          0.8377335071563721,
+          1.8556288480758667,
+          0.2866884469985962
+        ],
+        "size": [
+          1.7582477927207947,
+          1.8569282796233892,
+          0.3715759664773941
+        ]
+      }
+    },
+    {
+      "id": "men-swat",
+      "label": "Men · Swat",
+      "family": "men",
+      "source": "Swat",
+      "asset": "/avatar-v5-wardrobe-lab/legacy-families/men/Swat.glb",
+      "status": "rejected",
+      "reason": "Military styling is outside this workplace wardrobe phase.",
+      "outputBytes": 1255176,
+      "sourceFile": "Swat.gltf",
+      "sourceBytes": 2247763,
+      "skeleton": {
+        "jointCount": 62,
+        "exactApprovedBoneMatches": 1,
+        "approvedBonesCompared": 23,
+        "compatible": false,
+        "note": "Legacy 62-bone rig differs from the approved 65-bone Universal rig."
+      },
+      "meshNodes": [
+        "Pistol",
+        "Swat_Body",
+        "Swat_Feet",
+        "Swat_Head",
+        "Swat_Legs"
+      ],
+      "materials": [
+        "DarkBrown",
+        "Grey",
+        "Black",
+        "Skin",
+        "Swat",
+        "Swat_Black",
+        "Visor"
+      ],
+      "animationCount": 24,
+      "bounds": {
+        "min": [
+          -0.9205142855644226,
+          -0.0013974830508232117,
+          -0.08375564962625504
+        ],
+        "max": [
+          0.8377335071563721,
+          1.8524497747421265,
+          0.27799278497695923
+        ],
+        "size": [
+          1.7582477927207947,
+          1.8538472577929497,
+          0.36174843460321426
+        ]
+      }
+    },
+    {
+      "id": "men-worker",
+      "label": "Men · Worker",
+      "family": "men",
+      "source": "Worker",
+      "asset": "/avatar-v5-wardrobe-lab/legacy-families/men/Worker.glb",
+      "status": "incompatible",
+      "reason": "Workwear silhouette; complete legacy body only.",
+      "outputBytes": 1080568,
+      "sourceFile": "Worker.gltf",
+      "sourceBytes": 1843356,
+      "skeleton": {
+        "jointCount": 62,
+        "exactApprovedBoneMatches": 1,
+        "approvedBonesCompared": 23,
+        "compatible": false,
+        "note": "Legacy 62-bone rig differs from the approved 65-bone Universal rig."
+      },
+      "meshNodes": [
+        "Worker_Body",
+        "Worker_Feet",
+        "Worker_Head",
+        "Worker_Legs"
+      ],
+      "materials": [
+        "Skin",
+        "Worker_Yellow",
+        "Worker_Vest",
+        "LightBrown",
+        "Grey",
+        "Black",
+        "Eyebrows",
+        "Moustache",
+        "Eye",
+        "Brown",
+        "Brown2"
+      ],
+      "animationCount": 24,
+      "bounds": {
+        "min": [
+          -0.8377335071563721,
+          -0.0036725953686982393,
+          -0.1025611087679863
+        ],
+        "max": [
+          0.8377335071563721,
+          1.8627585172653198,
+          0.2866884469985962
+        ],
+        "size": [
+          1.6754670143127441,
+          1.866431112634018,
+          0.3892495557665825
+        ]
+      }
+    }
+  ],
+  "findings": [
+    "The free Standard Universal archive contains five hairstyle meshes and one beard, not all 20 hairstyles advertised for the overall pack.",
+    "The 2022 Ultimate Modular Women and Men packs use a legacy 62-bone rig that is not compatible with the approved 65-bone Universal rig.",
+    "Legacy outfits are retained only as complete alternate-family lab previews. No legacy garment is mixed onto the approved V5 body.",
+    "The free Universal eye distribution contains one brown eye texture. Lab-only iris variants recolour masked iris pixels while preserving pupil, highlights, whites, and surrounding pixels."
+  ],
+  "sourceInventory": {
+    "women": {
+      "root": "1720N9IGyQHXYvtvZJzazhxtTTlz-y2Vf",
+      "folderCount": 26,
+      "fileCount": 101,
+      "files": [
+        {
+          "path": "women/How To Use.txt",
+          "mime": "text/plain"
+        },
+        {
+          "path": "women/License.txt",
+          "mime": "text/plain"
+        },
+        {
+          "path": "women/Preview.jpg",
+          "mime": "image/jpeg"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Animations.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Gun.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Sword.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/All together/Blends/All together.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/All together/FBX/All together.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Individual Characters/Blends/Adventurer.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Individual Characters/Blends/Casual.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Individual Characters/Blends/Formal.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Individual Characters/Blends/Medieval.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Individual Characters/Blends/Punk.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Individual Characters/Blends/SciFi.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Individual Characters/Blends/Soldier.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Individual Characters/Blends/Suit.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Individual Characters/Blends/Witch.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Individual Characters/Blends/Worker.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Individual Characters/FBX/Adventurer.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Individual Characters/FBX/Casual.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Individual Characters/FBX/Formal.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Individual Characters/FBX/Medieval.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Individual Characters/FBX/Punk.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Individual Characters/FBX/SciFi.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Individual Characters/FBX/Soldier.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Individual Characters/FBX/Suit.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Individual Characters/FBX/Witch.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Individual Characters/FBX/Worker.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Individual Characters/glTF/Adventurer.gltf",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Individual Characters/glTF/Casual.gltf",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Individual Characters/glTF/Formal.gltf",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Individual Characters/glTF/Medieval.gltf",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Individual Characters/glTF/Punk.gltf",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Individual Characters/glTF/SciFi.gltf",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Individual Characters/glTF/Soldier.gltf",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Individual Characters/glTF/Suit.gltf",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Individual Characters/glTF/Witch.gltf",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Individual Characters/glTF/Worker.gltf",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Adventurer/Adventurer_Backpack.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Adventurer/Adventurer_Body.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Adventurer/Adventurer_Feet.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Adventurer/Adventurer_Head.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Adventurer/Adventurer_Legs.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Casual/Casual_Body.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Casual/Casual_Feet.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Casual/Casual_Head.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Casual/Casual_Legs.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Formal/Formal_Body.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Formal/Formal_Feet.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Formal/Formal_Head.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Formal/Formal_Legs.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Medieval/Medieval_Body.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Medieval/Medieval_Feet.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Medieval/Medieval_Head.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Medieval/Medieval_Legs.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Punk/Punk_Body.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Punk/Punk_Feet.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Punk/Punk_Head.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Punk/Punk_Legs.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/SciFi/SciFi_Body.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/SciFi/SciFi_Feet.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/SciFi/SciFi_Head.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/SciFi/SciFi_Legs.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Soldier/Soldier_Body.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Soldier/Soldier_Feet.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Soldier/Soldier_Head.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Soldier/Soldier_Legs.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Suit/Suit_Body.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Suit/Suit_Feet.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Suit/Suit_Head.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Suit/Suit_Legs.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Witch/Witch_Body.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Witch/Witch_Feet.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Witch/Witch_Head.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Witch/Witch_Legs.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Worker/Worker_Body.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Worker/Worker_Feet.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Worker/Worker_Head.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Separate Skeletal Meshes and Animations/Worker/Worker_Legs.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Humanoid Rigs/All Together/Blends/Humanoid Rig.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Humanoid Rigs/All Together/FBX/Humanoid Rig.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Humanoid Rigs/Individual Characters/Blends/Adventurer.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Humanoid Rigs/Individual Characters/Blends/Casual.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Humanoid Rigs/Individual Characters/Blends/Formal.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Humanoid Rigs/Individual Characters/Blends/Medieval.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Humanoid Rigs/Individual Characters/Blends/Punk.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Humanoid Rigs/Individual Characters/Blends/SciFi.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Humanoid Rigs/Individual Characters/Blends/Soldier.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Humanoid Rigs/Individual Characters/Blends/Suit.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Humanoid Rigs/Individual Characters/Blends/Witch.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Humanoid Rigs/Individual Characters/Blends/Worker.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Humanoid Rigs/Individual Characters/FBX/Adventurer.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Humanoid Rigs/Individual Characters/FBX/Casual.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Humanoid Rigs/Individual Characters/FBX/Formal.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Humanoid Rigs/Individual Characters/FBX/Medieval.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Humanoid Rigs/Individual Characters/FBX/Punk.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Humanoid Rigs/Individual Characters/FBX/SciFi.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Humanoid Rigs/Individual Characters/FBX/Soldier.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Humanoid Rigs/Individual Characters/FBX/Suit.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Humanoid Rigs/Individual Characters/FBX/Witch.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "women/Humanoid Rigs/Individual Characters/FBX/Worker.fbx",
+          "mime": "application/octet-stream"
+        }
+      ]
+    },
+    "men": {
+      "root": "1USAAquX2JJWuA2m6zol0KUkFe3UkZ8zX",
+      "folderCount": 27,
+      "fileCount": 111,
+      "files": [
+        {
+          "path": "men/How To Use.txt",
+          "mime": "text/plain"
+        },
+        {
+          "path": "men/License.txt",
+          "mime": "text/plain"
+        },
+        {
+          "path": "men/Preview.jpg",
+          "mime": "image/jpeg"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Animations.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Humans_master.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/All together/Blends/Humans_Master.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/All together/FBX/Humans_Master.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Humanoid Rig/All Together/Humans_Master.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/Blends/Adventurer.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/Blends/Beach.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/Blends/Casual_2.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/Blends/Casual_Hoodie.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/Blends/Farmer.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/Blends/King.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/Blends/Punk.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/Blends/Spacesuit.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/Blends/Suit.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/Blends/Swat.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/Blends/Worker.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/FBX/Adventurer.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/FBX/Beach.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/FBX/Casual_2.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/FBX/Casual_Hoodie.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/FBX/Farmer.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/FBX/King.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/FBX/Punk.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/FBX/Spacesuit.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/FBX/Suit.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/FBX/Swat.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/FBX/Worker.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/glTF/Adventurer.gltf",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/glTF/Beach.gltf",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/glTF/Casual_2.gltf",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/glTF/Casual_Hoodie.gltf",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/glTF/Farmer.gltf",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/glTF/King.gltf",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/glTF/Punk.gltf",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/glTF/Spacesuit.gltf",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/glTF/Suit.gltf",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/glTF/Swat.gltf",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Individual Characters/glTF/Worker.gltf",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Adventurer/Adventurer_Backpack.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Adventurer/Adventurer_Body.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Adventurer/Adventurer_Feet.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Adventurer/Adventurer_Head.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Adventurer/Adventurer_Legs.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Beach/Beach_Body.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Beach/Beach_Feet.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Beach/Beach_Head.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Beach/Beach_Legs.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Casual_2/Casual2_Body.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Casual_2/Casual2_Feet.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Casual_2/Casual2_Head.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Casual_2/Casual2_Legs.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Casual_Hoodie/Casual_Body.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Casual_Hoodie/Casual_Feet.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Casual_Hoodie/Casual_Head.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Casual_Hoodie/Casual_Legs.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Farmer/Farmer_Body.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Farmer/Farmer_Feet.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Farmer/Farmer_Head.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Farmer/Farmer_Legs.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Horse/Horse_Head.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/King/King_Body.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/King/King_Feet.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/King/King_Head.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/King/King_Legs.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Punk/Punk_Body.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Punk/Punk_Feet.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Punk/Punk_Head.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Punk/Punk_Legs.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/SpaceSuit/SpaceSuit_Body.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/SpaceSuit/SpaceSuit_Feet.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/SpaceSuit/SpaceSuit_Head.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/SpaceSuit/SpaceSuit_Legs.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Suit/Suit_Body.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Suit/Suit_Feet.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Suit/Suit_Head.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Suit/Suit_Legs.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Swat/Swat_Body.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Swat/Swat_Feet.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Swat/Swat_Head.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Swat/Swat_Legs.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Weapons/Pistol.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Weapons/Sword.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Worker/Worker_Body.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Worker/Worker_Feet.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Worker/Worker_Head.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Separate Skeletal Meshes and Animations/Worker/Worker_Legs.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Humanoid Rig/Individual Characters/Blend/Adventurer.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Humanoid Rig/Individual Characters/Blend/Beach.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Humanoid Rig/Individual Characters/Blend/Casual.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Humanoid Rig/Individual Characters/Blend/Casual2.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Humanoid Rig/Individual Characters/Blend/Farmer.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Humanoid Rig/Individual Characters/Blend/King.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Humanoid Rig/Individual Characters/Blend/Punk.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Humanoid Rig/Individual Characters/Blend/Spacesuit.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Humanoid Rig/Individual Characters/Blend/Suit.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Humanoid Rig/Individual Characters/Blend/Swat.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Humanoid Rig/Individual Characters/Blend/Worker.blend",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Humanoid Rig/Individual Characters/FBX/Adventurer.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Humanoid Rig/Individual Characters/FBX/Beach.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Humanoid Rig/Individual Characters/FBX/Casual.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Humanoid Rig/Individual Characters/FBX/Casual2.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Humanoid Rig/Individual Characters/FBX/Farmer.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Humanoid Rig/Individual Characters/FBX/King.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Humanoid Rig/Individual Characters/FBX/Punk.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Humanoid Rig/Individual Characters/FBX/Spacesuit.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Humanoid Rig/Individual Characters/FBX/Suit.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Humanoid Rig/Individual Characters/FBX/Swat.fbx",
+          "mime": "application/octet-stream"
+        },
+        {
+          "path": "men/Humanoid Rig/Individual Characters/FBX/Worker.fbx",
+          "mime": "application/octet-stream"
+        }
+      ]
+    }
+  }
+}

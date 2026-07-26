@@ -8,6 +8,8 @@ import type { AvatarV4Config } from "@/components/avatar-3d/config/avatar-v4-typ
 import {
   avatarV5BottomStyles,
   avatarV5ColourVariants,
+  avatarV5EyeColours,
+  avatarV5FacialHairStyles,
   avatarV5HairColours,
   avatarV5HairStyles,
   avatarV5ShoeStyles,
@@ -40,7 +42,9 @@ const AvatarV5Studio = dynamic(
 
 const categories = [
   { value: "skin", label: "Skin" },
+  { value: "eyes", label: "Eyes" },
   { value: "hair", label: "Hair" },
+  { value: "facial-hair", label: "Facial hair" },
   { value: "tops", label: "Tops" },
   { value: "bottoms", label: "Bottoms" },
   { value: "shoes", label: "Shoes" },
@@ -270,6 +274,14 @@ function CreatorContent({
               onChange={(value) => setField("skinToneId", value)}
             />
           ) : null}
+          {category === "eyes" ? (
+            <Swatches
+              label="Eye colour"
+              options={avatarV5EyeColours}
+              value={config.eyeColourId}
+              onChange={(value) => setField("eyeColourId", value)}
+            />
+          ) : null}
           {category === "hair" ? (
             <>
               <StyleOptions
@@ -285,6 +297,14 @@ function CreatorContent({
                 onChange={(value) => setField("hairColourId", value)}
               />
             </>
+          ) : null}
+          {category === "facial-hair" ? (
+            <StyleOptions
+              label="Facial hair"
+              options={avatarV5FacialHairStyles}
+              value={config.facialHairStyleId}
+              onChange={(value) => setField("facialHairStyleId", value)}
+            />
           ) : null}
           {category === "tops" ? (
             <StyleOptions

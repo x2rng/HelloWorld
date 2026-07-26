@@ -1,6 +1,8 @@
 import type {
   AvatarV5BottomStyleId,
   AvatarV5ColourVariantId,
+  AvatarV5EyeColourId,
+  AvatarV5FacialHairStyleId,
   AvatarV5HairStyleId,
   AvatarV5ShoeStyleId,
   AvatarV5TopStyleId,
@@ -15,6 +17,35 @@ export const avatarV5IdleAsset = `${ROOT}/animation/Idle_Loop.glb`;
 export const avatarV5HairAssets: Record<AvatarV5HairStyleId, string> = {
   "approved-long": `${ROOT}/hair/Hair_Long.gltf`,
   "double-buns": `${ROOT}/hair/Hair_Buns.gltf`,
+  "close-buzz": `${ROOT}/hair/Hair_Buzzed.gltf`,
+  "soft-close-crop": `${ROOT}/hair/Hair_BuzzedFemale.gltf`,
+  "simple-side-part": `${ROOT}/hair/Hair_SimpleParted.gltf`,
+};
+
+export const avatarV5HairTransforms: Record<
+  AvatarV5HairStyleId,
+  { position: [number, number, number]; scale: number }
+> = {
+  "approved-long": { position: [0, 0, 0], scale: 1 },
+  "double-buns": { position: [0, 0, 0], scale: 1 },
+  "close-buzz": { position: [0, 0.003, 0], scale: 1.012 },
+  "soft-close-crop": { position: [0, 0.004, 0], scale: 1.014 },
+  "simple-side-part": { position: [0, 0.004, 0], scale: 1.015 },
+};
+
+export const avatarV5FacialHairAssets: Record<
+  Exclude<AvatarV5FacialHairStyleId, "none">,
+  string
+> = {
+  "short-beard": `${ROOT}/hair/Hair_Beard.gltf`,
+};
+
+export const avatarV5EyeTextures: Record<AvatarV5EyeColourId, string> = {
+  brown: `${ROOT}/base/T_Eye_Brown.png`,
+  blue: `${ROOT}/base/T_Eye_Blue.png`,
+  green: `${ROOT}/base/T_Eye_Green.png`,
+  hazel: `${ROOT}/base/T_Eye_Hazel.png`,
+  grey: `${ROOT}/base/T_Eye_Grey.png`,
 };
 
 export const avatarV5TopAssets: Record<
@@ -65,13 +96,14 @@ export function avatarV5OutfitTexture(
   family: "peasant" | "ranger",
   variant: AvatarV5ColourVariantId,
 ) {
-  if (family === "peasant") {
-    return variant === "alternate"
-      ? `${ROOT}/outfits/T_Peasant_2_BaseColor.png`
-      : `${ROOT}/outfits/T_Peasant_BaseColor.png`;
-  }
-
-  return variant === "alternate"
-    ? `${ROOT}/outfits/T_Ranger_3_BaseColor.png`
-    : `${ROOT}/outfits/T_Ranger_BaseColor.png`;
+  const familyName = family === "peasant" ? "Peasant" : "Ranger";
+  const sourceVariant =
+    variant === "alternate"
+      ? family === "peasant"
+        ? "2"
+        : "3"
+      : variant === "original"
+        ? ""
+        : `_${variant[0].toUpperCase()}${variant.slice(1)}`;
+  return `${ROOT}/outfits/T_${familyName}${sourceVariant}_BaseColor.png`;
 }

@@ -1,6 +1,8 @@
 import type {
   AvatarV5BottomStyleId,
   AvatarV5ColourVariantId,
+  AvatarV5EyeColourId,
+  AvatarV5FacialHairStyleId,
   AvatarV5HairColourId,
   AvatarV5HairStyleId,
   AvatarV5Option,
@@ -34,6 +36,21 @@ export const avatarV5HairStyles: ReadonlyArray<
     value: "double-buns",
     description: "A compact tied style with a clear rear silhouette.",
   },
+  {
+    label: "Close buzz",
+    value: "close-buzz",
+    description: "A clean, close-cut silhouette.",
+  },
+  {
+    label: "Soft close crop",
+    value: "soft-close-crop",
+    description: "A softly shaped short crop.",
+  },
+  {
+    label: "Simple side part",
+    value: "simple-side-part",
+    description: "A restrained swept side part.",
+  },
 ];
 
 export const avatarV5HairColours: ReadonlyArray<
@@ -45,6 +62,35 @@ export const avatarV5HairColours: ReadonlyArray<
   { label: "Auburn", value: "auburn", colour: "#7f3829" },
   { label: "Golden brown", value: "golden-brown", colour: "#a97842" },
   { label: "Silver", value: "silver", colour: "#a8a6a1" },
+  { label: "Blue black", value: "blue-black", colour: "#121722" },
+  { label: "Ash brown", value: "ash-brown", colour: "#66584e" },
+  { label: "Copper", value: "copper", colour: "#a44e2f" },
+  { label: "Platinum", value: "platinum", colour: "#d8d1bd" },
+];
+
+export const avatarV5EyeColours: ReadonlyArray<
+  AvatarV5Option<AvatarV5EyeColourId> & { colour: string }
+> = [
+  { label: "Brown", value: "brown", colour: "#69452c" },
+  { label: "Blue", value: "blue", colour: "#416f9b" },
+  { label: "Green", value: "green", colour: "#527a59" },
+  { label: "Hazel", value: "hazel", colour: "#8a6e36" },
+  { label: "Grey", value: "grey", colour: "#687783" },
+];
+
+export const avatarV5FacialHairStyles: ReadonlyArray<
+  AvatarV5Option<AvatarV5FacialHairStyleId>
+> = [
+  {
+    label: "None",
+    value: "none",
+    description: "Keep the approved clean face.",
+  },
+  {
+    label: "Short beard",
+    value: "short-beard",
+    description: "A fitted beard from the same Universal character family.",
+  },
 ];
 
 export const avatarV5TopStyles: ReadonlyArray<
@@ -97,12 +143,18 @@ export const avatarV5ColourVariants: ReadonlyArray<
 > = [
   { label: "Original earth", value: "original", colour: "#4b3022" },
   { label: "Alternate slate", value: "alternate", colour: "#46505f" },
+  { label: "Deep navy", value: "navy", colour: "#27394f" },
+  { label: "Forest", value: "forest", colour: "#334d3d" },
+  { label: "Burgundy", value: "burgundy", colour: "#633a46" },
+  { label: "Charcoal", value: "charcoal", colour: "#34373e" },
 ];
 
 export const avatarV5Catalogue = {
   skinTones: avatarV5SkinTones,
   hairStyles: avatarV5HairStyles,
   hairColours: avatarV5HairColours,
+  eyeColours: avatarV5EyeColours,
+  facialHairStyles: avatarV5FacialHairStyles,
   topStyles: avatarV5TopStyles,
   bottomStyles: avatarV5BottomStyles,
   shoeStyles: avatarV5ShoeStyles,

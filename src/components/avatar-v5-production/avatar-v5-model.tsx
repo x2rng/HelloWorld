@@ -19,7 +19,10 @@ import { clone as cloneSkinnedScene } from "three/examples/jsm/utils/SkeletonUti
 import {
   avatarV5BaseAsset,
   avatarV5BottomAssets,
+  avatarV5EyeTextures,
+  avatarV5FacialHairAssets,
   avatarV5HairAssets,
+  avatarV5HairTransforms,
   avatarV5IdleAsset,
   avatarV5OutfitTexture,
   avatarV5ShoeAssets,
@@ -58,12 +61,14 @@ function AnimatedAvatarPartCore({
   animate,
   materialOptions,
   overrideTexture,
+  overrideEyeTexture,
 }: {
   asset: string;
   idleClip: AnimationClip | undefined;
   animate: boolean;
   materialOptions: AvatarV5MaterialOptions;
   overrideTexture?: Texture;
+  overrideEyeTexture?: Texture;
 }) {
   const source = useGLTF(asset);
   const invalidate = useThree((state) => state.invalidate);
@@ -72,16 +77,20 @@ function AnimatedAvatarPartCore({
   const prepared = useMemo(() => {
     const scene = cloneSkinnedScene(source.scene);
     const colourTexture = overrideTexture?.clone();
-    if (colourTexture) {
-      colourTexture.colorSpace = SRGBColorSpace;
-      colourTexture.needsUpdate = true;
+    const eyeTexture = overrideEyeTexture?.clone();
+    for (const texture of [colourTexture, eyeTexture]) {
+      if (!texture) continue;
+      texture.colorSpace = SRGBColorSpace;
+      texture.flipY = false;
+      texture.needsUpdate = true;
     }
     const materials = prepareAvatarV5Scene(scene, {
       ...materialOptions,
       mapOverride: colourTexture,
+      eyeMapOverride: eyeTexture,
     });
-    return { scene, materials, colourTexture };
-  }, [materialOptions, overrideTexture, source.scene]);
+    return { scene, materials, colourTexture, eyeTexture };
+  }, [materialOptions, overrideEyeTexture, overrideTexture, source.scene]);
 
   useEffect(() => {
     if (!idleClip) return;
@@ -108,8 +117,9 @@ function AnimatedAvatarPartCore({
     () => () => {
       for (const material of prepared.materials) material.dispose();
       prepared.colourTexture?.dispose();
+      prepared.eyeTexture?.dispose();
     },
-    [prepared.colourTexture, prepared.materials],
+    [prepared.colourTexture, prepared.eyeTexture, prepared.materials],
   );
 
   return <primitive object={prepared.scene} />;
@@ -118,7 +128,7 @@ function AnimatedAvatarPartCore({
 function AnimatedAvatarPart(
   props: Omit<
     ComponentProps<typeof AnimatedAvatarPartCore>,
-    "overrideTexture"
+    "overrideTexture" | "overrideEyeTexture"
   >,
 ) {
   return <AnimatedAvatarPartCore {...props} />;
@@ -128,14 +138,30 @@ function TexturedAvatarPart({
   texture,
   ...props
 }: Omit<
-  ComponentProps<typeof AnimatedAvatarPartCore>,
-  "overrideTexture"
+    ComponentProps<typeof AnimatedAvatarPartCore>,
+    "overrideTexture" | "overrideEyeTexture"
 > & { texture: string }) {
   const overrideTexture = useTexture(texture);
   return (
     <AnimatedAvatarPartCore
       {...props}
       overrideTexture={overrideTexture}
+    />
+  );
+}
+
+function BaseAvatarPart({
+  eyeTexture,
+  ...props
+}: Omit<
+  ComponentProps<typeof AnimatedAvatarPartCore>,
+  "overrideTexture" | "overrideEyeTexture"
+> & { eyeTexture: string }) {
+  const overrideEyeTexture = useTexture(eyeTexture);
+  return (
+    <AnimatedAvatarPartCore
+      {...props}
+      overrideEyeTexture={overrideEyeTexture}
     />
   );
 }
@@ -154,6 +180,12 @@ export function AvatarV5ProductionModel({
   const skinColour = getAvatarV5SkinColour(config.skinToneId);
   const hairColour = getAvatarV5HairColour(config.hairColourId);
   const hairAsset = avatarV5HairAssets[config.hairStyleId];
+  const hairTransform = avatarV5HairTransforms[config.hairStyleId];
+  const facialHairAsset =
+    config.facialHairStyleId === "none"
+      ? null
+      : avatarV5FacialHairAssets[config.facialHairStyleId];
+  const eyeTexture = avatarV5EyeTextures[config.eyeColourId];
   const top = avatarV5TopAssets[config.topStyleId];
   const bottom = avatarV5BottomAssets[config.bottomStyleId];
   const shoes = avatarV5ShoeAssets[config.shoeStyleId];
@@ -169,8 +201,9 @@ export function AvatarV5ProductionModel({
 
   return (
     <group position={[0, MODEL_FLOOR_Y, 0]} scale={MODEL_SCALE}>
-      <AnimatedAvatarPart
+      <BaseAvatarPart
         asset={avatarV5BaseAsset}
+        eyeTexture={eyeTexture}
         idleClip={idleClip}
         animate={animate}
         materialOptions={{
@@ -181,12 +214,22 @@ export function AvatarV5ProductionModel({
           skinEligible: true,
         }}
       />
-      <AnimatedAvatarPart
-        asset={hairAsset}
-        idleClip={idleClip}
-        animate={animate}
-        materialOptions={{ hairColour }}
-      />
+      <group position={hairTransform.position} scale={hairTransform.scale}>
+        <AnimatedAvatarPart
+          asset={hairAsset}
+          idleClip={idleClip}
+          animate={animate}
+          materialOptions={{ hairColour }}
+        />
+      </group>
+      {facialHairAsset ? (
+        <AnimatedAvatarPart
+          asset={facialHairAsset}
+          idleClip={idleClip}
+          animate={animate}
+          materialOptions={{ hairColour }}
+        />
+      ) : null}
       <TexturedAvatarPart
         asset={top.body}
         idleClip={idleClip}

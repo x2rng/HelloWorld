@@ -21,6 +21,7 @@ export type AvatarV5MaterialOptions = {
   skinSourceColour?: string;
   skinEligible?: boolean;
   mapOverride?: Texture;
+  eyeMapOverride?: Texture;
 };
 
 function isMaterialOwner(object: Object3D): object is MaterialOwner {
@@ -86,6 +87,15 @@ export function prepareAvatarV5Scene(
         (material.name === "MI_Peasant" || material.name === "MI_Ranger")
       ) {
         material.map = options.mapOverride;
+        material.needsUpdate = true;
+      }
+
+      if (
+        options.eyeMapOverride &&
+        material instanceof MeshStandardMaterial &&
+        material.name === "MI_Eyes"
+      ) {
+        material.map = options.eyeMapOverride;
         material.needsUpdate = true;
       }
 

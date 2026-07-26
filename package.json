@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "avatar:audit-wardrobe": "node scripts/avatar-v5/build-wardrobe-lab-assets.mjs",
+    "avatar:promote-v5": "node scripts/avatar-v5/promote-approved-v5-expansion.mjs"
   },
   "dependencies": {
     "@react-three/drei": "10.7.7",
@@ -19,6 +21,8 @@
     "three": "0.185.1"
   },
   "devDependencies": {
+    "@gltf-transform/core": "4.2.1",
+    "@gltf-transform/functions": "4.2.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -26,6 +30,7 @@
     "@types/three": "0.185.1",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
+    "sharp": "0.34.5",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

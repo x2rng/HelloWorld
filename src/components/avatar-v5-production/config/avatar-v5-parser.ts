@@ -1,6 +1,8 @@
 import {
   avatarV5BottomStyles,
   avatarV5ColourVariants,
+  avatarV5EyeColours,
+  avatarV5FacialHairStyles,
   avatarV5HairColours,
   avatarV5HairStyles,
   avatarV5ShoeStyles,
@@ -14,6 +16,8 @@ import type {
   AvatarV5BottomStyleId,
   AvatarV5ColourVariantId,
   AvatarV5Config,
+  AvatarV5EyeColourId,
+  AvatarV5FacialHairStyleId,
   AvatarV5HairColourId,
   AvatarV5HairStyleId,
   AvatarV5Option,
@@ -53,6 +57,11 @@ export function parseAvatarV5Config(value: unknown): AvatarV5Config {
       avatarV5SkinTones,
       defaultAvatarV5Config.skinToneId,
     ),
+    eyeColourId: allowed<AvatarV5EyeColourId>(
+      config.eyeColourId,
+      avatarV5EyeColours,
+      defaultAvatarV5Config.eyeColourId,
+    ),
     hairStyleId: allowed<AvatarV5HairStyleId>(
       config.hairStyleId,
       avatarV5HairStyles,
@@ -62,6 +71,11 @@ export function parseAvatarV5Config(value: unknown): AvatarV5Config {
       config.hairColourId,
       avatarV5HairColours,
       defaultAvatarV5Config.hairColourId,
+    ),
+    facialHairStyleId: allowed<AvatarV5FacialHairStyleId>(
+      config.facialHairStyleId,
+      avatarV5FacialHairStyles,
+      defaultAvatarV5Config.facialHairStyleId,
     ),
     topStyleId: allowed<AvatarV5TopStyleId>(
       config.topStyleId,
@@ -134,8 +148,10 @@ export function randomAvatarV5Config(): AvatarV5Config {
     renderer: "modular-gltf",
     assetFamily: "quaternius-universal",
     skinToneId: randomOption(avatarV5SkinTones),
+    eyeColourId: randomOption(avatarV5EyeColours),
     hairStyleId: randomOption(avatarV5HairStyles),
     hairColourId: randomOption(avatarV5HairColours),
+    facialHairStyleId: randomOption(avatarV5FacialHairStyles),
     topStyleId: randomOption(avatarV5TopStyles),
     topColourId: randomOption(avatarV5ColourVariants),
     bottomStyleId: randomOption(avatarV5BottomStyles),
@@ -149,6 +165,9 @@ export function avatarV5ToV3(config: AvatarV5Config): AvatarConfig {
   const hairStyleMap: Record<AvatarV5HairStyleId, AvatarConfig["hairStyle"]> = {
     "approved-long": "long",
     "double-buns": "bun",
+    "close-buzz": "fade",
+    "soft-close-crop": "short",
+    "simple-side-part": "side",
   };
 
   const skinToneMap: Record<AvatarV5SkinToneId, AvatarConfig["skinTone"]> = {
@@ -171,16 +190,36 @@ export function avatarV5ToV3(config: AvatarV5Config): AvatarConfig {
     auburn: "#8a3f2b",
     "golden-brown": "#c9a35a",
     silver: "#9ca3af",
+    "blue-black": "#111827",
+    "ash-brown": "#62574f",
+    copper: "#a44e2f",
+    platinum: "#d6cfbc",
+  };
+  const eyeColourMap: Record<
+    AvatarV5EyeColourId,
+    AvatarConfig["eyeColor"]
+  > = {
+    brown: "#65432d",
+    blue: "#416f9b",
+    green: "#527a59",
+    hazel: "#8a6e36",
+    grey: "#687783",
   };
 
   return normalizeAvatarConfig({
     ...defaultAvatarConfig,
     skinTone: skinToneMap[config.skinToneId] ?? getAvatarV5SkinColour(config.skinToneId),
+    eyeColor: eyeColourMap[config.eyeColourId],
     hairStyle: hairStyleMap[config.hairStyleId],
     hairColor:
       hairColourMap[config.hairColourId] ??
       getAvatarV5HairColour(config.hairColourId),
     eyebrowColor:
+      hairColourMap[config.hairColourId] ??
+      getAvatarV5HairColour(config.hairColourId),
+    facialHairStyle:
+      config.facialHairStyleId === "short-beard" ? "beard" : "none",
+    facialHairColor:
       hairColourMap[config.hairColourId] ??
       getAvatarV5HairColour(config.hairColourId),
     topStyle:
