@@ -66,10 +66,17 @@ export type AvatarV5CreatorProps = {
 function canUseWebGL() {
   try {
     const canvas = document.createElement("canvas");
-    return Boolean(
-      canvas.getContext("webgl2", { failIfMajorPerformanceCaveat: true }) ||
-        canvas.getContext("webgl", { failIfMajorPerformanceCaveat: true }),
-    );
+    // Match the normal context creation used by the studio. Some mobile GPUs
+    // report a performance caveat while still rendering the V5 scene correctly.
+    const context =
+      canvas.getContext("webgl2") ?? canvas.getContext("webgl");
+
+    if (!context) return false;
+
+    // The capability probe should not consume one of the limited WebGL
+    // contexts available to mobile browsers.
+    context.getExtension("WEBGL_lose_context")?.loseContext();
+    return true;
   } catch {
     return false;
   }
