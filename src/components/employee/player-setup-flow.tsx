@@ -5,11 +5,19 @@ import {
   completePlayerSetup,
   type CompletePlayerSetupState,
 } from "@/app/employee/setup/actions";
-import { ProceduralAvatarCreator } from "@/components/avatar-3d/procedural-avatar-creator";
+import {
+  createAvatarV4FromStored,
+  type StoredAvatarConfig,
+} from "@/components/avatar-3d/config/avatar-v4-parser";
+import { AvatarV5Creator } from "@/components/avatar-v5-production/avatar-v5-creator";
+import { AvatarV5Presentation } from "@/components/avatar-v5-production/avatar-v5-presentation";
+import {
+  createAvatarV5FromStored,
+  isAvatarV5Config,
+} from "@/components/avatar-v5-production/config/avatar-v5-parser";
 import { FullBodyAvatar } from "@/components/employee/full-body-avatar";
 import { BadgePill } from "@/components/ui/badge-pill";
 import { Button } from "@/components/ui/button";
-import type { AvatarV4Config } from "@/components/avatar-3d/config/avatar-v4-types";
 import {
   growthPriorityOptions,
   playerInterestOptions,
@@ -44,7 +52,7 @@ type PlayerSetupFlowProps = {
   hasCompanyAssignedIdentity: boolean;
   initialInterests: string[];
   initialGrowthPriorities: string[];
-  initialAvatarConfig: AvatarV4Config;
+  initialAvatarConfig: StoredAvatarConfig;
   assignmentTitle: string | null;
   startingLevel: number;
   avatarStage: string;
@@ -107,6 +115,13 @@ export function PlayerSetupFlow({
   const [priorities, setPriorities] = useState(initialGrowthPriorities);
   const [customInterest, setCustomInterest] = useState("");
   const [avatarConfig, setAvatarConfig] = useState(initialAvatarConfig);
+  const [v5AvatarConfig, setV5AvatarConfig] = useState(() =>
+    createAvatarV5FromStored(initialAvatarConfig),
+  );
+  const [fallbackAvatarConfig, setFallbackAvatarConfig] = useState(() =>
+    createAvatarV4FromStored(initialAvatarConfig),
+  );
+  const [v5Available, setV5Available] = useState(false);
   const fallbackSkills = useMemo(
     () => getRoleTemplateSkills(fallbackRole),
     [fallbackRole],
@@ -403,9 +418,18 @@ export function PlayerSetupFlow({
                   Make your identity feel personal.
                 </h1>
               </div>
-              <ProceduralAvatarCreator
-                config={avatarConfig}
-                onChange={setAvatarConfig}
+              <AvatarV5Creator
+                config={v5AvatarConfig}
+                onChange={(next) => {
+                  setV5AvatarConfig(next);
+                  setAvatarConfig(next);
+                }}
+                fallbackConfig={fallbackAvatarConfig}
+                onFallbackChange={(next) => {
+                  setFallbackAvatarConfig(next);
+                  setAvatarConfig(next);
+                }}
+                onAvailabilityChange={setV5Available}
                 setupMode
               />
             </section>
@@ -419,10 +443,17 @@ export function PlayerSetupFlow({
                     <BadgePill tone="blue">Ready to enter</BadgePill>
                   </div>
                   <div className="absolute bottom-10 size-56 rounded-full bg-blue-500/16 blur-3xl" />
-                  <FullBodyAvatar
-                    config={avatarConfig}
-                    className="relative translate-y-7 scale-110"
-                  />
+                  {isAvatarV5Config(avatarConfig) ? (
+                    <AvatarV5Presentation
+                      config={avatarConfig}
+                      className="relative h-[30rem] w-full rounded-none border-0"
+                    />
+                  ) : (
+                    <FullBodyAvatar
+                      config={avatarConfig}
+                      className="relative translate-y-7 scale-110"
+                    />
+                  )}
                 </div>
                 <div className="p-7 sm:p-10">
                   <p className="eyebrow">Player summary</p>
@@ -503,11 +534,15 @@ export function PlayerSetupFlow({
               type="button"
               size="lg"
               disabled={!canContinue}
-              onClick={() =>
+              onClick={(event) => {
+                event.preventDefault();
+                if (step === 4 && v5Available) {
+                  setAvatarConfig(v5AvatarConfig);
+                }
                 setStep((current) =>
                   Math.min(stepLabels.length - 1, current + 1),
-                )
-              }
+                );
+              }}
             >
               {step === 2 && interests.length === 0
                 ? "Skip for now"

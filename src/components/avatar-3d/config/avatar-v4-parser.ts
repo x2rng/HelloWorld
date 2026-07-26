@@ -27,8 +27,17 @@ import type {
   ShoeStyleId,
   TopStyleId,
 } from "@/components/avatar-3d/config/avatar-v4-types";
+import {
+  avatarV5ToV3,
+  isAvatarV5Config,
+  parseAvatarV5Config,
+} from "@/components/avatar-v5-production/config/avatar-v5-parser";
+import type { AvatarV5Config } from "@/components/avatar-v5-production/config/avatar-v5-types";
 
-export type StoredAvatarConfig = AvatarConfig | AvatarV4Config;
+export type StoredAvatarConfig =
+  | AvatarConfig
+  | AvatarV4Config
+  | AvatarV5Config;
 
 function allowed<T extends string>(
   value: unknown,
@@ -402,6 +411,15 @@ export function createAvatarV4FromStored(value: unknown): AvatarV4Config {
     value &&
     typeof value === "object" &&
     !Array.isArray(value) &&
+    (value as Record<string, unknown>).version === 5
+  ) {
+    return upgradeAvatarV3ToV4(avatarV5ToV3(parseAvatarV5Config(value)));
+  }
+
+  if (
+    value &&
+    typeof value === "object" &&
+    !Array.isArray(value) &&
     (value as Record<string, unknown>).version === 4
   ) {
     return parseAvatarV4Config(value);
@@ -411,6 +429,15 @@ export function createAvatarV4FromStored(value: unknown): AvatarV4Config {
 }
 
 export function normalizeStoredAvatarConfig(value: unknown): StoredAvatarConfig {
+  if (
+    value &&
+    typeof value === "object" &&
+    !Array.isArray(value) &&
+    (value as Record<string, unknown>).version === 5
+  ) {
+    return parseAvatarV5Config(value);
+  }
+
   if (
     value &&
     typeof value === "object" &&
@@ -426,7 +453,11 @@ export function normalizeStoredAvatarConfig(value: unknown): StoredAvatarConfig 
 export function isCompleteStoredAvatarConfig(
   value: unknown,
 ): value is StoredAvatarConfig {
-  return isCompleteAvatarV4Config(value) || isCompleteAvatarConfig(value);
+  return (
+    isAvatarV5Config(value) ||
+    isCompleteAvatarV4Config(value) ||
+    isCompleteAvatarConfig(value)
+  );
 }
 
 export function avatarV4ToV3(config: AvatarV4Config): AvatarConfig {
