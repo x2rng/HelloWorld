@@ -18,8 +18,8 @@ export const defaultAvatarV5Config: AvatarV5Config = {
   topColourId: "modern-ocean",
   bottomStyleId: "straight-trousers",
   bottomColourId: "modern-graphite",
-  shoeStyleId: "trainers",
-  shoeColourId: "modern-cloud",
+  shoeStyleId: "ranger-boots",
+  shoeColourId: "modern-graphite",
   glassesStyleId: "none",
   accessoryIds: [],
 };

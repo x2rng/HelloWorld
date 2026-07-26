@@ -18,6 +18,7 @@ export function AvatarV5ProductionScene({
   autoRotate,
   onInteraction,
   viewRequest,
+  focusMode = "full",
 }: {
   config: AvatarV5Config;
   quality: AvatarQualityTier;
@@ -26,6 +27,7 @@ export function AvatarV5ProductionScene({
   autoRotate: boolean;
   onInteraction: () => void;
   viewRequest: AvatarViewRequest;
+  focusMode?: "full" | "face";
 }) {
   return (
     <>
@@ -92,6 +94,7 @@ export function AvatarV5ProductionScene({
         autoRotate={autoRotate && !reducedMotion && quality !== "low"}
         onInteraction={onInteraction}
         viewRequest={viewRequest}
+        focus={focusMode}
       />
     </>
   );

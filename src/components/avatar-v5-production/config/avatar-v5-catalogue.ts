@@ -120,13 +120,8 @@ export const avatarV5BottomStyles: ReadonlyArray<AvatarV5Option<AvatarV5BottomSt
 ];
 
 export const avatarV5ShoeStyles: ReadonlyArray<AvatarV5Option<AvatarV5ShoeStyleId>> = [
-  { label: "Trainers", value: "trainers" },
-  { label: "Casual shoes", value: "casual-shoes" },
-  { label: "Formal shoes", value: "formal-shoes" },
-  { label: "Modern boots", value: "modern-boots" },
-  { label: "Sport shoes", value: "sport-shoes" },
-  { label: "Heritage boots", value: "heritage-boots" },
-  { label: "Ranger boots", value: "ranger-boots" },
+  { label: "Casual ankle boots", value: "heritage-boots" },
+  { label: "Structured boots", value: "ranger-boots" },
 ];
 
 export const avatarV5GlassesStyles: ReadonlyArray<AvatarV5Option<AvatarV5GlassesStyleId>> = [

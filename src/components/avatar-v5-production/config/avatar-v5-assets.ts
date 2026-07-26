@@ -61,9 +61,9 @@ const topFamilies: Record<AvatarV5TopStyleId, OutfitFamily> = {
   "oxford-shirt": "peasant",
   "polo-shirt": "peasant",
   "crew-sweater": "peasant",
-  hoodie: "ranger",
-  blazer: "ranger",
-  bomber: "ranger",
+  hoodie: "peasant",
+  blazer: "peasant",
+  bomber: "peasant",
 };
 
 const bottomFamilies: Record<AvatarV5BottomStyleId, OutfitFamily> = {

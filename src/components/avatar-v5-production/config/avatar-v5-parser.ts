@@ -152,12 +152,12 @@ export function parseAvatarV5Config(value: unknown): AvatarV5Config {
       defaultAvatarV5Config.bottomColourId,
     ),
     shoeStyleId: allowed<AvatarV5ShoeStyleId>(
-      legacyV5 ? "trainers" : config.shoeStyleId,
+      legacyV5 ? "ranger-boots" : config.shoeStyleId,
       avatarV5ShoeStyles,
       defaultAvatarV5Config.shoeStyleId,
     ),
     shoeColourId: allowed<AvatarV5ColourVariantId>(
-      legacyV5 ? "modern-cloud" : config.shoeColourId,
+      legacyV5 ? "modern-graphite" : config.shoeColourId,
       avatarV5ColourVariants,
       defaultAvatarV5Config.shoeColourId,
     ),

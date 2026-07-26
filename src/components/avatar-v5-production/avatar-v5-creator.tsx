@@ -252,7 +252,17 @@ function CreatorContent({
   return (
     <div className={cx("grid min-w-0 gap-5 xl:grid-cols-[minmax(0,1fr)_23rem]", className)}>
       <div className="min-w-0 xl:sticky xl:top-5 xl:self-start">
-        <AvatarV5Studio config={config} className={setupMode ? "lg:h-[39rem]" : undefined} />
+        <AvatarV5Studio
+          config={config}
+          className={setupMode ? "lg:h-[39rem]" : undefined}
+          focusMode={
+            category === "face" ||
+            category === "hair" ||
+            category === "accessories"
+              ? "face"
+              : "full"
+          }
+        />
       </div>
       <aside className="min-w-0 rounded-[30px] border border-white/9 bg-[#0d1119] p-4 sm:p-5">
         <div className="flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -296,9 +306,24 @@ function CreatorContent({
               <Swatches label="Hair colour" options={avatarV5HairColours} value={config.hairColourId} onChange={(value) => setField("hairColourId", value)} />
             </>
           ) : null}
-          {category === "tops" ? <StyleOptions label="Top" options={avatarV5TopStyles} value={config.topStyleId} onChange={(value) => setField("topStyleId", value)} /> : null}
-          {category === "bottoms" ? <StyleOptions label="Bottoms" options={avatarV5BottomStyles} value={config.bottomStyleId} onChange={(value) => setField("bottomStyleId", value)} /> : null}
-          {category === "shoes" ? <StyleOptions label="Shoes" options={avatarV5ShoeStyles} value={config.shoeStyleId} onChange={(value) => setField("shoeStyleId", value)} /> : null}
+          {category === "tops" ? (
+            <>
+              <StyleOptions label="Top" options={avatarV5TopStyles} value={config.topStyleId} onChange={(value) => setField("topStyleId", value)} />
+              <Swatches label="Top colour" options={avatarV5ColourVariants} value={config.topColourId} onChange={(value) => setField("topColourId", value)} />
+            </>
+          ) : null}
+          {category === "bottoms" ? (
+            <>
+              <StyleOptions label="Bottoms" options={avatarV5BottomStyles} value={config.bottomStyleId} onChange={(value) => setField("bottomStyleId", value)} />
+              <Swatches label="Bottom colour" options={avatarV5ColourVariants} value={config.bottomColourId} onChange={(value) => setField("bottomColourId", value)} />
+            </>
+          ) : null}
+          {category === "shoes" ? (
+            <>
+              <StyleOptions label="Shoes" options={avatarV5ShoeStyles} value={config.shoeStyleId} onChange={(value) => setField("shoeStyleId", value)} />
+              <Swatches label="Shoe colour" options={avatarV5ColourVariants} value={config.shoeColourId} onChange={(value) => setField("shoeColourId", value)} />
+            </>
+          ) : null}
           {category === "accessories" ? (
             <>
               <StyleOptions label="Glasses" options={avatarV5GlassesStyles} value={config.glassesStyleId} onChange={(value) => setField("glassesStyleId", value)} />

@@ -23,10 +23,12 @@ export default function AvatarV5ProductionStudio({
   config,
   className,
   presentation = false,
+  focusMode = "full",
 }: {
   config: AvatarV5Config;
   className?: string;
   presentation?: boolean;
+  focusMode?: "full" | "face";
 }) {
   const {
     containerRef,
@@ -87,6 +89,7 @@ export default function AvatarV5ProductionStudio({
             autoRotate={autoRotate}
             onInteraction={() => setAutoRotate(false)}
             viewRequest={viewRequest}
+            focusMode={focusMode}
           />
         </Suspense>
       </Canvas>
