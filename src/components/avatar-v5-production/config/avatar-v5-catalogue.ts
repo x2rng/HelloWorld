@@ -96,27 +96,21 @@ export const avatarV5FacialHairStyles: ReadonlyArray<AvatarV5Option<AvatarV5Faci
 ];
 
 export const avatarV5TopStyles: ReadonlyArray<AvatarV5Option<AvatarV5TopStyleId>> = [
-  { label: "Fitted T-shirt", value: "fitted-tee", description: "Clean crew neck and fitted sleeve." },
-  { label: "Relaxed T-shirt", value: "relaxed-tee", description: "A softer, roomier everyday silhouette." },
-  { label: "Oxford shirt", value: "oxford-shirt", description: "Collar, placket, buttons and cuffs." },
-  { label: "Polo shirt", value: "polo-shirt", description: "Structured collar with a short placket." },
-  { label: "Crew sweater", value: "crew-sweater", description: "Thicker knit with ribbed edges." },
-  { label: "Hoodie", value: "hoodie", description: "Hood, drawstrings and front pocket." },
-  { label: "Blazer", value: "blazer", description: "Structured lapels and workplace tailoring." },
-  { label: "Bomber jacket", value: "bomber", description: "Ribbed collar, cuffs and zip front." },
-  { label: "Heritage fitted", value: "heritage-fitted" },
-  { label: "Ranger structured", value: "ranger-structured" },
+  {
+    label: "Heritage fitted",
+    value: "heritage-fitted",
+    description: "An artist-authored fitted outfit that moves with the character.",
+  },
+  {
+    label: "Ranger structured",
+    value: "ranger-structured",
+    description: "An artist-authored layered outfit that moves with the character.",
+  },
 ];
 
 export const avatarV5BottomStyles: ReadonlyArray<AvatarV5Option<AvatarV5BottomStyleId>> = [
-  { label: "Straight trousers", value: "straight-trousers" },
-  { label: "Slim trousers", value: "slim-trousers" },
-  { label: "Jeans", value: "jeans" },
-  { label: "Relaxed trousers", value: "relaxed-trousers" },
-  { label: "Utility trousers", value: "utility-trousers" },
-  { label: "Sport trousers", value: "sport-trousers" },
-  { label: "Heritage trousers", value: "heritage-trousers" },
-  { label: "Ranger trousers", value: "ranger-trousers" },
+  { label: "Heritage trousers", value: "heritage-trousers", description: "Fitted and fully rigged." },
+  { label: "Ranger trousers", value: "ranger-trousers", description: "Structured and fully rigged." },
 ];
 
 export const avatarV5ShoeStyles: ReadonlyArray<AvatarV5Option<AvatarV5ShoeStyleId>> = [

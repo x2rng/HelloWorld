@@ -38,7 +38,6 @@ import {
   type AvatarV5MaterialOptions,
 } from "@/components/avatar-v5-production/avatar-v5-materials";
 import { AvatarV6Details } from "@/components/avatar-v5-production/avatar-v6-details";
-import { isAvatarV6ModernTop } from "@/components/avatar-v5-production/avatar-v6-garments";
 
 const MODEL_SCALE = 3.55;
 const MODEL_FLOOR_Y = -3.14;
@@ -86,20 +85,20 @@ function eyeScale(config: AvatarV5Config): [number, number, number] {
 }
 
 function topScale(config: AvatarV5Config): [number, number, number] {
-  if (config.topStyleId === "relaxed-tee") return [1.1, 1, 1.07];
-  if (config.topStyleId === "crew-sweater") return [1.07, 1.005, 1.08];
-  if (config.topStyleId === "hoodie") return [1.1, 1.005, 1.1];
-  if (config.topStyleId === "blazer") return [1.07, 1.01, 1.055];
-  if (config.topStyleId === "bomber") return [1.12, 0.985, 1.11];
+  if (config.topStyleId === "relaxed-tee") return [1.045, 1, 1.035];
+  if (config.topStyleId === "crew-sweater") return [1.035, 1.005, 1.045];
+  if (config.topStyleId === "hoodie") return [1.055, 1.005, 1.06];
+  if (config.topStyleId === "blazer") return [1.04, 1.01, 1.035];
+  if (config.topStyleId === "bomber") return [1.06, 0.995, 1.06];
   return [1, 1, 1];
 }
 
 function bottomScale(config: AvatarV5Config): [number, number, number] {
-  if (config.bottomStyleId === "slim-trousers") return [1.08, 1, 1.1];
-  if (config.bottomStyleId === "relaxed-trousers") return [1.23, 1, 1.22];
-  if (config.bottomStyleId === "utility-trousers") return [1.22, 1, 1.22];
-  if (config.bottomStyleId === "sport-trousers") return [1.14, 1, 1.16];
-  return [1.16, 1, 1.18];
+  if (config.bottomStyleId === "slim-trousers") return [0.94, 1, 0.97];
+  if (config.bottomStyleId === "relaxed-trousers") return [1.06, 1, 1.04];
+  if (config.bottomStyleId === "utility-trousers") return [1.045, 1, 1.05];
+  if (config.bottomStyleId === "sport-trousers") return [0.98, 1, 1.01];
+  return [1, 1, 1];
 }
 
 function shoeScale(config: AvatarV5Config): [number, number, number] {
@@ -107,8 +106,8 @@ function shoeScale(config: AvatarV5Config): [number, number, number] {
   if (config.shoeStyleId === "casual-shoes") return [0.98, 1, 1.04];
   if (config.shoeStyleId === "formal-shoes") return [0.94, 1, 1.08];
   if (config.shoeStyleId === "sport-shoes") return [1.08, 1, 1.14];
-  if (config.shoeStyleId === "modern-boots") return [1.05, 1.04, 1.06];
-  return [1.03, 1.02, 1.05];
+  if (config.shoeStyleId === "modern-boots") return [1.02, 1.04, 1.04];
+  return [1, 1, 1];
 }
 
 function createCompatibleClip(source: AnimationClip, root: Object3D) {
@@ -284,11 +283,6 @@ export function AvatarV5ProductionModel({
   const selectedTopScale = topScale(config);
   const selectedBottomScale = bottomScale(config);
   const selectedShoeScale = shoeScale(config);
-  const modernTop = isAvatarV6ModernTop(config.topStyleId);
-  const animateParts = animate;
-  const modernBottom =
-    config.bottomStyleId !== "heritage-trousers" &&
-    config.bottomStyleId !== "ranger-trousers";
 
   return (
     <group position={[0, MODEL_FLOOR_Y, 0]} scale={MODEL_SCALE}>
@@ -297,7 +291,7 @@ export function AvatarV5ProductionModel({
         asset={baseAsset}
         eyeTexture={eyeTexture}
         idleClip={idleClip}
-        animate={animateParts}
+        animate={animate}
         materialOptions={{
           clipBelowWorldY: HEAD_CLIP_WORLD_Y,
           hairColour,
@@ -312,7 +306,7 @@ export function AvatarV5ProductionModel({
         <AnimatedAvatarPart
           asset={hairAsset}
           idleClip={idleClip}
-          animate={animateParts}
+          animate={animate}
           materialOptions={{ hairColour, faceScale: selectedFaceScale }}
         />
       </group>
@@ -320,16 +314,15 @@ export function AvatarV5ProductionModel({
         <AnimatedAvatarPart
           asset={facialHairAsset}
           idleClip={idleClip}
-          animate={animateParts}
+          animate={animate}
           materialOptions={{ hairColour, faceScale: selectedFaceScale }}
         />
       ) : null}
-      {!modernTop ? (
       <group scale={selectedTopScale}>
       <TexturedAvatarPart
         asset={top.body}
         idleClip={idleClip}
-        animate={animateParts}
+        animate={animate}
         texture={topTexture}
         materialOptions={{
           skinColour,
@@ -340,7 +333,7 @@ export function AvatarV5ProductionModel({
       <TexturedAvatarPart
         asset={top.arms}
         idleClip={idleClip}
-        animate={animateParts}
+        animate={animate}
         texture={topTexture}
         materialOptions={{
           skinColour,
@@ -349,31 +342,22 @@ export function AvatarV5ProductionModel({
         }}
       />
       </group>
-      ) : null}
       <group scale={selectedBottomScale}>
-      {!modernBottom ? (
       <TexturedAvatarPart
         asset={bottom.asset}
         idleClip={idleClip}
-        animate={animateParts}
+        animate={animate}
         texture={bottomTexture}
-        materialOptions={{
-          depthTest: false,
-          renderOrder: 2,
-        }}
+        materialOptions={{}}
       />
-      ) : null}
       </group>
       <group scale={selectedShoeScale}>
       <TexturedAvatarPart
         asset={shoes.asset}
         idleClip={idleClip}
-        animate={animateParts}
+        animate={animate}
         texture={shoeTexture}
-        materialOptions={{
-          depthTest: false,
-          renderOrder: 3,
-        }}
+        materialOptions={{}}
       />
       </group>
       <AvatarV6Details config={config} />

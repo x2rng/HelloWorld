@@ -16,8 +16,6 @@ type MaterialOwner = Mesh | SkinnedMesh;
 
 export type AvatarV5MaterialOptions = {
   clipBelowWorldY?: number;
-  depthTest?: boolean;
-  renderOrder?: number;
   hairColour?: string;
   skinColour?: string;
   skinSourceColour?: string;
@@ -62,9 +60,6 @@ export function prepareAvatarV5Scene(
 
     object.castShadow = true;
     object.receiveShadow = true;
-    if (options.renderOrder !== undefined) {
-      object.renderOrder = options.renderOrder;
-    }
 
     const sourceMaterials = Array.isArray(object.material)
       ? object.material
@@ -72,9 +67,6 @@ export function prepareAvatarV5Scene(
     const materials = sourceMaterials.map((sourceMaterial) => {
       const material = sourceMaterial.clone();
       ownedMaterials.push(material);
-      if (options.depthTest !== undefined) {
-        material.depthTest = options.depthTest;
-      }
 
       if (
         options.clipBelowWorldY !== undefined &&

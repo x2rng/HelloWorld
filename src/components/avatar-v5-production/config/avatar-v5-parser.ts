@@ -132,7 +132,7 @@ export function parseAvatarV5Config(value: unknown): AvatarV5Config {
       defaultAvatarV5Config.facialHairStyleId,
     ),
     topStyleId: allowed<AvatarV5TopStyleId>(
-      legacyV5 ? "fitted-tee" : config.topStyleId,
+      legacyV5 ? "heritage-fitted" : config.topStyleId,
       avatarV5TopStyles,
       defaultAvatarV5Config.topStyleId,
     ),
@@ -142,7 +142,7 @@ export function parseAvatarV5Config(value: unknown): AvatarV5Config {
       defaultAvatarV5Config.topColourId,
     ),
     bottomStyleId: allowed<AvatarV5BottomStyleId>(
-      legacyV5 ? "straight-trousers" : config.bottomStyleId,
+      legacyV5 ? "heritage-trousers" : config.bottomStyleId,
       avatarV5BottomStyles,
       defaultAvatarV5Config.bottomStyleId,
     ),
@@ -152,7 +152,7 @@ export function parseAvatarV5Config(value: unknown): AvatarV5Config {
       defaultAvatarV5Config.bottomColourId,
     ),
     shoeStyleId: allowed<AvatarV5ShoeStyleId>(
-      legacyV5 ? "ranger-boots" : config.shoeStyleId,
+      legacyV5 ? "heritage-boots" : config.shoeStyleId,
       avatarV5ShoeStyles,
       defaultAvatarV5Config.shoeStyleId,
     ),
