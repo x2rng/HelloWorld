@@ -9,6 +9,8 @@ import {
 type AvatarWebGLBoundaryProps = {
   children: ReactNode;
   fallback: (retry: () => void) => ReactNode;
+  onFailure?: () => void;
+  onRetry?: () => void;
 };
 
 type AvatarWebGLBoundaryState = {
@@ -31,9 +33,11 @@ export class AvatarWebGLBoundary extends Component<
 
   componentDidCatch(error: Error, info: ErrorInfo) {
     console.error("Procedural avatar renderer failed.", error, info);
+    this.props.onFailure?.();
   }
 
   retry = () => {
+    this.props.onRetry?.();
     this.setState((current) => ({
       failed: false,
       retryKey: current.retryKey + 1,

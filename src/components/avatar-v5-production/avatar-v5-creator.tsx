@@ -63,25 +63,6 @@ export type AvatarV5CreatorProps = {
   onAvailabilityChange?: (available: boolean) => void;
 };
 
-function canUseWebGL() {
-  try {
-    const canvas = document.createElement("canvas");
-    // Match the normal context creation used by the studio. Some mobile GPUs
-    // report a performance caveat while still rendering the V5 scene correctly.
-    const context =
-      canvas.getContext("webgl2") ?? canvas.getContext("webgl");
-
-    if (!context) return false;
-
-    // The capability probe should not consume one of the limited WebGL
-    // contexts available to mobile browsers.
-    context.getExtension("WEBGL_lose_context")?.loseContext();
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 function StyleOptions<T extends string>({
   label,
   options,
@@ -387,38 +368,16 @@ function CreatorContent({
 }
 
 export function AvatarV5Creator(props: AvatarV5CreatorProps) {
-  const [available, setAvailable] = useState<boolean | null>(null);
   const { onAvailabilityChange } = props;
 
   useEffect(() => {
-    const frame = window.requestAnimationFrame(() => {
-      const next = canUseWebGL();
-      setAvailable(next);
-      onAvailabilityChange?.(next);
-    });
-    return () => window.cancelAnimationFrame(frame);
+    onAvailabilityChange?.(true);
   }, [onAvailabilityChange]);
-
-  if (available === null) {
-    return (
-      <div className="flex min-h-[520px] items-center justify-center rounded-[2rem] border border-white/10 bg-[#0a0b10] px-6 text-center text-sm text-white/60">
-        Preparing the avatar studio…
-      </div>
-    );
-  }
-
-  if (!available) {
-    return (
-      <FallbackEditor
-        fallbackConfig={props.fallbackConfig}
-        onFallbackChange={props.onFallbackChange}
-        setupMode={props.setupMode}
-      />
-    );
-  }
 
   return (
     <AvatarWebGLBoundary
+      onFailure={() => onAvailabilityChange?.(false)}
+      onRetry={() => onAvailabilityChange?.(true)}
       fallback={(retry) => (
         <FallbackEditor
           fallbackConfig={props.fallbackConfig}
