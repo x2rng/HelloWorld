@@ -1,0 +1,8 @@
+.codex/
+.codex-remote-attachments/
+.codex-dev.log
+.codex-dev.err.log
+.env*
+.git/
+.next/
+node_modules/
