@@ -33,11 +33,18 @@ import {
   parseAvatarV5Config,
 } from "@/components/avatar-v5-production/config/avatar-v5-parser";
 import type { AvatarV5Config } from "@/components/avatar-v5-production/config/avatar-v5-types";
+import {
+  isCompletePlayerCompanionConfig,
+  isPlayerCompanionConfig,
+  parsePlayerCompanionConfig,
+} from "@/components/player-companion/config/player-companion-parser";
+import type { PlayerCompanionConfig } from "@/components/player-companion/config/player-companion-types";
 
 export type StoredAvatarConfig =
   | AvatarConfig
   | AvatarV4Config
-  | AvatarV5Config;
+  | AvatarV5Config
+  | PlayerCompanionConfig;
 
 function allowed<T extends string>(
   value: unknown,
@@ -430,6 +437,10 @@ export function createAvatarV4FromStored(value: unknown): AvatarV4Config {
 }
 
 export function normalizeStoredAvatarConfig(value: unknown): StoredAvatarConfig {
+  if (isPlayerCompanionConfig(value)) {
+    return parsePlayerCompanionConfig(value);
+  }
+
   if (
     value &&
     typeof value === "object" &&
@@ -456,6 +467,7 @@ export function isCompleteStoredAvatarConfig(
   value: unknown,
 ): value is StoredAvatarConfig {
   return (
+    isCompletePlayerCompanionConfig(value) ||
     isAvatarV5Config(value) ||
     isCompleteAvatarV4Config(value) ||
     isCompleteAvatarConfig(value)

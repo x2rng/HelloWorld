@@ -6,16 +6,11 @@ import {
   type CompletePlayerSetupState,
 } from "@/app/employee/setup/actions";
 import {
-  createAvatarV4FromStored,
   type StoredAvatarConfig,
 } from "@/components/avatar-3d/config/avatar-v4-parser";
-import { AvatarV5Creator } from "@/components/avatar-v5-production/avatar-v5-creator";
-import { AvatarV5Presentation } from "@/components/avatar-v5-production/avatar-v5-presentation";
-import {
-  createAvatarV5FromStored,
-  isAvatarV5Config,
-} from "@/components/avatar-v5-production/config/avatar-v5-parser";
-import { FullBodyAvatar } from "@/components/employee/full-body-avatar";
+import { createPlayerCompanionFromStored } from "@/components/player-companion/config/player-companion-parser";
+import { PlayerCompanionEditor } from "@/components/player-companion/player-companion-editor";
+import { PlayerCompanionPresentation } from "@/components/player-companion/player-companion-presentation";
 import { BadgePill } from "@/components/ui/badge-pill";
 import { Button } from "@/components/ui/button";
 import {
@@ -115,13 +110,9 @@ export function PlayerSetupFlow({
   const [priorities, setPriorities] = useState(initialGrowthPriorities);
   const [customInterest, setCustomInterest] = useState("");
   const [avatarConfig, setAvatarConfig] = useState(initialAvatarConfig);
-  const [v5AvatarConfig, setV5AvatarConfig] = useState(() =>
-    createAvatarV5FromStored(initialAvatarConfig),
+  const [companionConfig, setCompanionConfig] = useState(() =>
+    createPlayerCompanionFromStored(initialAvatarConfig),
   );
-  const [fallbackAvatarConfig, setFallbackAvatarConfig] = useState(() =>
-    createAvatarV4FromStored(initialAvatarConfig),
-  );
-  const [v5Available, setV5Available] = useState(false);
   const fallbackSkills = useMemo(
     () => getRoleTemplateSkills(fallbackRole),
     [fallbackRole],
@@ -418,19 +409,13 @@ export function PlayerSetupFlow({
                   Make your identity feel personal.
                 </h1>
               </div>
-              <AvatarV5Creator
-                config={v5AvatarConfig}
+              <PlayerCompanionEditor
+                config={companionConfig}
                 onChange={(next) => {
-                  setV5AvatarConfig(next);
+                  setCompanionConfig(next);
                   setAvatarConfig(next);
                 }}
-                fallbackConfig={fallbackAvatarConfig}
-                onFallbackChange={(next) => {
-                  setFallbackAvatarConfig(next);
-                  setAvatarConfig(next);
-                }}
-                onAvailabilityChange={setV5Available}
-                setupMode
+                footerNote="You can continue even if 3D is unavailable. A lightweight portrait remains available."
               />
             </section>
           ) : null}
@@ -443,17 +428,10 @@ export function PlayerSetupFlow({
                     <BadgePill tone="blue">Ready to enter</BadgePill>
                   </div>
                   <div className="absolute bottom-10 size-56 rounded-full bg-blue-500/16 blur-3xl" />
-                  {isAvatarV5Config(avatarConfig) ? (
-                    <AvatarV5Presentation
-                      config={avatarConfig}
-                      className="relative h-[30rem] w-full rounded-none border-0"
-                    />
-                  ) : (
-                    <FullBodyAvatar
-                      config={avatarConfig}
-                      className="relative translate-y-7 scale-110"
-                    />
-                  )}
+                  <PlayerCompanionPresentation
+                    config={companionConfig}
+                    className="relative h-[30rem] min-h-[30rem] w-full rounded-none border-0"
+                  />
                 </div>
                 <div className="p-7 sm:p-10">
                   <p className="eyebrow">Player summary</p>
@@ -536,8 +514,8 @@ export function PlayerSetupFlow({
               disabled={!canContinue}
               onClick={(event) => {
                 event.preventDefault();
-                if (step === 4 && v5Available) {
-                  setAvatarConfig(v5AvatarConfig);
+                if (step === 4) {
+                  setAvatarConfig(companionConfig);
                 }
                 setStep((current) =>
                   Math.min(stepLabels.length - 1, current + 1),

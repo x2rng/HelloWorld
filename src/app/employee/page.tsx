@@ -2,7 +2,6 @@ import Link from "next/link";
 import { AchievementList } from "@/components/employee/achievement-list";
 import { FullBodyAvatar } from "@/components/employee/full-body-avatar";
 import { OccupationSetupForm } from "@/components/employee/occupation-setup-form";
-import { SkillsPanel } from "@/components/employee/skills-panel";
 import { BadgePill } from "@/components/ui/badge-pill";
 import { Card } from "@/components/ui/card";
 import { ProgressBar } from "@/components/ui/progress-bar";
@@ -669,15 +668,6 @@ export default async function EmployeePage() {
       <AchievementList
         achievements={achievementsResult.data}
         unlockedAchievements={unlockedResult.data}
-      />
-      <SkillsPanel
-        employeeName={profile.full_name ?? profile.email}
-        roleFocus={roleFocus}
-        avatarConfig={avatarConfig}
-        stage={stage}
-        nextStage={nextStage}
-        overall={level}
-        groups={skillGroups}
       />
     </div>
   );

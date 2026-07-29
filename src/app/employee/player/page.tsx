@@ -1,12 +1,7 @@
 import Link from "next/link";
-import {
-  createAvatarV4FromStored,
-  normalizeStoredAvatarConfig,
-} from "@/components/avatar-3d/config/avatar-v4-parser";
-import { ProceduralAvatarPresentation } from "@/components/avatar-3d/procedural-avatar-presentation";
-import { AvatarV5Presentation } from "@/components/avatar-v5-production/avatar-v5-presentation";
-import { isAvatarV5Config } from "@/components/avatar-v5-production/config/avatar-v5-parser";
 import { AchievementList } from "@/components/employee/achievement-list";
+import { createPlayerCompanionFromStored } from "@/components/player-companion/config/player-companion-parser";
+import { PlayerCompanionPresentation } from "@/components/player-companion/player-companion-presentation";
 import { BadgePill } from "@/components/ui/badge-pill";
 import { Card } from "@/components/ui/card";
 import { ProgressBar } from "@/components/ui/progress-bar";
@@ -87,7 +82,7 @@ export default async function EmployeePlayerPage() {
     assignedSkills.length > 0
       ? assignedSkills
       : getRoleTemplateSkills(roleFocus);
-  const storedAvatarConfig = normalizeStoredAvatarConfig(
+  const companionConfig = createPlayerCompanionFromStored(
     playerResult.data?.avatar_config,
   );
   const overall = getLevelInfo(statsResult.data?.total_xp ?? 0);
@@ -108,17 +103,11 @@ export default async function EmployeePlayerPage() {
               <BadgePill tone="purple">Player</BadgePill>
             </div>
             <div className="absolute bottom-8 size-56 rounded-full bg-blue-500/15 blur-3xl" />
-            {isAvatarV5Config(storedAvatarConfig) ? (
-              <AvatarV5Presentation
-                config={storedAvatarConfig}
-                className="h-full min-h-[28rem] w-full rounded-none border-0"
-              />
-            ) : (
-              <ProceduralAvatarPresentation
-                config={createAvatarV4FromStored(storedAvatarConfig)}
-                className="h-full min-h-[28rem] w-full rounded-none border-0"
-              />
-            )}
+            <PlayerCompanionPresentation
+              config={companionConfig}
+              modelScale={1.08}
+              className="h-full min-h-[28rem] w-full rounded-none border-0"
+            />
           </div>
 
           <div className="flex flex-col justify-between p-7 sm:p-10">
