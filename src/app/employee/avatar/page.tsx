@@ -25,13 +25,11 @@ export default async function EmployeeAvatarPage() {
   return (
     <div className="space-y-5">
       <Card className="rounded-[36px] p-6 sm:p-8">
-        <p className="eyebrow">Player companion</p>
-        <h2 className="mt-2 text-4xl sm:text-5xl">
-          Make your companion feel like you.
-        </h2>
+        <p className="eyebrow">Player appearance</p>
+        <h2 className="mt-2 text-4xl sm:text-5xl">Create a look that feels like you.</h2>
         <p className="mt-3 max-w-2xl text-sm leading-7 text-[var(--color-muted)]">
-          Choose a body, face, hair, and outfit for the character that represents
-          you across EXP. Progress changes its stage, not the identity you save.
+          Shape every layer of your full-body player. Your selected identity
+          stays yours while level progression evolves the stage around it.
         </p>
       </Card>
 

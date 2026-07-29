@@ -4,10 +4,6 @@ import Link from "next/link";
 import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { SignOutButton } from "@/components/auth/sign-out-button";
-import {
-  EmployeePlayerCompanion,
-  type EmployeeCompanionData,
-} from "@/components/employee/employee-player-companion";
 import type { ProfileRecord } from "@/lib/exp-types";
 import { cx } from "@/lib/utils";
 
@@ -140,21 +136,16 @@ function DestinationLink({
 export function EmployeeGameShell({
   profile,
   playerSetupCompleted,
-  companion,
   children,
 }: {
   profile: ProfileRecord;
   playerSetupCompleted: boolean;
-  companion: EmployeeCompanionData;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
   const router = useRouter();
   const firstName = (profile.full_name ?? profile.email).split(" ")[0];
   const isSetupRoute = pathname.startsWith("/employee/setup");
-  const isFullCompanionRoute =
-    pathname.startsWith("/employee/player") ||
-    pathname.startsWith("/employee/avatar");
 
   useEffect(() => {
     if (!playerSetupCompleted && !isSetupRoute) {
@@ -246,10 +237,6 @@ export function EmployeeGameShell({
           </div>
         </div>
       </div>
-
-      {!isFullCompanionRoute ? (
-        <EmployeePlayerCompanion key={pathname} data={companion} />
-      ) : null}
 
       <nav
         className="fixed inset-x-3 bottom-3 z-40 flex items-stretch rounded-[24px] border border-white/10 bg-[#0d1119]/95 p-1.5 shadow-[0_24px_80px_rgba(0,0,0,0.55)] backdrop-blur-xl lg:hidden"

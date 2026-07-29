@@ -6,8 +6,13 @@ import {
   saveAvatarConfig,
   type SaveAvatarState,
 } from "@/app/employee/avatar/actions";
-import { createPlayerCompanionFromStored } from "@/components/player-companion/config/player-companion-parser";
-import { PlayerCompanionEditor } from "@/components/player-companion/player-companion-editor";
+import {
+  createAvatarV4FromStored,
+  normalizeStoredAvatarConfig,
+  type StoredAvatarConfig,
+} from "@/components/avatar-3d/config/avatar-v4-parser";
+import { AvatarV5Creator } from "@/components/avatar-v5-production/avatar-v5-creator";
+import { createAvatarV5FromStored } from "@/components/avatar-v5-production/config/avatar-v5-parser";
 import { Button } from "@/components/ui/button";
 
 const initialState: SaveAvatarState = {
@@ -26,9 +31,25 @@ export function AvatarEditorForm({
     saveAvatarConfig,
     initialState,
   );
-  const [config, setConfig] = useState(() =>
-    createPlayerCompanionFromStored(initialStoredConfig),
+  const [config, setConfig] = useState<StoredAvatarConfig>(() =>
+    normalizeStoredAvatarConfig(initialStoredConfig),
   );
+  const [v5Config, setV5Config] = useState(() =>
+    createAvatarV5FromStored(initialStoredConfig),
+  );
+  const [fallbackConfig, setFallbackConfig] = useState(() =>
+    createAvatarV4FromStored(initialStoredConfig),
+  );
+
+  function updateV5(next: typeof v5Config) {
+    setV5Config(next);
+    setConfig(next);
+  }
+
+  function updateFallback(next: typeof fallbackConfig) {
+    setFallbackConfig(next);
+    setConfig(next);
+  }
 
   return (
     <form action={formAction} className="space-y-5">
@@ -37,10 +58,11 @@ export function AvatarEditorForm({
         name="avatar_config"
         value={JSON.stringify(config)}
       />
-      <PlayerCompanionEditor
-        config={config}
-        onChange={setConfig}
-        footerNote="Your existing avatar remains unchanged until you choose Save avatar."
+      <AvatarV5Creator
+        config={v5Config}
+        onChange={updateV5}
+        fallbackConfig={fallbackConfig}
+        onFallbackChange={updateFallback}
       />
 
       {state.message ? (

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { completeTask } from "@/app/employee/onboarding/actions";
 import { AchievementList } from "@/components/employee/achievement-list";
 import { FullBodyAvatar } from "@/components/employee/full-body-avatar";
+import { SkillsPanel } from "@/components/employee/skills-panel";
 import { BadgePill } from "@/components/ui/badge-pill";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -32,6 +33,9 @@ import type {
 import { getLevelInfo } from "@/lib/levels";
 import { normalizeSkillContributions, normalizeSkillFocus } from "@/lib/skill-attribution";
 import {
+  deriveSkillGroups,
+  normalizeAssignedSkills,
+  normalizeRoleFocus,
   type RoleFocus,
 } from "@/lib/skills";
 import { createClient } from "@/lib/supabase/server";
@@ -126,18 +130,49 @@ export default async function EmployeeOnboardingPage({
   }
 
   if (!assignment) {
+    const [emptyStatsResult, emptyAvatarResult] = await Promise.all([
+      supabase
+        .from("employee_stats")
+        .select("id, workspace_id, employee_id, total_xp, current_level, completed_tasks_count, created_at, updated_at")
+        .eq("workspace_id", profile.workspace_id)
+        .eq("employee_id", profile.id)
+        .maybeSingle<EmployeeStatsRecord>(),
+      supabase
+        .from("profiles")
+        .select("avatar_config, role_focus, assigned_skills")
+        .eq("id", profile.id)
+        .maybeSingle<EmployeeAvatarProfile>(),
+    ]);
+    const emptyLevel = getLevelInfo(emptyStatsResult.data?.total_xp ?? 0);
+    const emptyStage = getAvatarStage(emptyLevel.level);
+    const emptyRoleFocus = normalizeRoleFocus(emptyAvatarResult.data?.role_focus);
+    const emptyAssignedSkills = normalizeAssignedSkills(emptyAvatarResult.data?.assigned_skills);
+
     return (
-      <Card className="rounded-[36px] p-8">
-        <BadgePill tone="amber">Awaiting assignment</BadgePill>
-        <h2 className="mt-4 text-4xl">Your Journey is not assigned yet.</h2>
-        <p className="mt-3 max-w-xl text-sm leading-7 text-[var(--color-muted)]">
-          Your workspace admin can assign a track when it is ready. Your progress
-          view will appear here automatically.
-        </p>
-        <Link href="/employee" className="mt-6 inline-flex">
-          <Button variant="secondary">Back to Home</Button>
-        </Link>
-      </Card>
+      <>
+        <Card className="rounded-[36px] p-8">
+          <BadgePill tone="amber">Awaiting assignment</BadgePill>
+          <h2 className="mt-4 text-4xl">Your Journey is not assigned yet.</h2>
+          <p className="mt-3 max-w-xl text-sm leading-7 text-[var(--color-muted)]">
+            Your workspace admin can assign a track when it is ready. Your progress
+            view will appear here automatically.
+          </p>
+          <Link href="/employee" className="mt-6 inline-flex">
+            <Button variant="secondary">Back to Home</Button>
+          </Link>
+        </Card>
+        <SkillsPanel
+          employeeName={profile.full_name ?? profile.email}
+          roleFocus={emptyRoleFocus}
+          avatarConfig={normalizeStoredAvatarConfig(
+            emptyAvatarResult.data?.avatar_config,
+          )}
+          stage={emptyStage}
+          nextStage={getNextAvatarStage(emptyLevel.level)}
+          overall={emptyLevel}
+          groups={deriveSkillGroups([], emptyRoleFocus, emptyAssignedSkills)}
+        />
+      </>
     );
   }
 
@@ -251,6 +286,9 @@ export default async function EmployeeOnboardingPage({
   const avatarConfig = normalizeStoredAvatarConfig(
     avatarResult.data?.avatar_config,
   );
+  const roleFocus = normalizeRoleFocus(avatarResult.data?.role_focus);
+  const assignedSkills = normalizeAssignedSkills(avatarResult.data?.assigned_skills);
+  const skillGroups = deriveSkillGroups(journeyMilestones, roleFocus, assignedSkills);
   const currentMilestone =
     journeyMilestones.find((item) => item.status === "in_progress") ?? null;
   const parsedPreviousLevel = Number(previousLevel);
@@ -617,6 +655,15 @@ export default async function EmployeeOnboardingPage({
       <AchievementList
         achievements={achievementsResult.data}
         unlockedAchievements={unlockedResult.data}
+      />
+      <SkillsPanel
+        employeeName={profile.full_name ?? profile.email}
+        roleFocus={roleFocus}
+        avatarConfig={avatarConfig}
+        stage={stage}
+        nextStage={nextStage}
+        overall={level}
+        groups={skillGroups}
       />
     </div>
   );
