@@ -164,7 +164,7 @@ function PatternLayer({
     growth: { left: 21, right: 41, y: 45, stripeWidth: 13 },
     signal: { left: 20, right: 42, y: 43, stripeWidth: 14 },
     stack: { left: 17, right: 45, y: 44, stripeWidth: 18 },
-    spirit: { left: 22, right: 40, y: 42, stripeWidth: 11 },
+    spirit: { left: 21, right: 43, y: 41, stripeWidth: 12 },
   };
   const anchor = anchors[family];
 
@@ -402,34 +402,47 @@ function StackArtwork({ state, glow, palette }: ArtworkProps) {
 function SpiritArtwork({ state, glow, palette }: ArtworkProps) {
   return (
     <>
-      <rect x="26" y="12" width="12" height="3" fill={palette.secondary} />
-      <rect x="22" y="15" width="20" height="4" fill={palette.primary} />
-      <rect x="18" y="19" width="28" height="5" fill={palette.primary} />
-      <rect x="15" y="24" width="34" height="13" fill={palette.primary} />
-      <rect x="17" y="37" width="30" height="7" fill={palette.primary} />
-      <rect x="20" y="44" width="25" height="5" fill={palette.shadow} />
-      <rect x="20" y="49" width="7" height="4" fill={palette.shadow} />
-      <rect x="29" y="49" width="7" height="7" fill={palette.shadow} />
-      <rect x="38" y="49" width="7" height="3" fill={palette.shadow} />
-      <rect x="29" y="56" width="5" height="3" fill={palette.deepShadow} />
-      <rect x="18" y="22" width="4" height="15" fill={palette.secondary} />
-      <rect x="43" y="24" width="4" height="13" fill={palette.shadow} />
-      <rect x="23" y="16" width="15" height="3" fill={palette.highlight} />
+      <path
+        d="M27 10H37V12H42V15H46V19H49V24H51V36H49V40H46V44H43V48H40V52H37V55H34V58H29V55H31V52H27V49H23V46H19V42H16V38H13V36H12V24H14V19H17V15H21V12H27Z"
+        fill={palette.primary}
+      />
+      <path
+        d="M23 14H36V17H23V20H19V24H16V35H14V24H16V19H19V16H23Z"
+        fill={palette.secondary}
+      />
+      <rect x="25" y="13" width="11" height="2" fill={palette.highlight} />
+      <rect x="46" y="23" width="4" height="13" fill={palette.shadow} />
+      <rect x="43" y="36" width="6" height="4" fill={palette.shadow} />
+      <rect x="40" y="40" width="6" height="4" fill={palette.shadow} />
+      <rect x="37" y="44" width="6" height="4" fill={palette.shadow} />
+      <rect x="34" y="48" width="6" height="4" fill={palette.deepShadow} />
+      <path
+        className={styles.spiritCore}
+        d="M23 19H41V21H44V36H41V41H38V45H26V43H21V39H18V24H20V21H23Z"
+        fill={glow}
+      />
       <PixelEyes
-        leftX={22}
-        rightX={36}
-        y={28}
+        leftX={21}
+        rightX={37}
+        y={27}
         state={state}
         glow={glow}
         face={palette.face}
         detail={palette.detail}
       />
-      <PixelMouth centerX={32} y={35} state={state} color={palette.detail} />
+      <PixelMouth centerX={32} y={34} state={state} color={palette.detail} />
+      {state === "completed" ? (
+        <g className={styles.spiritSpark} fill={glow}>
+          <rect x="42" y="20" width="2" height="2" />
+          <rect x="40" y="21" width="1" height="1" />
+          <rect x="43" y="18" width="1" height="1" />
+        </g>
+      ) : null}
       <g className={styles.spiritTrail} fill={glow}>
-        <rect x="16" y="46" width="3" height="3" opacity="0.66" />
-        <rect x="12" y="51" width="3" height="3" opacity="0.46" />
-        <rect x="9" y="56" width="2" height="2" opacity="0.28" />
-        <rect x="46" y="45" width="3" height="3" opacity="0.5" />
+        <rect x="12" y="41" width="2" height="2" opacity="0.62" />
+        <rect x="8" y="45" width="2" height="2" opacity="0.42" />
+        <rect x="5" y="49" width="1" height="1" opacity="0.28" />
+        <rect x="46" y="46" width="2" height="2" opacity="0.38" />
       </g>
     </>
   );
@@ -481,8 +494,8 @@ export function PixelCompanion({
     >
       {config.family === "spirit" ? (
         <g className={styles.spiritShadow} fill={palette.deepShadow}>
-          <rect x="24" y="60" width="16" height="2" opacity="0.42" />
-          <rect x="28" y="59" width="8" height="1" opacity="0.28" />
+          <rect x="23" y="61" width="18" height="2" opacity="0.34" />
+          <rect x="27" y="60" width="10" height="1" opacity="0.22" />
         </g>
       ) : null}
       <g

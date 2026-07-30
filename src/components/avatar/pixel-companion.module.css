@@ -13,11 +13,17 @@
 }
 
 .spirit {
+  filter: drop-shadow(0 3px 0 rgb(0 0 0 / 22%))
+    drop-shadow(
+      0 0 4px color-mix(in srgb, var(--companion-glow) 42%, transparent)
+    );
   animation: pixel-spirit-idle 3.4s steps(2, end) infinite;
 }
 
 .growthCrown,
 .signalPulse,
+.spiritCore,
+.spiritSpark,
 .spiritTrail,
 .spiritShadow {
   transform-box: fill-box;
@@ -36,6 +42,15 @@
   animation: pixel-spirit-trail 2.4s steps(2, end) infinite;
 }
 
+.spiritCore {
+  opacity: 0.1;
+  animation: pixel-spirit-core 3.4s steps(2, end) infinite;
+}
+
+.spiritSpark {
+  animation: pixel-spirit-spark 720ms steps(2, end) 1;
+}
+
 .spiritShadow {
   animation: pixel-spirit-shadow 3.4s steps(2, end) infinite;
 }
@@ -44,8 +59,25 @@
   animation: pixel-working 1.1s steps(2, end) infinite;
 }
 
+.working .spirit {
+  animation: pixel-spirit-working 1.4s steps(2, end) infinite;
+}
+
+.working .spiritCore {
+  opacity: 0.18;
+  animation: pixel-spirit-working-core 1.4s steps(2, end) infinite;
+}
+
+.working .spiritTrail {
+  animation-duration: 1.2s;
+}
+
 .completed .art {
   animation: pixel-completed 720ms steps(3, end) 1;
+}
+
+.completed .spiritCore {
+  animation: pixel-spirit-completed-core 720ms steps(3, end) 1;
 }
 
 .blink {
@@ -67,6 +99,8 @@
 .reduced .indicator,
 .reduced .growthCrown,
 .reduced .signalPulse,
+.reduced .spiritCore,
+.reduced .spiritSpark,
 .reduced .spiritTrail,
 .reduced .spiritShadow {
   animation: none;
@@ -99,6 +133,58 @@
   }
   50% {
     transform: translateY(-2px);
+  }
+}
+
+@keyframes pixel-spirit-working {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-1px);
+  }
+}
+
+@keyframes pixel-spirit-core {
+  0%,
+  100% {
+    opacity: 0.08;
+  }
+  50% {
+    opacity: 0.13;
+  }
+}
+
+@keyframes pixel-spirit-working-core {
+  0%,
+  100% {
+    opacity: 0.14;
+  }
+  50% {
+    opacity: 0.22;
+  }
+}
+
+@keyframes pixel-spirit-completed-core {
+  0%,
+  100% {
+    opacity: 0.12;
+  }
+  45% {
+    opacity: 0.28;
+  }
+}
+
+@keyframes pixel-spirit-spark {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(0.75);
+  }
+  45% {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
@@ -195,6 +281,8 @@
   .indicator,
   .growthCrown,
   .signalPulse,
+  .spiritCore,
+  .spiritSpark,
   .spiritTrail,
   .spiritShadow {
     animation: none;

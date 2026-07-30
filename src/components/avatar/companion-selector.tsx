@@ -32,7 +32,7 @@ export function CompanionSelector({
             aria-pressed={selected}
             onClick={() => onChange(nextConfig)}
             className={cx(
-              "group relative flex min-h-[7.25rem] flex-col items-center rounded-[20px] border p-2.5 text-center transition sm:min-h-[8.25rem] sm:p-3",
+              "group relative flex min-h-28 flex-col items-center rounded-[20px] border p-2 text-center transition sm:min-h-32 sm:p-2.5",
               selected
                 ? "border-blue-300/50 bg-blue-400/[0.09] shadow-[0_12px_34px_rgba(59,130,246,0.12)] ring-1 ring-inset ring-blue-200/18"
                 : "border-white/8 bg-white/[0.025] hover:border-white/16 hover:bg-white/[0.045]",
@@ -57,7 +57,7 @@ export function CompanionSelector({
             <span className="mt-0.5 text-sm font-semibold text-white">
               {family.label}
             </span>
-            <span className="mt-0.5 max-w-32 text-[10px] leading-4 text-white/46">
+            <span className="max-w-32 text-[10px] leading-4 text-white/46">
               {family.traits}
             </span>
           </button>

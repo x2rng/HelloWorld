@@ -2,7 +2,6 @@
 
 import {
   companionGlowOptions,
-  companionPatternOptions,
   companionThemeOptions,
 } from "@/components/avatar/companion-palettes";
 import { PixelCompanion } from "@/components/avatar/pixel-companion";
@@ -37,10 +36,6 @@ export function CompanionCompactDock({
   const glow =
     companionGlowOptions.find((item) => item.id === config.glowColor) ??
     companionGlowOptions[0];
-  const marking =
-    companionPatternOptions.find((item) => item.id === config.pattern) ??
-    companionPatternOptions[0];
-
   return (
     <div className="grid h-full min-w-0 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2.5 rounded-[22px] border border-blue-200/18 bg-[#0b1018]/96 px-3 shadow-[0_18px_54px_rgba(0,0,0,0.42)] backdrop-blur-xl">
       <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl border border-white/8 bg-white/[0.035]">
@@ -54,7 +49,7 @@ export function CompanionCompactDock({
           className="mt-0.5 block truncate text-[10px] text-white/46"
           aria-live="polite"
         >
-          {theme.label} · {glow.label} glow · {marking.label}
+          {theme.label} {"\u00B7"} {glow.label}
         </span>
       </span>
       {action ? (
