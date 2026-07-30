@@ -5,19 +5,13 @@ import {
   completePlayerSetup,
   type CompletePlayerSetupState,
 } from "@/app/employee/setup/actions";
-import {
-  createAvatarV4FromStored,
-  type StoredAvatarConfig,
-} from "@/components/avatar-3d/config/avatar-v4-parser";
-import { AvatarV5Creator } from "@/components/avatar-v5-production/avatar-v5-creator";
-import { AvatarV5Presentation } from "@/components/avatar-v5-production/avatar-v5-presentation";
-import {
-  createAvatarV5FromStored,
-  isAvatarV5Config,
-} from "@/components/avatar-v5-production/config/avatar-v5-parser";
-import { FullBodyAvatar } from "@/components/employee/full-body-avatar";
+import type { StoredAvatarConfig } from "@/components/avatar-3d/config/avatar-v4-parser";
+import { CompanionCustomizer } from "@/components/avatar/companion-customizer";
+import { PixelCompanion } from "@/components/avatar/pixel-companion";
 import { BadgePill } from "@/components/ui/badge-pill";
 import { Button } from "@/components/ui/button";
+import { getCompanionStage } from "@/lib/avatar/get-companion-stage";
+import { createPixelCompanionFromStored } from "@/lib/avatar/normalize-companion-config";
 import {
   growthPriorityOptions,
   playerInterestOptions,
@@ -55,7 +49,6 @@ type PlayerSetupFlowProps = {
   initialAvatarConfig: StoredAvatarConfig;
   assignmentTitle: string | null;
   startingLevel: number;
-  avatarStage: string;
   initialStep?: number;
   editing?: boolean;
 };
@@ -101,7 +94,6 @@ export function PlayerSetupFlow({
   initialAvatarConfig,
   assignmentTitle,
   startingLevel,
-  avatarStage,
   initialStep = 0,
   editing = false,
 }: PlayerSetupFlowProps) {
@@ -115,13 +107,10 @@ export function PlayerSetupFlow({
   const [priorities, setPriorities] = useState(initialGrowthPriorities);
   const [customInterest, setCustomInterest] = useState("");
   const [avatarConfig, setAvatarConfig] = useState(initialAvatarConfig);
-  const [v5AvatarConfig, setV5AvatarConfig] = useState(() =>
-    createAvatarV5FromStored(initialAvatarConfig),
+  const [companionConfig, setCompanionConfig] = useState(() =>
+    createPixelCompanionFromStored(initialAvatarConfig),
   );
-  const [fallbackAvatarConfig, setFallbackAvatarConfig] = useState(() =>
-    createAvatarV4FromStored(initialAvatarConfig),
-  );
-  const [v5Available, setV5Available] = useState(false);
+  const companionStage = getCompanionStage(startingLevel);
   const fallbackSkills = useMemo(
     () => getRoleTemplateSkills(fallbackRole),
     [fallbackRole],
@@ -413,23 +402,19 @@ export function PlayerSetupFlow({
           {step === 4 ? (
             <section>
               <div className="mb-5">
-                <p className="eyebrow">Create your player</p>
+                <p className="eyebrow">Choose your companion</p>
                 <h1 className="mt-2 text-4xl sm:text-5xl">
-                  Make your identity feel personal.
+                  A steady presence for your journey.
                 </h1>
+                <p className="mt-3 max-w-2xl text-sm leading-7 text-white/48">
+                  Choose a companion that will grow with you throughout your
+                  onboarding journey.
+                </p>
               </div>
-              <AvatarV5Creator
-                config={v5AvatarConfig}
-                onChange={(next) => {
-                  setV5AvatarConfig(next);
-                  setAvatarConfig(next);
-                }}
-                fallbackConfig={fallbackAvatarConfig}
-                onFallbackChange={(next) => {
-                  setFallbackAvatarConfig(next);
-                  setAvatarConfig(next);
-                }}
-                onAvailabilityChange={setV5Available}
+              <CompanionCustomizer
+                config={companionConfig}
+                onChange={setCompanionConfig}
+                stage={companionStage.id}
                 setupMode
               />
             </section>
@@ -443,17 +428,12 @@ export function PlayerSetupFlow({
                     <BadgePill tone="blue">Ready to enter</BadgePill>
                   </div>
                   <div className="absolute bottom-10 size-56 rounded-full bg-blue-500/16 blur-3xl" />
-                  {isAvatarV5Config(avatarConfig) ? (
-                    <AvatarV5Presentation
-                      config={avatarConfig}
-                      className="relative h-[30rem] w-full rounded-none border-0"
-                    />
-                  ) : (
-                    <FullBodyAvatar
-                      config={avatarConfig}
-                      className="relative translate-y-7 scale-110"
-                    />
-                  )}
+                  <PixelCompanion
+                    config={companionConfig}
+                    stage={companionStage.id}
+                    size={300}
+                    className="relative mb-10"
+                  />
                 </div>
                 <div className="p-7 sm:p-10">
                   <p className="eyebrow">Player summary</p>
@@ -464,7 +444,7 @@ export function PlayerSetupFlow({
                       {getRoleFocusLabel(displayedRole)}
                     </BadgePill>
                     <BadgePill tone="blue">Level {startingLevel}</BadgePill>
-                    <BadgePill tone="cyan">{avatarStage}</BadgePill>
+                    <BadgePill tone="cyan">{companionStage.label}</BadgePill>
                   </div>
 
                   <div className="mt-8 grid gap-5 sm:grid-cols-2">
@@ -536,8 +516,8 @@ export function PlayerSetupFlow({
               disabled={!canContinue}
               onClick={(event) => {
                 event.preventDefault();
-                if (step === 4 && v5Available) {
-                  setAvatarConfig(v5AvatarConfig);
+                if (step === 4) {
+                  setAvatarConfig(companionConfig);
                 }
                 setStep((current) =>
                   Math.min(stepLabels.length - 1, current + 1),

@@ -84,7 +84,7 @@ export async function completePlayerSetup(
   const avatarInput = parseObject(formData, "avatar_config");
 
   if (!isCompleteStoredAvatarConfig(avatarInput)) {
-    return { ok: false, message: "Choose a valid player appearance." };
+    return { ok: false, message: "Choose a valid companion." };
   }
   const avatarConfig = normalizeStoredAvatarConfig(avatarInput);
 

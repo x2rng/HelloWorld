@@ -6,14 +6,10 @@ import {
   saveAvatarConfig,
   type SaveAvatarState,
 } from "@/app/employee/avatar/actions";
-import {
-  createAvatarV4FromStored,
-  normalizeStoredAvatarConfig,
-  type StoredAvatarConfig,
-} from "@/components/avatar-3d/config/avatar-v4-parser";
-import { AvatarV5Creator } from "@/components/avatar-v5-production/avatar-v5-creator";
-import { createAvatarV5FromStored } from "@/components/avatar-v5-production/config/avatar-v5-parser";
+import { CompanionCustomizer } from "@/components/avatar/companion-customizer";
 import { Button } from "@/components/ui/button";
+import type { CompanionStage } from "@/lib/avatar/companion-types";
+import { createPixelCompanionFromStored } from "@/lib/avatar/normalize-companion-config";
 
 const initialState: SaveAvatarState = {
   ok: false,
@@ -22,34 +18,20 @@ const initialState: SaveAvatarState = {
 
 type AvatarEditorFormProps = {
   initialStoredConfig: unknown;
+  companionStage: CompanionStage;
 };
 
 export function AvatarEditorForm({
   initialStoredConfig,
+  companionStage,
 }: AvatarEditorFormProps) {
   const [state, formAction, isPending] = useActionState(
     saveAvatarConfig,
     initialState,
   );
-  const [config, setConfig] = useState<StoredAvatarConfig>(() =>
-    normalizeStoredAvatarConfig(initialStoredConfig),
+  const [config, setConfig] = useState(() =>
+    createPixelCompanionFromStored(initialStoredConfig),
   );
-  const [v5Config, setV5Config] = useState(() =>
-    createAvatarV5FromStored(initialStoredConfig),
-  );
-  const [fallbackConfig, setFallbackConfig] = useState(() =>
-    createAvatarV4FromStored(initialStoredConfig),
-  );
-
-  function updateV5(next: typeof v5Config) {
-    setV5Config(next);
-    setConfig(next);
-  }
-
-  function updateFallback(next: typeof fallbackConfig) {
-    setFallbackConfig(next);
-    setConfig(next);
-  }
 
   return (
     <form action={formAction} className="space-y-5">
@@ -58,17 +40,20 @@ export function AvatarEditorForm({
         name="avatar_config"
         value={JSON.stringify(config)}
       />
-      <AvatarV5Creator
-        config={v5Config}
-        onChange={updateV5}
-        fallbackConfig={fallbackConfig}
-        onFallbackChange={updateFallback}
+      <CompanionCustomizer
+        config={config}
+        onChange={setConfig}
+        stage={companionStage}
       />
 
       {state.message ? (
         <p
-          role="alert"
-          className="rounded-2xl border border-red-400/20 bg-red-400/10 px-4 py-3 text-sm text-red-200"
+          role={state.ok ? "status" : "alert"}
+          className={
+            state.ok
+              ? "rounded-2xl border border-emerald-400/20 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-100"
+              : "rounded-2xl border border-red-400/20 bg-red-400/10 px-4 py-3 text-sm text-red-200"
+          }
         >
           {state.message}
         </p>
@@ -81,8 +66,11 @@ export function AvatarEditorForm({
         >
           Cancel
         </Link>
+        <span className="hidden text-xs font-semibold uppercase tracking-[0.14em] text-white/32 sm:mr-auto sm:block">
+          4&nbsp;&nbsp;Save companion
+        </span>
         <Button type="submit" size="lg" disabled={isPending}>
-          {isPending ? "Saving player..." : "Save avatar"}
+          {isPending ? "Saving companion..." : "Save companion"}
         </Button>
       </div>
     </form>

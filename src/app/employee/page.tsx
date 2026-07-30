@@ -364,7 +364,7 @@ export default async function EmployeePage() {
             </div>
             <div className="absolute bottom-8 h-48 w-48 rounded-full bg-blue-400/20 blur-3xl" />
             <div className="relative translate-y-8 scale-110 sm:scale-125">
-              <FullBodyAvatar config={avatarConfig} />
+              <FullBodyAvatar config={avatarConfig} level={level.level} />
             </div>
             <Link
               href="/employee/avatar"

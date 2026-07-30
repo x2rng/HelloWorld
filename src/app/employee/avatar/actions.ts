@@ -1,12 +1,11 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { requireRole } from "@/lib/exp-auth";
 import {
-  isCompleteStoredAvatarConfig,
-  normalizeStoredAvatarConfig,
-} from "@/components/avatar-3d/config/avatar-v4-parser";
+  isCompletePixelCompanionConfig,
+  normalizeCompanionConfig,
+} from "@/lib/avatar/normalize-companion-config";
 import { createClient } from "@/lib/supabase/server";
 
 export type SaveAvatarState = {
@@ -33,13 +32,14 @@ export async function saveAvatarConfig(
   const supabase = await createClient();
   const input = parseAvatarConfig(formData);
 
-  if (!isCompleteStoredAvatarConfig(input)) {
+  if (!isCompletePixelCompanionConfig(input)) {
     return {
       ok: false,
-      message: "Your avatar contains an invalid selection. Review it and try again.",
+      message:
+        "Your companion contains an invalid selection. Review it and try again.",
     };
   }
-  const avatarConfig = normalizeStoredAvatarConfig(input);
+  const avatarConfig = normalizeCompanionConfig(input);
 
   const { error } = await supabase
     .from("profiles")
@@ -49,7 +49,7 @@ export async function saveAvatarConfig(
   if (error) {
     return {
       ok: false,
-      message: `Failed to save avatar: ${error.message}`,
+      message: "Your companion could not be saved. Please try again.",
     };
   }
 
@@ -59,5 +59,8 @@ export async function saveAvatarConfig(
   revalidatePath("/employee/player");
   revalidatePath("/employee/skills");
 
-  redirect("/employee/player");
+  return {
+    ok: true,
+    message: "Your companion is ready.",
+  };
 }

@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import { PlayerSetupFlow } from "@/components/employee/player-setup-flow";
-import { getAvatarStage } from "@/lib/avatar-stage";
 import { requireRole } from "@/lib/exp-auth";
 import type { EmployeeStatsRecord } from "@/lib/exp-types";
 import { getLevelInfo } from "@/lib/levels";
@@ -75,7 +74,6 @@ export default async function EmployeeSetupPage({
 
   const setupProfile = normalizePlayerSetupProfile(setupResult.data);
   const level = getLevelInfo(statsResult.data?.total_xp ?? 0);
-  const stage = getAvatarStage(level.level);
 
   return (
     <PlayerSetupFlow
@@ -89,7 +87,6 @@ export default async function EmployeeSetupPage({
       initialAvatarConfig={setupProfile.avatarConfig}
       assignmentTitle={assignmentResult.data?.track?.title ?? null}
       startingLevel={level.level}
-      avatarStage={stage.name}
       initialStep={editStep ?? 0}
       editing={setupResult.data.player_setup_completed}
     />

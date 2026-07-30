@@ -33,11 +33,19 @@ import {
   parseAvatarV5Config,
 } from "@/components/avatar-v5-production/config/avatar-v5-parser";
 import type { AvatarV5Config } from "@/components/avatar-v5-production/config/avatar-v5-types";
+import type { PixelCompanionConfig } from "@/lib/avatar/companion-types";
+import {
+  createPixelCompanionFromStored,
+  isCompletePixelCompanionConfig,
+  isPixelCompanionConfig,
+  normalizeCompanionConfig,
+} from "@/lib/avatar/normalize-companion-config";
 
 export type StoredAvatarConfig =
   | AvatarConfig
   | AvatarV4Config
-  | AvatarV5Config;
+  | AvatarV5Config
+  | PixelCompanionConfig;
 
 function allowed<T extends string>(
   value: unknown,
@@ -407,6 +415,10 @@ export function upgradeAvatarV3ToV4(value: unknown): AvatarV4Config {
 }
 
 export function createAvatarV4FromStored(value: unknown): AvatarV4Config {
+  if (isPixelCompanionConfig(value)) {
+    return { ...defaultAvatarV4Config, accessoryIds: [] };
+  }
+
   if (
     value &&
     typeof value === "object" &&
@@ -430,6 +442,10 @@ export function createAvatarV4FromStored(value: unknown): AvatarV4Config {
 }
 
 export function normalizeStoredAvatarConfig(value: unknown): StoredAvatarConfig {
+  if (isPixelCompanionConfig(value)) {
+    return normalizeCompanionConfig(value);
+  }
+
   if (
     value &&
     typeof value === "object" &&
@@ -449,13 +465,18 @@ export function normalizeStoredAvatarConfig(value: unknown): StoredAvatarConfig 
     return parseAvatarV4Config(value);
   }
 
-  return normalizeAvatarConfig(value);
+  if (isCompleteAvatarConfig(value)) {
+    return normalizeAvatarConfig(value);
+  }
+
+  return createPixelCompanionFromStored(value);
 }
 
 export function isCompleteStoredAvatarConfig(
   value: unknown,
 ): value is StoredAvatarConfig {
   return (
+    isCompletePixelCompanionConfig(value) ||
     isAvatarV5Config(value) ||
     isCompleteAvatarV4Config(value) ||
     isCompleteAvatarConfig(value)

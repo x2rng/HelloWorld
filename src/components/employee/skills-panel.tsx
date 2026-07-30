@@ -102,7 +102,12 @@ export function SkillsPanel({
             <div className="absolute -right-10 -top-10 size-36 rounded-full bg-blue-500/15 blur-3xl" />
             <div className="relative flex items-center gap-4">
               <div className="flex size-16 shrink-0 items-start justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/[0.06]">
-                <FullBodyAvatar config={avatarConfig} compact className="h-24 w-16 -translate-y-1" />
+                <FullBodyAvatar
+                  config={avatarConfig}
+                  compact
+                  level={overall.level}
+                  className="h-24 w-16 -translate-y-1"
+                />
               </div>
               <div className="min-w-0">
                 <p className="truncate text-lg font-semibold">{employeeName}</p>

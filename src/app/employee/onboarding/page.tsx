@@ -455,7 +455,11 @@ export default async function EmployeeOnboardingPage({
             </div>
             <div className="absolute bottom-4 h-36 w-36 rounded-full bg-blue-300/25 blur-3xl" />
             <div className="relative translate-y-10">
-              <FullBodyAvatar config={avatarConfig} compact />
+              <FullBodyAvatar
+                config={avatarConfig}
+                compact
+                level={level.level}
+              />
             </div>
           </div>
         </div>

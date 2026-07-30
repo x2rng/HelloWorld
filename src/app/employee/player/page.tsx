@@ -6,11 +6,14 @@ import {
 import { ProceduralAvatarPresentation } from "@/components/avatar-3d/procedural-avatar-presentation";
 import { AvatarV5Presentation } from "@/components/avatar-v5-production/avatar-v5-presentation";
 import { isAvatarV5Config } from "@/components/avatar-v5-production/config/avatar-v5-parser";
+import { PixelCompanion } from "@/components/avatar/pixel-companion";
 import { AchievementList } from "@/components/employee/achievement-list";
 import { BadgePill } from "@/components/ui/badge-pill";
 import { Card } from "@/components/ui/card";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { getAvatarStage, getNextAvatarStage } from "@/lib/avatar-stage";
+import { getCompanionStage } from "@/lib/avatar/get-companion-stage";
+import { isPixelCompanionConfig } from "@/lib/avatar/normalize-companion-config";
 import { requireRole } from "@/lib/exp-auth";
 import type {
   AchievementRecord,
@@ -93,6 +96,7 @@ export default async function EmployeePlayerPage() {
   const overall = getLevelInfo(statsResult.data?.total_xp ?? 0);
   const stage = getAvatarStage(overall.level);
   const nextStage = getNextAvatarStage(overall.level);
+  const companionStage = getCompanionStage(overall.level);
   const interests = normalizePlayerSelections(playerResult.data?.interests, 20);
   const growthPriorities = normalizePlayerSelections(
     playerResult.data?.growth_priorities,
@@ -108,7 +112,15 @@ export default async function EmployeePlayerPage() {
               <BadgePill tone="purple">Player</BadgePill>
             </div>
             <div className="absolute bottom-8 size-56 rounded-full bg-blue-500/15 blur-3xl" />
-            {isAvatarV5Config(storedAvatarConfig) ? (
+            {isPixelCompanionConfig(storedAvatarConfig) ? (
+              <div className="flex h-full min-h-[28rem] w-full items-end justify-center pb-12">
+                <PixelCompanion
+                  config={storedAvatarConfig}
+                  stage={companionStage.id}
+                  size={320}
+                />
+              </div>
+            ) : isAvatarV5Config(storedAvatarConfig) ? (
               <AvatarV5Presentation
                 config={storedAvatarConfig}
                 className="h-full min-h-[28rem] w-full rounded-none border-0"
@@ -133,7 +145,11 @@ export default async function EmployeePlayerPage() {
               <div className="mt-5 flex flex-wrap gap-2">
                 <BadgePill tone="blue">Level {overall.level}</BadgePill>
                 <BadgePill tone="cyan">{overall.totalXp} XP</BadgePill>
-                <BadgePill tone="purple">{stage.name}</BadgePill>
+                <BadgePill tone="purple">
+                  {isPixelCompanionConfig(storedAvatarConfig)
+                    ? companionStage.label
+                    : stage.name}
+                </BadgePill>
               </div>
             </div>
 
@@ -152,7 +168,7 @@ export default async function EmployeePlayerPage() {
                   href="/employee/avatar"
                   className="inline-flex h-11 items-center justify-center rounded-full bg-white px-5 text-sm font-semibold text-slate-950"
                 >
-                  Edit player
+                  Customize companion
                 </Link>
                 <Link
                   href="/employee/skills"
@@ -188,15 +204,26 @@ export default async function EmployeePlayerPage() {
         </Card>
 
         <Card className="rounded-[32px] p-6 sm:p-7">
-          <p className="eyebrow">Evolution</p>
-          <h2 className="mt-2 text-3xl">{stage.name}</h2>
+          <p className="eyebrow">
+            {isPixelCompanionConfig(storedAvatarConfig)
+              ? "Companion stage"
+              : "Evolution"}
+          </p>
+          <h2 className="mt-2 text-3xl">
+            {isPixelCompanionConfig(storedAvatarConfig)
+              ? companionStage.label
+              : stage.name}
+          </h2>
           <p className="mt-3 text-sm leading-7 text-[var(--color-muted)]">
-            {nextStage
-              ? `Your next player stage is ${nextStage.name}. Complete growth steps to continue evolving.`
-              : "You have reached the highest avatar stage available in V1."}
+            {isPixelCompanionConfig(storedAvatarConfig)
+              ? `Your companion stage is derived from Level ${overall.level} and grows through real EXP progress.`
+              : nextStage
+                ? `Your next player stage is ${nextStage.name}. Complete growth steps to continue evolving.`
+                : "You have reached the highest avatar stage available in V1."}
           </p>
           <p className="mt-5 text-xs text-[var(--color-muted)]">
-            Avatar appearance remains separate from profession and assigned skills.
+            Companion appearance remains separate from profession and assigned
+            skills.
           </p>
         </Card>
       </div>

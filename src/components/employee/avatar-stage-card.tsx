@@ -77,7 +77,11 @@ export function AvatarStageCard({
             <div className="absolute inset-x-5 bottom-5 top-8 rounded-[36px] border border-white/8 bg-gradient-to-br from-white/[0.08] to-white/[0.015] shadow-[0_24px_60px_rgba(0,0,0,0.28)]" />
             <div className={cx("absolute inset-x-12 bottom-10 h-24 rounded-full blur-2xl", accent.glow)} />
             <div className="absolute inset-x-0 bottom-7 flex justify-center">
-              <FullBodyAvatar config={avatarConfig} compact={compact} />
+              <FullBodyAvatar
+                config={avatarConfig}
+                compact={compact}
+                level={currentLevel}
+              />
             </div>
             <div className={cx("absolute left-8 top-8 h-10 w-10 rounded-2xl border", accent.ring)} />
             <div className={cx("absolute right-8 top-12 h-7 w-7 rounded-full opacity-70", accent.glow)} />
