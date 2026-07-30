@@ -410,16 +410,14 @@ export function PlayerSetupFlow({
                 <p className="eyebrow">Player Companion</p>
                 <h1 className="mt-2 text-4xl sm:text-5xl">Choose your companion</h1>
                 <p className="mt-3 max-w-2xl text-sm leading-7 text-white/48">
-                  Choose a companion that will grow with you throughout your
-                  onboarding journey. You can adjust its look now and change it
-                  later.
+                  Pick the companion that will grow with you throughout your
+                  onboarding journey.
                 </p>
               </div>
               <CompanionCustomizer
                 config={companionConfig}
                 onChange={setCompanionConfig}
                 stage={companionStage.id}
-                layoutContext="standalone"
               />
             </section>
           ) : null}

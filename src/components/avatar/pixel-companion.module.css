@@ -18,7 +18,8 @@
 
 .growthCrown,
 .signalPulse,
-.spiritTrail {
+.spiritTrail,
+.spiritShadow {
   transform-box: fill-box;
   transform-origin: center;
 }
@@ -33,6 +34,10 @@
 
 .spiritTrail {
   animation: pixel-spirit-trail 2.4s steps(2, end) infinite;
+}
+
+.spiritShadow {
+  animation: pixel-spirit-shadow 3.4s steps(2, end) infinite;
 }
 
 .working .art {
@@ -62,7 +67,8 @@
 .reduced .indicator,
 .reduced .growthCrown,
 .reduced .signalPulse,
-.reduced .spiritTrail {
+.reduced .spiritTrail,
+.reduced .spiritShadow {
   animation: none;
 }
 
@@ -126,6 +132,18 @@
   }
 }
 
+@keyframes pixel-spirit-shadow {
+  0%,
+  100% {
+    opacity: 0.72;
+    transform: scaleX(1);
+  }
+  50% {
+    opacity: 0.42;
+    transform: scaleX(0.78);
+  }
+}
+
 @keyframes pixel-completed {
   0%,
   100% {
@@ -177,7 +195,8 @@
   .indicator,
   .growthCrown,
   .signalPulse,
-  .spiritTrail {
+  .spiritTrail,
+  .spiritShadow {
     animation: none;
   }
 }

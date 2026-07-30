@@ -17,7 +17,6 @@ type CompanionCustomizerProps = {
   config: PixelCompanionConfig;
   onChange: (config: PixelCompanionConfig) => void;
   stage?: CompanionStage;
-  layoutContext?: "employee-shell" | "standalone";
 };
 
 const controlSectionClass =
@@ -27,16 +26,10 @@ export function CompanionCustomizer({
   config,
   onChange,
   stage = "starter",
-  layoutContext = "employee-shell",
 }: CompanionCustomizerProps) {
   return (
     <div className="grid min-w-0 gap-5 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:items-start">
-      <div
-        className={cx(
-          "sticky z-10 min-w-0 lg:top-6",
-          layoutContext === "employee-shell" ? "top-[4.25rem]" : "top-2",
-        )}
-      >
+      <div className="min-w-0 lg:sticky lg:top-6">
         <CompanionPreview
           config={config}
           stage={stage}
@@ -49,14 +42,15 @@ export function CompanionCustomizer({
       <div className="min-w-0 space-y-4">
         <section className={controlSectionClass}>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-blue-200/72">
-              Companion
-            </p>
-            <h2 className="mt-2 text-xl font-semibold text-white sm:text-2xl">
-              Choose the personality that feels right.
+            <h2 className="text-xl font-semibold text-white sm:text-2xl">
+              Make it yours
             </h2>
+            <p className="mt-2 text-sm leading-6 text-white/48">
+              Adjust the look while keeping the same EXP companion style.
+            </p>
           </div>
-          <div className="mt-5">
+          <div className="mt-5 border-t border-white/8 pt-5">
+            <p className="mb-3 text-sm font-semibold text-white">Companion</p>
             <CompanionSelector config={config} onChange={onChange} stage={stage} />
           </div>
         </section>

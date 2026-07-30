@@ -28,7 +28,7 @@ export const companionPatterns = [
   "corner-pixels",
   "soft-dots",
   "tiny-stripe",
-  "signal-mark",
+  "pixel-notch",
 ] as const;
 
 export const companionStates = ["idle", "working", "completed"] as const;
@@ -74,11 +74,11 @@ export const companionFamilyDefinitions: CompanionFamilyDefinition[] = [
   {
     id: "stack",
     label: "Stack",
-    description: "Organized, reliable, structured.",
+    description: "Organized and reliable.",
   },
   {
     id: "spirit",
     label: "Spirit",
-    description: "Minimal, quiet, thoughtful.",
+    description: "Quiet, minimal, thoughtful.",
   },
 ];

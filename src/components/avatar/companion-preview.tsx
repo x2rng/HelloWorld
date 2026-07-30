@@ -62,7 +62,7 @@ export function CompanionPreview({
         className={cx(
           "relative",
           variant === "editor" &&
-            "h-auto w-[156px] sm:w-[190px] lg:w-[292px]",
+            "h-auto w-[168px] sm:w-[196px] lg:w-[292px]",
         )}
       />
       {showLabels ? (

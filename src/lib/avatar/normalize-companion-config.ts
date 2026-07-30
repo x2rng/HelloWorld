@@ -32,6 +32,16 @@ function allowed<T extends string>(
     : fallback;
 }
 
+function normalizePattern(value: unknown): CompanionPattern {
+  if (value === "signal-mark") return "pixel-notch";
+
+  return allowed<CompanionPattern>(
+    value,
+    companionPatterns,
+    defaultPixelCompanionConfig.pattern,
+  );
+}
+
 export function isPixelCompanionConfig(
   value: unknown,
 ): value is PixelCompanionConfig {
@@ -61,11 +71,7 @@ export function normalizeCompanionConfig(
       companionGlowColors,
       defaultPixelCompanionConfig.glowColor,
     ),
-    pattern: allowed<CompanionPattern>(
-      config.pattern,
-      companionPatterns,
-      defaultPixelCompanionConfig.pattern,
-    ),
+    pattern: normalizePattern(config.pattern),
   };
 }
 

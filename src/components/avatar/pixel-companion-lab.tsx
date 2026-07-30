@@ -29,7 +29,26 @@ export function PixelCompanionLab() {
   return (
     <main className="workspace-theme min-h-screen px-4 py-6 sm:px-6 lg:px-8 lg:py-10">
       <div className="mx-auto max-w-[96rem]">
-        <header className="overflow-hidden rounded-[34px] border border-white/9 bg-[#0c1018] p-6 shadow-[0_28px_100px_rgba(0,0,0,0.3)] sm:p-8">
+        <header className="overflow-hidden rounded-[34px] border border-white/9 bg-[#090c12] p-5 shadow-[0_28px_100px_rgba(0,0,0,0.3)] sm:p-7 lg:p-8">
+          <div className="max-w-3xl">
+            <h1 className="text-4xl leading-tight text-white sm:text-6xl">
+              Choose your companion
+            </h1>
+            <p className="mt-4 max-w-2xl text-sm leading-7 text-white/48 sm:text-base">
+              Pick the companion that will grow with you throughout your
+              onboarding journey.
+            </p>
+          </div>
+          <div className="mt-7">
+            <CompanionCustomizer
+              config={config}
+              onChange={setConfig}
+              stage={stage}
+            />
+          </div>
+        </header>
+
+        <section className="mt-5 overflow-hidden rounded-[34px] border border-white/9 bg-[#0c1018] p-6 sm:p-8">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl">
               <div className="flex flex-wrap gap-2">
@@ -40,12 +59,12 @@ export function PixelCompanionLab() {
                   No Supabase writes
                 </span>
               </div>
-              <h1 className="mt-5 text-4xl leading-tight text-white sm:text-6xl">
-                Pixel Companion foundation
-              </h1>
-              <p className="mt-4 max-w-2xl text-sm leading-7 text-white/48 sm:text-base">
-                Five deliberately distinct companion families, tested at editor
-                scale and at the compact size used across the employee experience.
+              <h2 className="mt-5 text-3xl leading-tight text-white sm:text-5xl">
+                Internal review environment
+              </h2>
+              <p className="mt-4 max-w-2xl text-sm leading-7 text-white/48">
+                Inspect state, stage, motion, surfaces, and compact rendering
+                without changing employee data.
               </p>
             </div>
 
@@ -59,7 +78,7 @@ export function PixelCompanionLab() {
               Reduced-motion preview
             </label>
           </div>
-        </header>
+        </section>
 
         <section className="mt-5 rounded-[32px] border border-white/9 bg-[#0d1119] p-5 sm:p-7">
           <div className="mb-6 border-b border-white/8 pb-5">
@@ -276,28 +295,6 @@ export function PixelCompanionLab() {
             size={220}
             reducedMotion={reducedMotion}
             surface="light"
-          />
-        </section>
-
-        <section className="mt-5 rounded-[34px] border border-white/9 bg-[#090c12] p-4 sm:p-6 lg:p-8">
-          <div className="mb-6">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-200/70">
-              Production employee preview
-            </p>
-            <h2 className="mt-2 text-3xl text-white sm:text-4xl">
-              Choose your companion
-            </h2>
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-white/48">
-              This is the same preview-first selection experience used in Player
-              Setup and the Avatar Editor. State and stage controls remain
-              internal.
-            </p>
-          </div>
-          <CompanionCustomizer
-            config={config}
-            onChange={setConfig}
-            stage={stage}
-            layoutContext="standalone"
           />
         </section>
 

@@ -148,18 +148,32 @@ function StateIndicator({
 function PatternLayer({
   pattern,
   color,
+  family,
 }: {
   pattern: CompanionPattern;
   color: string;
+  family: CompanionFamily;
 }) {
   if (pattern === "none") return null;
+
+  const anchors: Record<
+    CompanionFamily,
+    { left: number; right: number; y: number; stripeWidth: number }
+  > = {
+    terminal: { left: 18, right: 44, y: 42, stripeWidth: 16 },
+    growth: { left: 21, right: 41, y: 45, stripeWidth: 13 },
+    signal: { left: 20, right: 42, y: 43, stripeWidth: 14 },
+    stack: { left: 17, right: 45, y: 44, stripeWidth: 18 },
+    spirit: { left: 22, right: 40, y: 42, stripeWidth: 11 },
+  };
+  const anchor = anchors[family];
 
   if (pattern === "corner-pixels") {
     return (
       <g fill={color} opacity="0.75">
-        <rect x="18" y="39" width="3" height="3" />
-        <rect x="21" y="42" width="2" height="2" />
-        <rect x="43" y="39" width="3" height="3" />
+        <rect x={anchor.left} y={anchor.y} width="2" height="2" />
+        <rect x={anchor.left + 2} y={anchor.y + 2} width="2" height="2" />
+        <rect x={anchor.right - 2} y={anchor.y} width="2" height="2" />
       </g>
     );
   }
@@ -167,10 +181,10 @@ function PatternLayer({
   if (pattern === "soft-dots") {
     return (
       <g fill={color} opacity="0.58">
-        <rect x="23" y="39" width="2" height="2" />
-        <rect x="29" y="42" width="2" height="2" />
-        <rect x="35" y="39" width="2" height="2" />
-        <rect x="41" y="42" width="2" height="2" />
+        <rect x={anchor.left + 2} y={anchor.y} width="2" height="2" />
+        <rect x={anchor.left + 7} y={anchor.y + 2} width="2" height="2" />
+        <rect x={anchor.right - 7} y={anchor.y} width="2" height="2" />
+        <rect x={anchor.right - 2} y={anchor.y + 2} width="2" height="2" />
       </g>
     );
   }
@@ -178,18 +192,21 @@ function PatternLayer({
   if (pattern === "tiny-stripe") {
     return (
       <g fill={color} opacity="0.62">
-        <rect x="20" y="40" width="24" height="2" />
-        <rect x="24" y="44" width="16" height="1" />
+        <rect
+          x={32 - anchor.stripeWidth / 2}
+          y={anchor.y + 1}
+          width={anchor.stripeWidth}
+          height="2"
+        />
       </g>
     );
   }
 
   return (
-    <g fill={color} opacity="0.72">
-      <rect x="27" y="43" width="2" height="2" />
-      <rect x="30" y="40" width="2" height="5" />
-      <rect x="33" y="37" width="2" height="8" />
-      <rect x="36" y="40" width="2" height="5" />
+    <g fill={color} opacity="0.78">
+      <rect x={anchor.right - 7} y={anchor.y} width="2" height="2" />
+      <rect x={anchor.right - 5} y={anchor.y + 2} width="2" height="2" />
+      <rect x={anchor.right - 3} y={anchor.y + 2} width="2" height="2" />
     </g>
   );
 }
@@ -197,28 +214,48 @@ function PatternLayer({
 function StageMarks({
   stage,
   glow,
+  family,
 }: {
   stage: CompanionStage;
   glow: string;
+  family: CompanionFamily;
 }) {
+  const y: Record<CompanionFamily, number> = {
+    terminal: 48,
+    growth: 52,
+    signal: 51,
+    stack: 53,
+    spirit: 49,
+  };
+  const stageY = y[family];
+
   if (stage === "starter") {
-    return <rect x="30" y="51" width="4" height="2" fill={glow} opacity="0.72" />;
+    return (
+      <rect
+        x="30"
+        y={stageY}
+        width="4"
+        height="2"
+        fill={glow}
+        opacity="0.72"
+      />
+    );
   }
 
   if (stage === "explorer") {
     return (
       <g fill={glow} opacity="0.82">
-        <rect x="27" y="51" width="4" height="2" />
-        <rect x="33" y="51" width="4" height="2" />
+        <rect x="27" y={stageY} width="4" height="2" />
+        <rect x="33" y={stageY} width="4" height="2" />
       </g>
     );
   }
 
   return (
     <g fill={glow}>
-      <rect x="25" y="51" width="4" height="2" />
-      <rect x="30" y="49" width="4" height="4" />
-      <rect x="35" y="51" width="4" height="2" />
+      <rect x="25" y={stageY} width="4" height="2" />
+      <rect x="30" y={stageY - 2} width="4" height="4" />
+      <rect x="35" y={stageY} width="4" height="2" />
     </g>
   );
 }
@@ -258,25 +295,24 @@ function GrowthArtwork({ state, glow, palette }: ArtworkProps) {
   return (
     <>
       <g className={styles.growthCrown}>
-        <rect x="30" y="10" width="4" height="12" fill={palette.shadow} />
-        <rect x="22" y="10" width="8" height="3" fill={palette.secondary} />
-        <rect x="19" y="13" width="11" height="5" fill={palette.primary} />
-        <rect x="22" y="18" width="8" height="3" fill={palette.shadow} />
-        <rect x="34" y="7" width="8" height="3" fill={palette.highlight} />
-        <rect x="34" y="10" width="12" height="5" fill={palette.secondary} />
-        <rect x="34" y="15" width="8" height="3" fill={palette.shadow} />
+        <rect x="30" y="10" width="4" height="13" fill={palette.shadow} />
+        <rect x="21" y="9" width="9" height="3" fill={palette.secondary} />
+        <rect x="18" y="12" width="12" height="6" fill={palette.primary} />
+        <rect x="21" y="18" width="9" height="3" fill={palette.shadow} />
+        <rect x="34" y="6" width="9" height="3" fill={palette.highlight} />
+        <rect x="34" y="9" width="13" height="6" fill={palette.secondary} />
+        <rect x="34" y="15" width="9" height="4" fill={palette.shadow} />
       </g>
-      <rect x="25" y="21" width="14" height="3" fill={palette.secondary} />
-      <rect x="21" y="24" width="22" height="4" fill={palette.primary} />
-      <rect x="18" y="28" width="28" height="5" fill={palette.primary} />
-      <rect x="16" y="33" width="32" height="11" fill={palette.primary} />
-      <rect x="18" y="44" width="28" height="6" fill={palette.primary} />
+      <rect x="26" y="21" width="12" height="3" fill={palette.secondary} />
+      <rect x="22" y="24" width="20" height="4" fill={palette.primary} />
+      <rect x="19" y="28" width="26" height="5" fill={palette.primary} />
+      <rect x="16" y="33" width="32" height="10" fill={palette.primary} />
+      <rect x="18" y="43" width="28" height="7" fill={palette.primary} />
       <rect x="21" y="50" width="22" height="5" fill={palette.shadow} />
-      <rect x="18" y="32" width="4" height="12" fill={palette.secondary} />
-      <rect x="42" y="32" width="4" height="12" fill={palette.shadow} />
-      <rect x="22" y="25" width="18" height="3" fill={palette.secondary} />
-      <rect x="21" y="55" width="9" height="4" fill={palette.deepShadow} />
-      <rect x="34" y="55" width="9" height="4" fill={palette.deepShadow} />
+      <rect x="26" y="55" width="12" height="3" fill={palette.deepShadow} />
+      <rect x="19" y="31" width="4" height="13" fill={palette.secondary} />
+      <rect x="42" y="33" width="4" height="10" fill={palette.shadow} />
+      <rect x="23" y="25" width="16" height="3" fill={palette.highlight} />
       <PixelEyes
         leftX={22}
         rightX={36}
@@ -287,7 +323,6 @@ function GrowthArtwork({ state, glow, palette }: ArtworkProps) {
         detail={palette.detail}
       />
       <PixelMouth centerX={32} y={41} state={state} color={palette.detail} />
-      <StateIndicator state={state} glow={glow} x={28} y={47} />
     </>
   );
 }
@@ -296,36 +331,35 @@ function SignalArtwork({ state, glow, palette }: ArtworkProps) {
   return (
     <>
       <g className={styles.signalPulse} fill={glow}>
-        <rect x="10" y="17" width="3" height="3" opacity="0.35" />
-        <rect x="14" y="13" width="3" height="3" opacity="0.7" />
-        <rect x="51" y="17" width="3" height="3" opacity="0.35" />
-        <rect x="47" y="13" width="3" height="3" opacity="0.7" />
+        <rect x="8" y="23" width="3" height="3" opacity="0.3" />
+        <rect x="12" y="17" width="3" height="3" opacity="0.68" />
+        <rect x="53" y="23" width="3" height="3" opacity="0.3" />
+        <rect x="49" y="17" width="3" height="3" opacity="0.68" />
       </g>
-      <rect x="30" y="9" width="4" height="10" fill={palette.shadow} />
-      <rect x="27" y="5" width="10" height="6" fill={palette.deepShadow} />
-      <rect x="29" y="6" width="6" height="4" fill={glow} />
-      <rect x="24" y="18" width="16" height="3" fill={palette.secondary} />
-      <rect x="20" y="21" width="24" height="4" fill={palette.primary} />
-      <rect x="17" y="25" width="30" height="6" fill={palette.primary} />
-      <rect x="15" y="31" width="34" height="11" fill={palette.primary} />
-      <rect x="18" y="42" width="28" height="7" fill={palette.shadow} />
-      <rect x="22" y="49" width="20" height="5" fill={palette.shadow} />
-      <rect x="15" y="31" width="4" height="10" fill={palette.secondary} />
-      <rect x="45" y="31" width="4" height="10" fill={palette.deepShadow} />
-      <rect x="21" y="23" width="22" height="3" fill={palette.highlight} />
-      <rect x="21" y="54" width="9" height="4" fill={palette.deepShadow} />
-      <rect x="34" y="54" width="9" height="4" fill={palette.deepShadow} />
+      <rect x="30" y="8" width="4" height="9" fill={palette.shadow} />
+      <rect x="27" y="4" width="10" height="6" fill={palette.deepShadow} />
+      <rect x="29" y="5" width="6" height="4" fill={glow} />
+      <rect x="24" y="16" width="16" height="3" fill={palette.secondary} />
+      <rect x="20" y="19" width="24" height="4" fill={palette.primary} />
+      <rect x="16" y="23" width="32" height="6" fill={palette.primary} />
+      <rect x="13" y="29" width="38" height="13" fill={palette.primary} />
+      <rect x="16" y="42" width="32" height="6" fill={palette.primary} />
+      <rect x="20" y="48" width="24" height="5" fill={palette.shadow} />
+      <rect x="25" y="53" width="14" height="4" fill={palette.deepShadow} />
+      <rect x="13" y="30" width="4" height="11" fill={palette.secondary} />
+      <rect x="47" y="30" width="4" height="11" fill={palette.deepShadow} />
+      <rect x="21" y="20" width="22" height="3" fill={palette.highlight} />
       <PixelEyes
-        leftX={22}
-        rightX={36}
-        y={32}
+        leftX={21}
+        rightX={37}
+        y={31}
         state={state}
         glow={glow}
         face={palette.face}
         detail={palette.detail}
       />
-      <PixelMouth centerX={32} y={39} state={state} color={palette.detail} />
-      <StateIndicator state={state} glow={glow} x={28} y={45} />
+      <PixelMouth centerX={32} y={38} state={state} color={palette.detail} />
+      <StateIndicator state={state} glow={glow} x={38} y={44} />
     </>
   );
 }
@@ -333,17 +367,16 @@ function SignalArtwork({ state, glow, palette }: ArtworkProps) {
 function StackArtwork({ state, glow, palette }: ArtworkProps) {
   return (
     <>
-      <rect x="24" y="12" width="16" height="3" fill={palette.deepShadow} />
-      <rect x="20" y="15" width="24" height="8" fill={palette.secondary} />
-      <rect x="24" y="17" width="4" height="3" fill={palette.highlight} />
-      <rect x="40" y="17" width="4" height="4" fill={palette.shadow} />
-      <rect x="29" y="23" width="6" height="3" fill={palette.deepShadow} />
-      <rect x="15" y="26" width="34" height="10" fill={palette.primary} />
-      <rect x="18" y="28" width="4" height="2" fill={palette.highlight} />
-      <rect x="11" y="38" width="42" height="11" fill={palette.shadow} />
-      <rect x="15" y="40" width="34" height="2" fill={palette.primary} />
-      <rect x="17" y="49" width="30" height="3" fill={palette.deepShadow} />
-      <rect x="14" y="52" width="36" height="5" fill={palette.primary} />
+      <rect x="24" y="11" width="16" height="3" fill={palette.deepShadow} />
+      <rect x="21" y="14" width="22" height="9" fill={palette.secondary} />
+      <rect x="24" y="16" width="15" height="2" fill={palette.highlight} />
+      <rect x="39" y="18" width="4" height="3" fill={palette.shadow} />
+      <rect x="18" y="26" width="28" height="11" fill={palette.primary} />
+      <rect x="21" y="28" width="21" height="2" fill={palette.highlight} />
+      <rect x="14" y="40" width="36" height="12" fill={palette.shadow} />
+      <rect x="18" y="42" width="28" height="2" fill={palette.primary} />
+      <rect x="20" y="52" width="24" height="2" fill={palette.deepShadow} />
+      <rect x="17" y="54" width="30" height="4" fill={palette.primary} />
       <PixelEyes
         leftX={22}
         rightX={36}
@@ -354,9 +387,8 @@ function StackArtwork({ state, glow, palette }: ArtworkProps) {
         detail={palette.detail}
       />
       <PixelMouth centerX={32} y={34} state={state} color={palette.detail} />
-      <StateIndicator state={state} glow={glow} x={28} y={44} />
-      <rect x="14" y="57" width="13" height="3" fill={palette.deepShadow} />
-      <rect x="37" y="57" width="13" height="3" fill={palette.deepShadow} />
+      <StateIndicator state={state} glow={glow} x={39} y={44} />
+      <rect x="20" y="58" width="24" height="2" fill={palette.deepShadow} />
     </>
   );
 }
@@ -366,15 +398,17 @@ function SpiritArtwork({ state, glow, palette }: ArtworkProps) {
     <>
       <rect x="26" y="12" width="12" height="3" fill={palette.secondary} />
       <rect x="22" y="15" width="20" height="4" fill={palette.primary} />
-      <rect x="19" y="19" width="26" height="5" fill={palette.primary} />
-      <rect x="16" y="24" width="32" height="13" fill={palette.primary} />
-      <rect x="18" y="37" width="28" height="7" fill={palette.primary} />
-      <rect x="21" y="44" width="22" height="6" fill={palette.shadow} />
-      <rect x="24" y="50" width="16" height="5" fill={palette.shadow} />
-      <rect x="27" y="55" width="8" height="4" fill={palette.deepShadow} />
-      <rect x="19" y="22" width="4" height="15" fill={palette.secondary} />
-      <rect x="41" y="22" width="4" height="15" fill={palette.shadow} />
-      <rect x="24" y="16" width="14" height="3" fill={palette.highlight} />
+      <rect x="18" y="19" width="28" height="5" fill={palette.primary} />
+      <rect x="15" y="24" width="34" height="13" fill={palette.primary} />
+      <rect x="17" y="37" width="30" height="7" fill={palette.primary} />
+      <rect x="20" y="44" width="25" height="5" fill={palette.shadow} />
+      <rect x="20" y="49" width="7" height="4" fill={palette.shadow} />
+      <rect x="29" y="49" width="7" height="7" fill={palette.shadow} />
+      <rect x="38" y="49" width="7" height="3" fill={palette.shadow} />
+      <rect x="29" y="56" width="5" height="3" fill={palette.deepShadow} />
+      <rect x="18" y="22" width="4" height="15" fill={palette.secondary} />
+      <rect x="43" y="24" width="4" height="13" fill={palette.shadow} />
+      <rect x="23" y="16" width="15" height="3" fill={palette.highlight} />
       <PixelEyes
         leftX={22}
         rightX={36}
@@ -385,12 +419,11 @@ function SpiritArtwork({ state, glow, palette }: ArtworkProps) {
         detail={palette.detail}
       />
       <PixelMouth centerX={32} y={35} state={state} color={palette.detail} />
-      <StateIndicator state={state} glow={glow} x={28} y={44} />
       <g className={styles.spiritTrail} fill={glow}>
-        <rect x="19" y="49" width="3" height="3" opacity="0.7" />
-        <rect x="14" y="53" width="3" height="3" opacity="0.5" />
-        <rect x="10" y="57" width="2" height="2" opacity="0.3" />
-        <rect x="42" y="52" width="3" height="3" opacity="0.55" />
+        <rect x="16" y="46" width="3" height="3" opacity="0.66" />
+        <rect x="12" y="51" width="3" height="3" opacity="0.46" />
+        <rect x="9" y="56" width="2" height="2" opacity="0.28" />
+        <rect x="46" y="45" width="3" height="3" opacity="0.5" />
       </g>
     </>
   );
@@ -417,7 +450,7 @@ export function PixelCompanion({
   label,
 }: PixelCompanionProps) {
   const palette = getCompanionPalette(config.colorTheme);
-  const glow = getCompanionGlow(config.glowColor);
+  const glow = getCompanionGlow(config.glowColor, config.colorTheme);
 
   return (
     <svg
@@ -440,6 +473,12 @@ export function PixelCompanion({
         } as React.CSSProperties
       }
     >
+      {config.family === "spirit" ? (
+        <g className={styles.spiritShadow} fill={palette.deepShadow}>
+          <rect x="24" y="60" width="16" height="2" opacity="0.42" />
+          <rect x="28" y="59" width="8" height="1" opacity="0.28" />
+        </g>
+      ) : null}
       <g
         className={cx(
           styles.art,
@@ -452,8 +491,12 @@ export function PixelCompanion({
           glow={glow}
           palette={palette}
         />
-        <PatternLayer pattern={config.pattern} color={palette.highlight} />
-        <StageMarks stage={stage} glow={glow} />
+        <PatternLayer
+          pattern={config.pattern}
+          color={palette.highlight}
+          family={config.family}
+        />
+        <StageMarks stage={stage} glow={glow} family={config.family} />
       </g>
     </svg>
   );

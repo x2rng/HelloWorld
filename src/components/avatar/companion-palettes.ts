@@ -107,7 +107,7 @@ export const companionPatternOptions: Array<{
   { id: "corner-pixels", label: "Corner pixels" },
   { id: "soft-dots", label: "Soft dots" },
   { id: "tiny-stripe", label: "Tiny stripe" },
-  { id: "signal-mark", label: "Signal mark" },
+  { id: "pixel-notch", label: "Pixel notch" },
 ];
 
 export function getCompanionPalette(theme: CompanionColorTheme) {
@@ -117,7 +117,25 @@ export function getCompanionPalette(theme: CompanionColorTheme) {
   );
 }
 
-export function getCompanionGlow(glow: CompanionGlowColor) {
+const sameHueContrast: Partial<
+  Record<CompanionColorTheme, Partial<Record<CompanionGlowColor, string>>>
+> = {
+  classic: { sky: "#a9ddff" },
+  sage: { mint: "#a2efd8" },
+  violet: { violet: "#d0c2ff" },
+  amber: { amber: "#ffe09b" },
+  graphite: { white: "#ffffff" },
+};
+
+export function getCompanionGlow(
+  glow: CompanionGlowColor,
+  theme?: CompanionColorTheme,
+) {
+  if (theme) {
+    const guardedValue = sameHueContrast[theme]?.[glow];
+    if (guardedValue) return guardedValue;
+  }
+
   return (
     companionGlowOptions.find((option) => option.id === glow)?.value ??
     companionGlowOptions[0].value
