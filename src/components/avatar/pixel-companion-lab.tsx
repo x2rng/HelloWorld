@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { CompanionCustomizer } from "@/components/avatar/companion-customizer";
 import { CompanionPreview } from "@/components/avatar/companion-preview";
 import {
   companionGlowOptions,
@@ -61,6 +62,15 @@ export function PixelCompanionLab() {
         </header>
 
         <section className="mt-5 rounded-[32px] border border-white/9 bg-[#0d1119] p-5 sm:p-7">
+          <div className="mb-6 border-b border-white/8 pb-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-blue-200/65">
+              Internal review controls
+            </p>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-white/44">
+              Inspect system-controlled state, progression stage, motion, and
+              every visual configuration without changing employee data.
+            </p>
+          </div>
           <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-4">
             <fieldset>
               <legend className="text-xs font-semibold uppercase tracking-[0.15em] text-white/42">
@@ -71,6 +81,7 @@ export function PixelCompanionLab() {
                   <button
                     key={option.id}
                     type="button"
+                    aria-pressed={config.colorTheme === option.id}
                     onClick={() =>
                       setConfig((current) => ({
                         ...current,
@@ -99,6 +110,7 @@ export function PixelCompanionLab() {
                   <button
                     key={option.id}
                     type="button"
+                    aria-pressed={config.glowColor === option.id}
                     onClick={() =>
                       setConfig((current) => ({
                         ...current,
@@ -131,6 +143,7 @@ export function PixelCompanionLab() {
                   <button
                     key={option.id}
                     type="button"
+                    aria-pressed={config.pattern === option.id}
                     onClick={() =>
                       setConfig((current) => ({
                         ...current,
@@ -160,6 +173,7 @@ export function PixelCompanionLab() {
                     <button
                       key={item}
                       type="button"
+                      aria-pressed={state === item}
                       onClick={() => setState(item)}
                       className={cx(
                         "block w-full rounded-lg px-2.5 py-1.5 text-left text-xs capitalize",
@@ -182,6 +196,7 @@ export function PixelCompanionLab() {
                     <button
                       key={item}
                       type="button"
+                      aria-pressed={stage === item}
                       onClick={() => setStage(item)}
                       className={cx(
                         "block w-full rounded-lg px-2.5 py-1.5 text-left text-xs capitalize",
@@ -261,6 +276,28 @@ export function PixelCompanionLab() {
             size={220}
             reducedMotion={reducedMotion}
             surface="light"
+          />
+        </section>
+
+        <section className="mt-5 rounded-[34px] border border-white/9 bg-[#090c12] p-4 sm:p-6 lg:p-8">
+          <div className="mb-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-200/70">
+              Production employee preview
+            </p>
+            <h2 className="mt-2 text-3xl text-white sm:text-4xl">
+              Choose your companion
+            </h2>
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-white/48">
+              This is the same preview-first selection experience used in Player
+              Setup and the Avatar Editor. State and stage controls remain
+              internal.
+            </p>
+          </div>
+          <CompanionCustomizer
+            config={config}
+            onChange={setConfig}
+            stage={stage}
+            layoutContext="standalone"
           />
         </section>
 

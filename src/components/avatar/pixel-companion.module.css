@@ -6,10 +6,33 @@
 
 .art {
   filter: drop-shadow(0 3px 0 rgb(0 0 0 / 28%))
-    drop-shadow(0 0 4px color-mix(in srgb, var(--companion-glow) 44%, transparent));
+    drop-shadow(0 0 3px color-mix(in srgb, var(--companion-glow) 34%, transparent));
   transform-box: fill-box;
   transform-origin: center bottom;
   animation: pixel-idle 3.2s steps(2, end) infinite;
+}
+
+.spirit {
+  animation: pixel-spirit-idle 3.4s steps(2, end) infinite;
+}
+
+.growthCrown,
+.signalPulse,
+.spiritTrail {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.growthCrown {
+  animation: pixel-growth-crown 3.6s steps(2, end) infinite;
+}
+
+.signalPulse {
+  animation: pixel-signal-pulse 1.8s steps(2, end) infinite;
+}
+
+.spiritTrail {
+  animation: pixel-spirit-trail 2.4s steps(2, end) infinite;
 }
 
 .working .art {
@@ -36,7 +59,10 @@
 
 .reduced .art,
 .reduced .blink,
-.reduced .indicator {
+.reduced .indicator,
+.reduced .growthCrown,
+.reduced .signalPulse,
+.reduced .spiritTrail {
   animation: none;
 }
 
@@ -57,6 +83,46 @@
   }
   50% {
     transform: translateY(-1px);
+  }
+}
+
+@keyframes pixel-spirit-idle {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes pixel-growth-crown {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(1px);
+  }
+}
+
+@keyframes pixel-signal-pulse {
+  0%,
+  100% {
+    opacity: 0.42;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes pixel-spirit-trail {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-1px, 1px);
   }
 }
 
@@ -108,7 +174,10 @@
 @media (prefers-reduced-motion: reduce) {
   .art,
   .blink,
-  .indicator {
+  .indicator,
+  .growthCrown,
+  .signalPulse,
+  .spiritTrail {
     animation: none;
   }
 }

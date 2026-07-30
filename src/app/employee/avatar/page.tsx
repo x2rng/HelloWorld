@@ -42,13 +42,10 @@ export default async function EmployeeAvatarPage() {
     <div className="space-y-5">
       <Card className="rounded-[36px] p-6 sm:p-8">
         <p className="eyebrow">Player Companion</p>
-        <h2 className="mt-2 text-4xl sm:text-5xl">
-          Choose who grows alongside you.
-        </h2>
+        <h1 className="mt-2 text-4xl sm:text-5xl">Choose your companion</h1>
         <p className="mt-3 max-w-2xl text-sm leading-7 text-[var(--color-muted)]">
           Choose a companion that will grow with you throughout your onboarding
-          journey. Your colors and visual identity stay personal while your
-          stage reflects real progress.
+          journey. You can adjust its look now and change it later.
         </p>
       </Card>
 

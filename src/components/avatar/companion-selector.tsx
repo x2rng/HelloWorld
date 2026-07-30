@@ -20,7 +20,7 @@ export function CompanionSelector({
   stage = "starter",
 }: CompanionSelectorProps) {
   return (
-    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+    <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
       {companionFamilyDefinitions.map((family) => {
         const selected = config.family === family.id;
         const nextConfig = { ...config, family: family.id };
@@ -32,22 +32,33 @@ export function CompanionSelector({
             aria-pressed={selected}
             onClick={() => onChange(nextConfig)}
             className={cx(
-              "group flex min-h-44 flex-col items-center rounded-[24px] border p-4 text-center transition",
+              "group relative flex min-h-36 flex-col items-center rounded-[22px] border p-3 text-center transition sm:min-h-40 sm:p-4",
               selected
-                ? "border-blue-300/45 bg-blue-400/[0.09] shadow-[0_18px_55px_rgba(59,130,246,0.14)]"
+                ? "border-blue-300/55 bg-blue-400/[0.1] shadow-[0_14px_42px_rgba(59,130,246,0.13)] ring-1 ring-inset ring-blue-200/20"
                 : "border-white/8 bg-white/[0.025] hover:border-white/16 hover:bg-white/[0.045]",
             )}
           >
+            <span
+              aria-hidden="true"
+              className={cx(
+                "absolute right-2.5 top-2.5 flex size-5 items-center justify-center rounded-md border text-[10px] font-bold transition",
+                selected
+                  ? "border-blue-200/35 bg-blue-300 text-slate-950"
+                  : "border-white/10 bg-white/[0.025] text-transparent",
+              )}
+            >
+              ✓
+            </span>
             <PixelCompanion
               config={nextConfig}
               stage={stage}
-              size={84}
+              size={76}
               className="transition group-hover:-translate-y-0.5"
             />
-            <span className="mt-2 text-sm font-semibold text-white">
+            <span className="mt-1.5 text-sm font-semibold text-white">
               {family.label}
             </span>
-            <span className="mt-1 text-xs leading-5 text-white/42">
+            <span className="mt-1 max-w-32 text-[11px] leading-4 text-white/46 sm:text-xs sm:leading-5">
               {family.description}
             </span>
           </button>

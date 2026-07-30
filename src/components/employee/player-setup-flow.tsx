@@ -10,6 +10,7 @@ import { CompanionCustomizer } from "@/components/avatar/companion-customizer";
 import { PixelCompanion } from "@/components/avatar/pixel-companion";
 import { BadgePill } from "@/components/ui/badge-pill";
 import { Button } from "@/components/ui/button";
+import { companionFamilyDefinitions } from "@/lib/avatar/companion-types";
 import { getCompanionStage } from "@/lib/avatar/get-companion-stage";
 import { createPixelCompanionFromStored } from "@/lib/avatar/normalize-companion-config";
 import {
@@ -111,6 +112,10 @@ export function PlayerSetupFlow({
     createPixelCompanionFromStored(initialAvatarConfig),
   );
   const companionStage = getCompanionStage(startingLevel);
+  const selectedCompanionFamily =
+    companionFamilyDefinitions.find(
+      (family) => family.id === companionConfig.family,
+    ) ?? companionFamilyDefinitions[0];
   const fallbackSkills = useMemo(
     () => getRoleTemplateSkills(fallbackRole),
     [fallbackRole],
@@ -402,20 +407,19 @@ export function PlayerSetupFlow({
           {step === 4 ? (
             <section>
               <div className="mb-5">
-                <p className="eyebrow">Choose your companion</p>
-                <h1 className="mt-2 text-4xl sm:text-5xl">
-                  A steady presence for your journey.
-                </h1>
+                <p className="eyebrow">Player Companion</p>
+                <h1 className="mt-2 text-4xl sm:text-5xl">Choose your companion</h1>
                 <p className="mt-3 max-w-2xl text-sm leading-7 text-white/48">
                   Choose a companion that will grow with you throughout your
-                  onboarding journey.
+                  onboarding journey. You can adjust its look now and change it
+                  later.
                 </p>
               </div>
               <CompanionCustomizer
                 config={companionConfig}
                 onChange={setCompanionConfig}
                 stage={companionStage.id}
-                setupMode
+                layoutContext="standalone"
               />
             </section>
           ) : null}
@@ -442,6 +446,9 @@ export function PlayerSetupFlow({
                   <div className="mt-5 flex flex-wrap gap-2">
                     <BadgePill tone="purple">
                       {getRoleFocusLabel(displayedRole)}
+                    </BadgePill>
+                    <BadgePill tone="green">
+                      {selectedCompanionFamily.label} companion
                     </BadgePill>
                     <BadgePill tone="blue">Level {startingLevel}</BadgePill>
                     <BadgePill tone="cyan">{companionStage.label}</BadgePill>

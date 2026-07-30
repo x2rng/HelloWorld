@@ -16,6 +16,7 @@ type CompanionPreviewProps = {
   reducedMotion?: boolean;
   surface?: "dark" | "light";
   showLabels?: boolean;
+  variant?: "default" | "editor";
 };
 
 export function CompanionPreview({
@@ -27,6 +28,7 @@ export function CompanionPreview({
   reducedMotion = false,
   surface = "dark",
   showLabels = true,
+  variant = "default",
 }: CompanionPreviewProps) {
   const family =
     companionFamilyDefinitions.find((item) => item.id === config.family) ??
@@ -35,7 +37,10 @@ export function CompanionPreview({
   return (
     <div
       className={cx(
-        "relative flex min-h-72 flex-col items-center justify-center overflow-hidden rounded-[30px] border p-6",
+        "relative flex flex-col items-center justify-center overflow-hidden border",
+        variant === "editor"
+          ? "min-h-[13.5rem] rounded-[26px] p-4 sm:min-h-[16rem] sm:p-5 lg:min-h-[34rem] lg:rounded-[32px] lg:p-8"
+          : "min-h-72 rounded-[30px] p-6",
         surface === "light"
           ? "border-slate-200 bg-[#eef1f4] text-slate-900"
           : "border-white/9 bg-[#090d14] text-white",
@@ -54,7 +59,11 @@ export function CompanionPreview({
         stage={stage}
         size={size}
         reducedMotion={reducedMotion}
-        className="relative"
+        className={cx(
+          "relative",
+          variant === "editor" &&
+            "h-auto w-[156px] sm:w-[190px] lg:w-[292px]",
+        )}
       />
       {showLabels ? (
         <div className="relative mt-2 text-center">
