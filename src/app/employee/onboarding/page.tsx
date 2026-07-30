@@ -400,6 +400,7 @@ export default async function EmployeeOnboardingPage({
         completedTasks={completedTasks}
         totalTasks={tasks.length}
         overallPercent={overallPercent}
+        recentCompletion={completionSaved === "true"}
         level={{
           current: level.level,
           totalXp: level.totalXp,
