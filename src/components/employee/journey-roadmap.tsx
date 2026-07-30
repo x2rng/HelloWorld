@@ -5,7 +5,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { completeTask } from "@/app/employee/onboarding/actions";
 import { PixelCompanion } from "@/components/avatar/pixel-companion";
-import { BadgePill } from "@/components/ui/badge-pill";
 import { Button } from "@/components/ui/button";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import type {
@@ -485,97 +484,189 @@ function MilestoneDetails({
   );
 }
 
+const LEFT_NODE_X = 29;
+const RIGHT_NODE_X = 71;
+
+type RoadmapPathTone = "completed" | "current" | "future";
+
+function getNodeX(index: number) {
+  return index % 2 === 0 ? LEFT_NODE_X : RIGHT_NODE_X;
+}
+
+function getConnectorTone(
+  milestone: JourneyRoadmapMilestone,
+  nextMilestone?: JourneyRoadmapMilestone,
+): RoadmapPathTone {
+  if (nextMilestone?.state === "current") return "current";
+  if (milestone.state === "completed") return "completed";
+  if (milestone.state === "current") return "current";
+  return "future";
+}
+
+function RoadmapConnector({
+  fromX,
+  toX,
+  tone,
+  className,
+}: {
+  fromX: number;
+  toX: number;
+  tone: RoadmapPathTone;
+  className: string;
+}) {
+  const path = `M ${fromX} 0 C ${fromX} 34, ${toX} 66, ${toX} 100`;
+
+  return (
+    <svg
+      viewBox="0 0 100 100"
+      preserveAspectRatio="none"
+      className={cx(
+        "pointer-events-none absolute left-0 z-0 w-full overflow-visible",
+        className,
+      )}
+      aria-hidden="true"
+    >
+      {tone === "current" ? (
+        <path
+          d={path}
+          fill="none"
+          stroke="rgba(96, 165, 250, 0.1)"
+          strokeWidth="7"
+          vectorEffect="non-scaling-stroke"
+        />
+      ) : null}
+      <path
+        d={path}
+        fill="none"
+        stroke={
+          tone === "completed"
+            ? "rgba(110, 231, 183, 0.46)"
+            : tone === "current"
+              ? "rgba(125, 211, 252, 0.58)"
+              : "rgba(148, 163, 184, 0.14)"
+        }
+        strokeWidth={tone === "future" ? 1.35 : 1.8}
+        strokeLinecap="round"
+        vectorEffect="non-scaling-stroke"
+      />
+    </svg>
+  );
+}
+
+function RoadmapNode({
+  state,
+}: {
+  state: RoadmapMilestoneState;
+}) {
+  return (
+    <span
+      className={cx(
+        "relative flex items-center justify-center border bg-[#0d141d] shadow-[0_9px_24px_rgba(0,0,0,0.3)]",
+        state === "completed" &&
+          "size-9 rounded-[14px] border-emerald-300/24 bg-[#123029] text-emerald-100/82",
+        state === "current" &&
+          "size-12 rounded-[18px] border-blue-200/68 bg-[#10273e] text-blue-50 ring-4 ring-blue-400/9 shadow-[0_0_38px_rgba(96,165,250,0.34)] motion-safe:animate-[pulse_3.2s_ease-in-out_infinite]",
+        state === "available_next" &&
+          "size-10 rounded-[15px] border-cyan-200/42 bg-[#0d151e] text-cyan-100/72",
+        state === "locked" &&
+          "size-9 rounded-[14px] border-white/9 bg-[#0c1118] text-white/26",
+      )}
+    >
+      <StatusIcon
+        state={state}
+        className={state === "current" ? "size-5" : "size-4"}
+      />
+    </span>
+  );
+}
+
 function MilestoneNode({
   milestone,
+  nextMilestone,
   index,
   isLast,
   selected,
   showCompanion,
-  markerComplete,
   companion,
   companionState,
   onSelect,
 }: {
   milestone: JourneyRoadmapMilestone;
+  nextMilestone?: JourneyRoadmapMilestone;
   index: number;
   isLast: boolean;
   selected: boolean;
   showCompanion: boolean;
-  markerComplete: boolean;
   companion: JourneyRoadmapProps["companion"];
   companionState: CompanionState;
   onSelect: (milestoneId: string) => void;
 }) {
-  const xpCopy =
+  const nodeX = getNodeX(index);
+  const nextNodeX = getNodeX(index + 1);
+  const cardOnRight = nodeX === LEFT_NODE_X;
+  const xpValue =
     milestone.state === "completed"
-      ? `${milestone.earnedXp} XP earned`
-      : `${milestone.totalXp} XP available`;
-  const nextTask =
-    milestone.tasks.find((task) => task.state === "next") ?? null;
+      ? milestone.earnedXp
+      : milestone.totalXp;
+  const roadmapStatus =
+    milestone.state === "current"
+      ? "Current"
+      : milestoneStatePresentation[milestone.state].label;
 
   return (
     <li
       id={`milestone-${milestone.id}`}
-      className="relative grid scroll-mt-24 grid-cols-[3.5rem_minmax(0,1fr)] gap-2 pb-4 last:pb-0 sm:gap-3 sm:pb-5"
+      className="relative h-[9.75rem] scroll-mt-24"
     >
-      {!isLast ? (
-        <span
-          aria-hidden="true"
-          className={cx(
-            "absolute bottom-0 left-[1.72rem] top-10 z-0 w-[2px]",
-            milestone.state === "completed"
-              ? "bg-gradient-to-b from-emerald-300/62 via-emerald-300/38 to-emerald-300/22 shadow-[0_0_12px_rgba(110,231,183,0.12)]"
-              : "bg-[repeating-linear-gradient(to_bottom,rgba(148,163,184,0.2)_0,rgba(148,163,184,0.2)_5px,transparent_5px,transparent_11px)]",
-          )}
-        />
-      ) : null}
+      <RoadmapConnector
+        fromX={nodeX}
+        toX={nextNodeX}
+        tone={getConnectorTone(milestone, nextMilestone)}
+        className={isLast ? "top-1/2 h-[7.875rem]" : "top-1/2 h-full"}
+      />
 
-      <div className="relative z-10 col-start-1 flex justify-center">
-        <span
-          className={cx(
-            "flex items-center justify-center border bg-[#101620] shadow-[0_9px_24px_rgba(0,0,0,0.28)]",
-            milestone.state === "completed" &&
-              "size-9 rounded-[14px] border-emerald-300/20 bg-emerald-300/12 text-emerald-100/78",
-            milestone.state === "current" &&
-              "size-11 rounded-[16px] border-blue-200/65 bg-blue-400/18 text-blue-50 ring-4 ring-blue-400/8 shadow-[0_0_34px_rgba(96,165,250,0.32)]",
-            milestone.state === "available_next" &&
-              "size-9 rounded-[14px] border-cyan-200/38 bg-transparent text-cyan-100/72",
-            milestone.state === "locked" &&
-              "size-9 rounded-[14px] border-white/8 bg-white/[0.025] text-white/28",
-          )}
-        >
-          <StatusIcon state={milestone.state} className="size-4.5" />
-        </span>
+      <div
+        className="absolute top-1/2 z-20 -translate-x-1/2 -translate-y-1/2"
+        style={{ left: `${nodeX}%` }}
+      >
+        <RoadmapNode state={milestone.state} />
       </div>
 
       {showCompanion ? (
-        <div className="pointer-events-none absolute left-0 top-[2.15rem] z-20 flex w-[5.35rem] flex-col items-center">
-          <div className="relative flex size-[4.6rem] items-center justify-center">
+        <div
+          data-roadmap-traveler
+          className={cx(
+            "pointer-events-none absolute top-1/2 z-30 flex -translate-y-1/2 flex-col items-center transition-[left,transform] duration-500 motion-reduce:transition-none",
+            cardOnRight
+              ? "-translate-x-full pr-2"
+              : "translate-x-0 pl-2",
+          )}
+          style={{ left: `${nodeX}%` }}
+        >
+          <span
+            className={cx(
+              "mb-0.5 whitespace-nowrap rounded-full border px-2 py-1 text-[8px] font-semibold uppercase tracking-[0.08em] shadow-[0_8px_22px_rgba(0,0,0,0.28)]",
+              "border-blue-300/16 bg-[#101722] text-blue-100/74",
+            )}
+          >
+            You are here
+          </span>
+          <div className="relative flex size-[4.25rem] items-center justify-center">
             <div
               className={cx(
-                "absolute size-14 rounded-full blur-2xl",
-                markerComplete ? "bg-emerald-300/12" : "bg-blue-300/12",
+                "absolute size-12 rounded-full blur-2xl",
+                "bg-blue-300/13",
               )}
             />
             <PixelCompanion
               config={companion.config}
               stage={companion.stage}
               state={companionState}
-              size={72}
+              size={68}
               className="relative"
               label={`${companion.config.family} companion at ${milestone.title}`}
             />
           </div>
-          <span
-            className={cx(
-              "-mt-1 whitespace-nowrap rounded-full border px-2 py-1 text-[8px] font-semibold uppercase tracking-[0.08em] shadow-[0_8px_22px_rgba(0,0,0,0.28)]",
-              markerComplete
-                ? "border-emerald-300/12 bg-[#101916] text-emerald-100/66"
-                : "border-blue-300/16 bg-[#101722] text-blue-100/72",
-            )}
-          >
-            {markerComplete ? "Journey complete" : "You are here"}
-          </span>
         </div>
       ) : null}
 
@@ -584,93 +675,74 @@ function MilestoneNode({
         onClick={() => onSelect(milestone.id)}
         aria-label={`Open ${milestone.title} milestone details`}
         aria-pressed={selected}
+        style={
+          cardOnRight
+            ? { left: `calc(${nodeX}% + 2.15rem)`, right: "0.5rem" }
+            : { left: "0.5rem", right: `calc(${100 - nodeX}% + 2.15rem)` }
+        }
         className={cx(
-          "group relative col-start-2 w-full overflow-hidden rounded-[22px] border text-left outline-none transition",
-          milestone.state === "completed" && "p-3.5",
-          milestone.state === "current" && "p-5",
-          milestone.state === "available_next" && "p-3.5",
-          milestone.state === "locked" && "p-3.5",
-          showCompanion && "min-h-[7.6rem] pl-[3.85rem] sm:pl-[4.35rem]",
+          "group absolute top-1/2 z-10 -translate-y-1/2 rounded-[20px] border p-3 text-left outline-none transition sm:p-3.5",
           milestone.state === "completed" &&
-            "border-emerald-300/9 bg-emerald-300/[0.02] hover:border-emerald-300/16",
+            "border-emerald-300/8 bg-[#0d1517]/92 hover:border-emerald-300/16",
           milestone.state === "current" &&
-            "border-blue-300/34 bg-gradient-to-br from-blue-400/[0.105] via-[#101720] to-[#0d121a] shadow-[0_18px_55px_rgba(59,130,246,0.12)] hover:border-blue-200/48",
+            "border-blue-300/34 bg-gradient-to-br from-blue-400/[0.11] via-[#101720] to-[#0d121a] p-3.5 shadow-[0_16px_48px_rgba(59,130,246,0.13)] hover:border-blue-200/48 sm:p-4",
           milestone.state === "available_next" &&
-            "border-cyan-300/12 bg-cyan-300/[0.02] hover:border-cyan-300/22",
+            "border-cyan-300/12 bg-[#0d141c]/88 hover:border-cyan-300/22",
           milestone.state === "locked" &&
-            "border-white/6 bg-white/[0.014] hover:border-white/10",
-          selected && "ring-1 ring-white/13",
+            "border-white/6 bg-[#0b1016]/72 hover:border-white/10",
+          selected && "ring-1 ring-white/14",
         )}
       >
-        <div className="flex min-w-0 items-start justify-between gap-3">
-          <div className="min-w-0">
-            <p className="text-[9px] font-semibold uppercase tracking-[0.15em] text-white/29">
-              Milestone {index + 1}
-            </p>
-            <h3
-              className={cx(
-                "mt-1.5 text-lg font-semibold leading-tight",
-                milestone.state === "locked" ? "text-white/62" : "text-white",
-              )}
-            >
-              {milestone.title}
-            </h3>
-          </div>
-          {!showCompanion ? (
-            <MilestoneStatusBadge state={milestone.state} />
-          ) : null}
-        </div>
-
-        {milestone.state === "current" ? (
-          <p className="mt-2 line-clamp-2 text-sm leading-6 text-[var(--color-muted)]">
-            {milestone.description ??
-              "A focused stage in your onboarding journey."}
+        <div className="flex items-start justify-between gap-2">
+          <p className="text-[8px] font-semibold uppercase tracking-[0.14em] text-white/27">
+            Milestone {index + 1}
           </p>
-        ) : null}
-
-        <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs">
-          <span className="text-white/43">
-            {milestone.completedTasks} / {milestone.totalTasks} tasks
+          <span
+            className={cx(
+              "text-[9px] font-semibold uppercase tracking-[0.09em]",
+              milestone.state === "completed" && "text-emerald-100/56",
+              milestone.state === "current" && "text-blue-100/84",
+              milestone.state === "available_next" && "text-cyan-100/62",
+              milestone.state === "locked" && "text-white/28",
+            )}
+          >
+            {roadmapStatus}
           </span>
-          {(milestone.state === "completed"
-            ? milestone.earnedXp
-            : milestone.totalXp) > 0 ? (
-            <span
-              className={cx(
-                "font-semibold",
-                milestone.state === "completed"
-                  ? "text-emerald-100/55"
-                  : "text-cyan-100/63",
-              )}
-            >
-              {xpCopy}
-            </span>
-          ) : null}
         </div>
-
-        {milestone.state === "current" ? (
-          <>
-            <ProgressBar
-              value={milestone.progress}
-              tone="blue"
-              className="mt-3"
-            />
-            {nextTask ? (
-              <p className="mt-2 truncate text-xs font-medium text-blue-100/68">
-                Next: {nextTask.title}
-              </p>
-            ) : null}
-          </>
-        ) : null}
-
-        <span
+        <h3
           className={cx(
-            "inline-flex items-center text-[11px] font-semibold text-white/40 transition group-hover:text-white/67",
-            milestone.state === "current" ? "mt-3" : "mt-2.5",
+            "mt-1.5 line-clamp-2 font-semibold leading-tight",
+            milestone.state === "current" ? "text-lg text-white" : "text-white/78",
+            milestone.state === "locked" && "text-white/48",
           )}
         >
-          {milestone.state === "locked" ? "Preview milestone" : "View details"}
-          <span className="ml-1.5" aria-hidden="true">
+          {milestone.title}
+        </h3>
+        <div className="mt-2 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[11px]">
+          <span className="text-white/42">
+            {milestone.completedTasks}/{milestone.totalTasks} steps
+          </span>
+          {xpValue > 0 ? (
+            <>
+              <span className="text-white/18" aria-hidden="true">
+                ·
+              </span>
+              <span
+                className={cx(
+                  "font-medium",
+                  milestone.state === "completed"
+                    ? "text-emerald-100/48"
+                    : "text-cyan-100/56",
+                )}
+              >
+                {xpValue} XP
+              </span>
+            </>
+          ) : null}
+        </div>
+        <span className="mt-2 inline-flex items-center text-[10px] font-semibold text-white/32 transition group-hover:text-white/62">
+          {milestone.state === "locked" ? "Preview" : "Open"}
+          <span className="ml-1" aria-hidden="true">
             →
           </span>
         </span>
@@ -722,17 +794,19 @@ export function JourneyRoadmap({
   const nextTask =
     currentMilestone?.tasks.find((task) => task.state === "next") ?? null;
   const companionState: CompanionState =
-    recentCompletion || journeyComplete
+    recentCompletion
       ? "completed"
-      : nextTask
-        ? "working"
-        : "idle";
+      : journeyComplete
+        ? "idle"
+        : nextTask
+          ? "working"
+          : "idle";
   const primaryActionLabel = journeyComplete
-    ? "Review milestone"
+    ? "Review journey"
     : nextTask
-      ? "Continue next task"
+      ? "Continue next step"
       : currentMilestone
-        ? "Review milestone"
+        ? "View current milestone"
         : null;
   const statusMilestone = journeyComplete
     ? lastCompletedMilestone
@@ -842,28 +916,21 @@ export function JourneyRoadmap({
 
   return (
     <>
-      <section className="relative overflow-hidden rounded-[30px] border border-white/9 bg-[#090d14] p-5 text-white shadow-[0_28px_90px_rgba(0,0,0,0.32)] sm:p-6">
+      <section className="relative overflow-hidden rounded-[27px] border border-white/9 bg-[#090d14] p-4 text-white shadow-[0_24px_70px_rgba(0,0,0,0.28)] sm:p-5">
         <div className="absolute -right-20 -top-24 size-64 rounded-full bg-blue-500/9 blur-3xl" />
         <div className="relative">
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
-              <p className="eyebrow text-blue-100/52">{track.title}</p>
-              <h1 className="mt-2 text-2xl leading-tight sm:text-4xl">
-                {journeyComplete
-                  ? "Journey complete"
-                  : currentMilestone
-                    ? `You are in ${currentMilestone.title}`
-                    : milestones.length > 0
-                      ? "Your roadmap is ready"
-                      : "Your roadmap is being prepared"}
+              <p className="eyebrow text-blue-100/52">Your journey</p>
+              <h1 className="mt-1.5 text-2xl leading-tight sm:text-3xl">
+                {track.title}
               </h1>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--color-muted)]">
+              <p className="mt-1.5 max-w-2xl text-sm leading-5 text-[var(--color-muted)]">
                 {journeyComplete
-                  ? `You completed every milestone in ${track.title}.`
+                  ? "Every milestone is complete."
                   : currentMilestone
-                    ? `${currentMilestone.completedTasks} of ${currentMilestone.totalTasks} tasks complete.`
-                    : track.description ??
-                      "Your milestone path will appear here when it is ready."}
+                    ? `Current milestone: ${currentMilestone.title}`
+                    : "Your milestone path is being prepared."}
               </p>
             </div>
             <div className="shrink-0 text-right">
@@ -881,28 +948,29 @@ export function JourneyRoadmap({
             </div>
           </div>
 
-          <div className="mt-4">
+          <div className="mt-3">
             <ProgressBar
               value={overallPercent}
               tone={journeyComplete ? "green" : "blue"}
             />
           </div>
 
-          <div className="mt-4 flex flex-col gap-3 border-t border-white/7 pt-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-3 flex flex-col gap-3 border-t border-white/7 pt-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="rounded-full border border-white/8 bg-white/[0.025] px-3 py-1.5 text-xs font-semibold text-white/72">
+              <span className="text-xs font-semibold text-white/66">
+                {completedTasks}/{totalTasks} steps
+              </span>
+              <span className="text-white/16" aria-hidden="true">
+                ·
+              </span>
+              <span className="text-xs font-medium text-white/48">
                 Level {level.current}
               </span>
-              <span className="rounded-full border border-cyan-300/10 bg-cyan-300/[0.035] px-3 py-1.5 text-xs font-semibold text-cyan-100/72">
-                {level.totalXp} XP
-                {level.nextLevel ? (
-                  <span className="ml-1 text-cyan-100/38">
-                    · {level.xpToNextLevel} to L{level.nextLevel}
-                  </span>
-                ) : null}
+              <span className="text-white/16" aria-hidden="true">
+                ·
               </span>
-              <span className="rounded-full border border-white/8 bg-white/[0.025] px-3 py-1.5 text-xs font-medium text-white/50">
-                {completedTasks}/{totalTasks} tasks
+              <span className="text-xs font-semibold text-cyan-100/64">
+                {level.totalXp} XP
               </span>
             </div>
 
@@ -925,42 +993,137 @@ export function JourneyRoadmap({
       <section
         id="roadmap"
         ref={roadmapSectionRef}
-        className="mt-5 scroll-mt-5"
+        className="mt-4 scroll-mt-5"
       >
         <div className="px-1">
-          <p className="eyebrow">Journey roadmap</p>
-          <div className="mt-2 flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <h2 className="text-3xl">Your milestone path</h2>
-              <p className="mt-2 text-sm text-[var(--color-muted)]">
-                Follow the path, then open a milestone to review its tasks.
-              </p>
-            </div>
-            {journeyComplete ? (
-              <BadgePill tone="green">Journey complete</BadgePill>
-            ) : null}
-          </div>
+          <p className="eyebrow">Roadmap</p>
+          <h2 className="mt-1.5 text-2xl sm:text-3xl">Your milestone path</h2>
+          <p className="mt-1.5 text-sm text-[var(--color-muted)]">
+            Follow the route and open any milestone to review its chapter.
+          </p>
         </div>
 
         {milestones.length > 0 ? (
-          <div className="mt-5 grid items-start gap-5 lg:grid-cols-[minmax(0,0.88fr)_minmax(24rem,1.12fr)]">
-            <div className="relative rounded-[29px] border border-white/7 bg-[#090d14]/68 px-4 py-5 sm:px-5 sm:py-6">
+          <div className="mt-4 grid items-start gap-5 lg:grid-cols-[minmax(0,0.92fr)_minmax(24rem,1.08fr)]">
+            <div className="relative overflow-hidden rounded-[29px] border border-white/7 bg-[radial-gradient(circle_at_50%_30%,rgba(59,130,246,0.055),transparent_48%),rgba(9,13,20,0.66)] px-2 py-4 sm:px-4">
+              <div className="relative h-16">
+                <RoadmapConnector
+                  fromX={getNodeX(0)}
+                  toX={getNodeX(0)}
+                  tone={
+                    milestones[0]?.state === "completed"
+                      ? "completed"
+                      : milestones[0]?.state === "current"
+                        ? "current"
+                        : "future"
+                  }
+                  className="top-1/2 h-[6.875rem]"
+                />
+                <div
+                  className="absolute top-1/2 z-10 -translate-x-1/2 -translate-y-1/2"
+                  style={{ left: `${getNodeX(0)}%` }}
+                >
+                  <span className="block size-3 rounded-full border border-white/24 bg-[#101720] shadow-[0_0_18px_rgba(148,163,184,0.12)]" />
+                </div>
+                <div
+                  className="absolute top-1/2 z-10 -translate-y-1/2"
+                  style={{ left: `calc(${getNodeX(0)}% + 1rem)` }}
+                >
+                  <p className="text-[9px] font-semibold uppercase tracking-[0.13em] text-white/32">
+                    Start
+                  </p>
+                  <p className="mt-0.5 text-xs text-white/48">
+                    Journey begins
+                  </p>
+                </div>
+              </div>
+
               <ol className="relative">
                 {milestones.map((milestone, index) => (
                   <MilestoneNode
                     key={milestone.id}
                     milestone={milestone}
+                    nextMilestone={milestones[index + 1]}
                     index={index}
                     isLast={index === milestones.length - 1}
                     selected={selectedMilestone?.id === milestone.id}
-                    showCompanion={markerMilestone?.id === milestone.id}
-                    markerComplete={journeyComplete}
+                    showCompanion={
+                      !journeyComplete && markerMilestone?.id === milestone.id
+                    }
                     companion={companion}
                     companionState={companionState}
                     onSelect={selectMilestone}
                   />
                 ))}
               </ol>
+
+              <div className="relative h-24">
+                <div
+                  className="absolute top-1/2 z-20 -translate-x-1/2 -translate-y-1/2"
+                  style={{ left: `${getNodeX(milestones.length)}%` }}
+                >
+                  <RoadmapNode
+                    state={journeyComplete ? "completed" : "locked"}
+                  />
+                </div>
+
+                {journeyComplete ? (
+                  <div
+                    data-roadmap-traveler
+                    className={cx(
+                      "pointer-events-none absolute top-1/2 z-30 flex -translate-y-1/2 flex-col items-center transition-[left,transform] duration-500 motion-reduce:transition-none",
+                      getNodeX(milestones.length) === LEFT_NODE_X
+                        ? "-translate-x-full pr-2"
+                        : "translate-x-0 pl-2",
+                    )}
+                    style={{ left: `${getNodeX(milestones.length)}%` }}
+                  >
+                    <span className="mb-0.5 whitespace-nowrap rounded-full border border-emerald-300/12 bg-[#101916] px-2 py-1 text-[8px] font-semibold uppercase tracking-[0.08em] text-emerald-100/68 shadow-[0_8px_22px_rgba(0,0,0,0.28)]">
+                      Journey complete
+                    </span>
+                    <div className="relative flex size-[4.25rem] items-center justify-center">
+                      <div className="absolute size-12 rounded-full bg-emerald-300/12 blur-2xl" />
+                      <PixelCompanion
+                        config={companion.config}
+                        stage={companion.stage}
+                        state="idle"
+                        size={68}
+                        className="relative"
+                        label={`${companion.config.family} companion at the journey destination`}
+                      />
+                    </div>
+                  </div>
+                ) : null}
+
+                <div
+                  className={cx(
+                    "absolute top-1/2 z-10 -translate-y-1/2",
+                    getNodeX(milestones.length) === LEFT_NODE_X
+                      ? "translate-x-0"
+                      : "-translate-x-full",
+                  )}
+                  style={{
+                    left:
+                      getNodeX(milestones.length) === LEFT_NODE_X
+                        ? `calc(${getNodeX(milestones.length)}% + 1.75rem)`
+                        : `calc(${getNodeX(milestones.length)}% - 1.75rem)`,
+                  }}
+                >
+                  <p
+                    className={cx(
+                      "whitespace-nowrap text-[9px] font-semibold uppercase tracking-[0.12em]",
+                      journeyComplete
+                        ? "text-emerald-100/58"
+                        : "text-white/30",
+                    )}
+                  >
+                    Destination
+                  </p>
+                  <p className="mt-0.5 whitespace-nowrap text-xs text-white/42">
+                    {journeyComplete ? "Route completed" : "End of journey"}
+                  </p>
+                </div>
+              </div>
             </div>
 
             <aside
