@@ -141,11 +141,24 @@ function DashboardCompanion({
         </p>
         <Link
           href="/employee/avatar"
+          aria-label="Edit companion appearance"
           className={cx(
-            "mt-1 inline-flex font-medium text-blue-200/70 transition hover:text-blue-100",
+            "mt-1 inline-flex items-center gap-1 font-medium text-white/32 transition hover:text-white/58",
             compact ? "text-[10px]" : "text-xs",
           )}
         >
+          <svg
+            viewBox="0 0 16 16"
+            className="size-2.5"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="m10.8 2.2 3 3L5.4 13.6 2 14l.4-3.4 8.4-8.4Z" />
+          </svg>
           Edit
         </Link>
       </div>
@@ -358,7 +371,7 @@ export default async function EmployeePage() {
               Welcome back, {firstName}.
             </h1>
 
-            <div className="mt-5 grid grid-cols-[minmax(0,1fr)_8rem] items-center gap-2 sm:grid-cols-[minmax(0,1fr)_10rem] lg:block">
+            <div className="mt-4 grid grid-cols-[minmax(0,1fr)_8rem] items-center gap-2 sm:mt-5 sm:grid-cols-[minmax(0,1fr)_10rem] lg:block">
               <div className="min-w-0">
                 <p className="flex flex-wrap items-baseline gap-x-2 text-2xl font-semibold tracking-tight sm:text-3xl">
                   <span className="whitespace-nowrap">Level {level.level}</span>
@@ -403,7 +416,7 @@ export default async function EmployeePage() {
               </div>
             </div>
 
-            <div className="mt-5 border-t border-white/9 pt-5">
+            <div className="mt-4 border-t border-white/9 pt-4 sm:mt-5 sm:pt-5">
               <div className="flex items-end justify-between gap-4">
                 <div className="min-w-0">
                   <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/38">
@@ -449,23 +462,15 @@ export default async function EmployeePage() {
               ) : null}
             </div>
 
-            <div className="mt-5 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
-              <Link
-                href={primaryAction.href}
-                className="inline-flex h-12 w-full items-center justify-center rounded-full bg-white px-6 text-sm font-semibold text-slate-950 shadow-[0_14px_40px_rgba(255,255,255,0.1)] transition hover:-translate-y-0.5 hover:bg-blue-50 sm:w-auto"
-              >
-                {primaryAction.label}
-                <span className="ml-2" aria-hidden="true">
-                  →
-                </span>
-              </Link>
-              <Link
-                href="/employee/activities"
-                className="inline-flex px-1 text-xs font-semibold text-white/48 transition hover:text-white/78"
-              >
-                Log activity
-              </Link>
-            </div>
+            <Link
+              href={primaryAction.href}
+              className="mt-4 inline-flex h-12 w-full items-center justify-center rounded-full bg-white px-6 text-sm font-semibold text-slate-950 shadow-[0_14px_40px_rgba(255,255,255,0.1)] transition hover:-translate-y-0.5 hover:bg-blue-50 sm:mt-5 sm:w-auto"
+            >
+              {primaryAction.label}
+              <span className="ml-2" aria-hidden="true">
+                →
+              </span>
+            </Link>
           </div>
 
           <div className="relative hidden overflow-hidden border-l border-white/8 bg-white/[0.018] lg:flex lg:items-center lg:justify-center">
@@ -512,24 +517,24 @@ export default async function EmployeePage() {
             </>
           ) : journeyIsComplete ? (
             <>
-              <p className="eyebrow text-emerald-200/70">Journey complete</p>
-              <h2 className="mt-2 text-2xl sm:text-3xl">Every step is complete.</h2>
+              <p className="eyebrow text-emerald-200/60">Onboarding journey</p>
+              <h2 className="mt-2 text-2xl sm:text-3xl">Journey complete</h2>
               <p className="mt-3 max-w-xl text-sm leading-6 text-[var(--color-muted)]">
                 You completed every step in this onboarding journey. Review your
                 progress or see what you unlocked.
               </p>
               <div className="mt-5 flex flex-wrap items-center gap-4">
                 <Link
-                  href="/employee/onboarding"
-                  className="inline-flex h-11 items-center justify-center rounded-full border border-emerald-300/18 bg-emerald-300/[0.08] px-5 text-sm font-semibold text-emerald-100 transition hover:bg-emerald-300/[0.13]"
-                >
-                  Review journey
-                </Link>
-                <Link
                   href="/employee/player"
-                  className="text-sm font-semibold text-blue-200"
+                  className="inline-flex h-11 items-center justify-center rounded-full border border-blue-300/16 bg-blue-300/[0.075] px-5 text-sm font-semibold text-blue-100 transition hover:bg-blue-300/[0.12]"
                 >
                   View achievements
+                </Link>
+                <Link
+                  href="/employee/onboarding"
+                  className="text-sm font-semibold text-white/52 transition hover:text-white/78"
+                >
+                  Review journey
                 </Link>
               </div>
             </>
@@ -586,9 +591,9 @@ export default async function EmployeePage() {
                   >
                     <span
                       className={cx(
-                        "flex size-8 shrink-0 items-center justify-center rounded-xl border text-xs font-semibold",
-                        milestone.status === "completed"
-                          ? "border-emerald-300/18 bg-emerald-300/10 text-emerald-200"
+                      "flex size-8 shrink-0 items-center justify-center rounded-xl border text-xs font-semibold",
+                      milestone.status === "completed"
+                          ? "border-emerald-300/12 bg-emerald-300/[0.055] text-emerald-100/75"
                           : milestone.status === "in_progress"
                             ? "border-blue-300/20 bg-blue-300/10 text-blue-100"
                             : "border-white/9 bg-white/[0.035] text-white/35",
@@ -609,7 +614,7 @@ export default async function EmployeePage() {
                       className={cx(
                         "shrink-0 rounded-full px-2.5 py-1 text-[10px] font-semibold",
                         milestone.status === "completed"
-                          ? "bg-emerald-400/10 text-emerald-200"
+                          ? "bg-emerald-300/[0.045] text-emerald-100/65"
                           : milestone.status === "in_progress"
                             ? "bg-blue-400/10 text-blue-200"
                             : "bg-white/[0.055] text-white/42",
