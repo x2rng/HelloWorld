@@ -33,7 +33,9 @@ function allowed<T extends string>(
 }
 
 function normalizePattern(value: unknown): CompanionPattern {
-  if (value === "signal-mark") return "pixel-notch";
+  if (value === "signal-mark" || value === "pixel-notch") {
+    return "micro-spark";
+  }
 
   return allowed<CompanionPattern>(
     value,

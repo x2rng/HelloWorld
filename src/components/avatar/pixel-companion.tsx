@@ -202,13 +202,19 @@ function PatternLayer({
     );
   }
 
-  return (
-    <g fill={color} opacity="0.78">
-      <rect x={anchor.right - 7} y={anchor.y} width="2" height="2" />
-      <rect x={anchor.right - 5} y={anchor.y + 2} width="2" height="2" />
-      <rect x={anchor.right - 3} y={anchor.y + 2} width="2" height="2" />
-    </g>
-  );
+  if (pattern === "micro-spark") {
+    return (
+      <g fill={color} opacity="0.78">
+        <rect x={anchor.right - 5} y={anchor.y + 2} width="2" height="2" />
+        <rect x={anchor.right - 7} y={anchor.y + 2} width="1" height="1" />
+        <rect x={anchor.right - 2} y={anchor.y + 2} width="1" height="1" />
+        <rect x={anchor.right - 5} y={anchor.y} width="1" height="1" />
+        <rect x={anchor.right - 5} y={anchor.y + 5} width="1" height="1" />
+      </g>
+    );
+  }
+
+  return null;
 }
 
 function StageMarks({

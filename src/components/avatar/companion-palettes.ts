@@ -107,7 +107,7 @@ export const companionPatternOptions: Array<{
   { id: "corner-pixels", label: "Corner pixels" },
   { id: "soft-dots", label: "Soft dots" },
   { id: "tiny-stripe", label: "Tiny stripe" },
-  { id: "pixel-notch", label: "Pixel notch" },
+  { id: "micro-spark", label: "Micro spark" },
 ];
 
 export function getCompanionPalette(theme: CompanionColorTheme) {

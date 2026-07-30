@@ -29,7 +29,7 @@ export function PixelCompanionLab() {
   return (
     <main className="workspace-theme min-h-screen px-4 py-6 sm:px-6 lg:px-8 lg:py-10">
       <div className="mx-auto max-w-[96rem]">
-        <header className="overflow-hidden rounded-[34px] border border-white/9 bg-[#090c12] p-5 shadow-[0_28px_100px_rgba(0,0,0,0.3)] sm:p-7 lg:p-8">
+        <header className="rounded-[34px] border border-white/9 bg-[#090c12] p-5 shadow-[0_28px_100px_rgba(0,0,0,0.3)] sm:p-7 lg:p-8">
           <div className="max-w-3xl">
             <h1 className="text-4xl leading-tight text-white sm:text-6xl">
               Choose your companion

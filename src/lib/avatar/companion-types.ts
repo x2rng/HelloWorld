@@ -28,7 +28,7 @@ export const companionPatterns = [
   "corner-pixels",
   "soft-dots",
   "tiny-stripe",
-  "pixel-notch",
+  "micro-spark",
 ] as const;
 
 export const companionStates = ["idle", "working", "completed"] as const;
@@ -53,6 +53,7 @@ export type CompanionFamilyDefinition = {
   id: CompanionFamily;
   label: string;
   description: string;
+  traits: string;
 };
 
 export const companionFamilyDefinitions: CompanionFamilyDefinition[] = [
@@ -60,25 +61,30 @@ export const companionFamilyDefinitions: CompanionFamilyDefinition[] = [
     id: "terminal",
     label: "Terminal",
     description: "Focused, calm, precise.",
+    traits: "Focused · Precise",
   },
   {
     id: "growth",
     label: "Growth",
     description: "Warm, steady, optimistic.",
+    traits: "Warm · Steady",
   },
   {
     id: "signal",
     label: "Signal",
     description: "Curious, adaptive, bright.",
+    traits: "Curious · Adaptive",
   },
   {
     id: "stack",
     label: "Stack",
     description: "Organized and reliable.",
+    traits: "Organized · Reliable",
   },
   {
     id: "spirit",
     label: "Spirit",
     description: "Quiet, minimal, thoughtful.",
+    traits: "Quiet · Thoughtful",
   },
 ];

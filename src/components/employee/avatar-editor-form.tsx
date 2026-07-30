@@ -44,6 +44,12 @@ export function AvatarEditorForm({
         config={config}
         onChange={setConfig}
         stage={companionStage}
+        mobileDockOffset="employee-shell"
+        compactAction={{
+          label: isPending ? "Saving..." : "Save",
+          type: "submit",
+          disabled: isPending,
+        }}
       />
 
       {state.message ? (

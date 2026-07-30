@@ -163,6 +163,16 @@ export function PlayerSetupFlow({
     hasCompanyAssignedIdentity ||
     Boolean(fallbackRole && fallbackSkills.length);
 
+  function continueSetup() {
+    if (!canContinue) return;
+    if (step === 4) {
+      setAvatarConfig(companionConfig);
+    }
+    setStep((current) =>
+      Math.min(stepLabels.length - 1, current + 1),
+    );
+  }
+
   return (
     <form action={formAction} className="min-h-screen bg-[#07090e] text-white">
       <input type="hidden" name="role_focus" value={fallbackRole} />
@@ -418,6 +428,11 @@ export function PlayerSetupFlow({
                 config={companionConfig}
                 onChange={setCompanionConfig}
                 stage={companionStage.id}
+                compactAction={{
+                  label: "Continue",
+                  onClick: continueSetup,
+                  disabled: !canContinue,
+                }}
               />
             </section>
           ) : null}
@@ -521,12 +536,7 @@ export function PlayerSetupFlow({
               disabled={!canContinue}
               onClick={(event) => {
                 event.preventDefault();
-                if (step === 4) {
-                  setAvatarConfig(companionConfig);
-                }
-                setStep((current) =>
-                  Math.min(stepLabels.length - 1, current + 1),
-                );
+                continueSetup();
               }}
             >
               {step === 2 && interests.length === 0

@@ -1,5 +1,10 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
+import {
+  CompanionCompactDock,
+  type CompanionDockAction,
+} from "@/components/avatar/companion-compact-dock";
 import { CompanionPreview } from "@/components/avatar/companion-preview";
 import { CompanionSelector } from "@/components/avatar/companion-selector";
 import {
@@ -17,6 +22,8 @@ type CompanionCustomizerProps = {
   config: PixelCompanionConfig;
   onChange: (config: PixelCompanionConfig) => void;
   stage?: CompanionStage;
+  compactAction?: CompanionDockAction;
+  mobileDockOffset?: "employee-shell" | "page";
 };
 
 const controlSectionClass =
@@ -26,10 +33,51 @@ export function CompanionCustomizer({
   config,
   onChange,
   stage = "starter",
+  compactAction,
+  mobileDockOffset = "page",
 }: CompanionCustomizerProps) {
+  const previewRef = useRef<HTMLDivElement>(null);
+  const [showCompactDock, setShowCompactDock] = useState(false);
+
+  useEffect(() => {
+    const preview = previewRef.current;
+    if (!preview || typeof IntersectionObserver === "undefined") return;
+
+    const mobileQuery = window.matchMedia("(max-width: 1023px)");
+    const topOffset = mobileDockOffset === "employee-shell" ? 68 : 12;
+    const updateForViewport = () => {
+      const previewBottom = preview.getBoundingClientRect().bottom;
+      setShowCompactDock(
+        mobileQuery.matches && previewBottom <= topOffset,
+      );
+    };
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setShowCompactDock(
+          mobileQuery.matches &&
+            !entry.isIntersecting &&
+            entry.boundingClientRect.bottom <= topOffset,
+        );
+      },
+      {
+        rootMargin: `-${topOffset}px 0px 0px 0px`,
+        threshold: 0,
+      },
+    );
+
+    observer.observe(preview);
+    mobileQuery.addEventListener("change", updateForViewport);
+    updateForViewport();
+
+    return () => {
+      observer.disconnect();
+      mobileQuery.removeEventListener("change", updateForViewport);
+    };
+  }, [mobileDockOffset]);
+
   return (
     <div className="grid min-w-0 gap-5 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:items-start">
-      <div className="min-w-0 lg:sticky lg:top-6">
+      <div ref={previewRef} className="min-w-0 lg:sticky lg:top-6">
         <CompanionPreview
           config={config}
           stage={stage}
@@ -40,6 +88,38 @@ export function CompanionCustomizer({
       </div>
 
       <div className="min-w-0 space-y-4">
+        <div
+          className={cx(
+            "sticky z-30 h-[4.5rem] lg:hidden",
+            mobileDockOffset === "employee-shell"
+              ? "top-[4.25rem]"
+              : "top-3",
+          )}
+        >
+          <div className="h-full">
+            {showCompactDock ? (
+              <CompanionCompactDock
+                config={config}
+                stage={stage}
+                action={compactAction}
+              />
+            ) : (
+              <div className="flex h-full items-center rounded-[22px] border border-white/9 bg-[#0d1119] px-5">
+                <p className="text-sm font-semibold text-white">Companion</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <section className={controlSectionClass}>
+          <div className="hidden lg:block">
+            <p className="text-sm font-semibold text-white">Companion</p>
+          </div>
+          <div className="lg:mt-4">
+            <CompanionSelector config={config} onChange={onChange} stage={stage} />
+          </div>
+        </section>
+
         <section className={controlSectionClass}>
           <div>
             <h2 className="text-xl font-semibold text-white sm:text-2xl">
@@ -49,14 +129,7 @@ export function CompanionCustomizer({
               Adjust the look while keeping the same EXP companion style.
             </p>
           </div>
-          <div className="mt-5 border-t border-white/8 pt-5">
-            <p className="mb-3 text-sm font-semibold text-white">Companion</p>
-            <CompanionSelector config={config} onChange={onChange} stage={stage} />
-          </div>
-        </section>
-
-        <section className={controlSectionClass}>
-          <fieldset>
+          <fieldset className="mt-5 border-t border-white/8 pt-5">
             <legend className="text-sm font-semibold text-white">
               Color theme
             </legend>

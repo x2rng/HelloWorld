@@ -1,5 +1,10 @@
 import { PixelCompanion } from "@/components/avatar/pixel-companion";
 import {
+  companionGlowOptions,
+  companionPatternOptions,
+  companionThemeOptions,
+} from "@/components/avatar/companion-palettes";
+import {
   companionFamilyDefinitions,
   type CompanionStage,
   type CompanionState,
@@ -33,13 +38,22 @@ export function CompanionPreview({
   const family =
     companionFamilyDefinitions.find((item) => item.id === config.family) ??
     companionFamilyDefinitions[0];
+  const theme =
+    companionThemeOptions.find((item) => item.id === config.colorTheme) ??
+    companionThemeOptions[0];
+  const glow =
+    companionGlowOptions.find((item) => item.id === config.glowColor) ??
+    companionGlowOptions[0];
+  const marking =
+    companionPatternOptions.find((item) => item.id === config.pattern) ??
+    companionPatternOptions[0];
 
   return (
     <div
       className={cx(
         "relative flex flex-col items-center justify-center overflow-hidden border",
         variant === "editor"
-          ? "min-h-[13.5rem] rounded-[26px] p-4 sm:min-h-[16rem] sm:p-5 lg:min-h-[34rem] lg:rounded-[32px] lg:p-8"
+          ? "min-h-[17.5rem] rounded-[26px] p-5 sm:min-h-[20rem] sm:p-6 lg:min-h-[34rem] lg:rounded-[32px] lg:p-8"
           : "min-h-72 rounded-[30px] p-6",
         surface === "light"
           ? "border-slate-200 bg-[#eef1f4] text-slate-900"
@@ -62,7 +76,7 @@ export function CompanionPreview({
         className={cx(
           "relative",
           variant === "editor" &&
-            "h-auto w-[168px] sm:w-[196px] lg:w-[292px]",
+            "h-auto w-[196px] sm:w-[224px] lg:w-[292px]",
         )}
       />
       {showLabels ? (
@@ -76,6 +90,23 @@ export function CompanionPreview({
           >
             {family.description}
           </p>
+          {variant === "editor" ? (
+            <div className="mt-3 flex flex-wrap items-center justify-center gap-1.5">
+              {[theme.label, `${glow.label} glow`, marking.label].map((label) => (
+                <span
+                  key={label}
+                  className={cx(
+                    "rounded-full border px-2.5 py-1 text-[10px] font-semibold",
+                    surface === "light"
+                      ? "border-slate-300 bg-white/60 text-slate-600"
+                      : "border-white/9 bg-white/[0.045] text-white/52",
+                  )}
+                >
+                  {label}
+                </span>
+              ))}
+            </div>
+          ) : null}
         </div>
       ) : null}
     </div>
