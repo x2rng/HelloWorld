@@ -1,9 +1,13 @@
-import type { TaskProgressStatus } from "@/lib/exp-types";
-
 export type EmployeeDashboardAction = {
   href: string;
   label: string;
 };
+
+export type EmployeeDashboardJourneyState =
+  | "active"
+  | "completed"
+  | "assigned_without_next"
+  | "unassigned";
 
 export function getEmployeeLevelTitle(level: number) {
   const safeLevel = Number.isFinite(level) ? Math.max(1, Math.floor(level)) : 1;
@@ -16,16 +20,31 @@ export function getEmployeeLevelTitle(level: number) {
   return "Starter";
 }
 
+export function getEmployeeDashboardJourneyState({
+  hasAssignment,
+  totalTasks,
+  completedTasks,
+  nextTaskId,
+}: {
+  hasAssignment: boolean;
+  totalTasks: number;
+  completedTasks: number;
+  nextTaskId: string | null;
+}): EmployeeDashboardJourneyState {
+  if (!hasAssignment) return "unassigned";
+  if (totalTasks > 0 && completedTasks >= totalTasks) return "completed";
+  if (nextTaskId) return "active";
+  return "assigned_without_next";
+}
+
 export function getEmployeeDashboardAction({
   playerSetupCompleted,
+  journeyState,
   nextTaskId,
-  nextTaskStatus,
-  completedTasks,
 }: {
   playerSetupCompleted: boolean;
+  journeyState: EmployeeDashboardJourneyState;
   nextTaskId: string | null;
-  nextTaskStatus: TaskProgressStatus | null;
-  completedTasks: number;
 }): EmployeeDashboardAction {
   if (!playerSetupCompleted) {
     return {
@@ -34,19 +53,17 @@ export function getEmployeeDashboardAction({
     };
   }
 
-  if (nextTaskId) {
-    const href = `/employee/onboarding#task-${nextTaskId}`;
-
-    if (nextTaskStatus === "IN_PROGRESS") {
-      return {
-        href,
-        label: "Resume current milestone",
-      };
-    }
-
+  if (journeyState === "active" && nextTaskId) {
     return {
-      href,
-      label: completedTasks > 0 ? "Continue journey" : "Start next task",
+      href: `/employee/onboarding#task-${nextTaskId}`,
+      label: "Continue next step",
+    };
+  }
+
+  if (journeyState === "completed") {
+    return {
+      href: "/employee/onboarding",
+      label: "Review completed journey",
     };
   }
 

@@ -146,6 +146,7 @@ export function EmployeeGameShell({
   const router = useRouter();
   const firstName = (profile.full_name ?? profile.email).split(" ")[0];
   const isSetupRoute = pathname.startsWith("/employee/setup");
+  const isEmployeeHome = pathname === "/employee";
 
   useEffect(() => {
     if (!playerSetupCompleted && !isSetupRoute) {
@@ -191,13 +192,15 @@ export function EmployeeGameShell({
             ))}
           </nav>
 
-          <Link
-            href="/employee/activities"
-            className="mt-7 flex items-center justify-center gap-2 rounded-2xl bg-blue-500 px-4 py-3 text-sm font-semibold text-white shadow-[0_16px_40px_rgba(59,130,246,0.2)] transition hover:-translate-y-0.5 hover:bg-blue-400"
-          >
-            <span className="text-lg leading-none">+</span>
-            Log activity
-          </Link>
+          {!isEmployeeHome ? (
+            <Link
+              href="/employee/activities"
+              className="mt-7 flex items-center justify-center gap-2 rounded-2xl bg-blue-500 px-4 py-3 text-sm font-semibold text-white shadow-[0_16px_40px_rgba(59,130,246,0.2)] transition hover:-translate-y-0.5 hover:bg-blue-400"
+            >
+              <span className="text-lg leading-none">+</span>
+              Log activity
+            </Link>
+          ) : null}
 
           <div className="mt-auto rounded-[22px] border border-white/8 bg-white/[0.035] p-3">
             <p className="truncate text-sm font-semibold text-white">{firstName}</p>
@@ -224,12 +227,14 @@ export function EmployeeGameShell({
                 </p>
               </div>
             </Link>
-            <Link
-              href="/employee/activities"
-              className="rounded-full bg-blue-500 px-4 py-2 text-xs font-semibold text-white"
-            >
-              Log activity
-            </Link>
+            {!isEmployeeHome ? (
+              <Link
+                href="/employee/activities"
+                className="rounded-full bg-blue-500 px-4 py-2 text-xs font-semibold text-white"
+              >
+                Log activity
+              </Link>
+            ) : null}
           </header>
 
           <div className="px-4 pb-28 pt-5 sm:px-6 lg:px-8 lg:pb-10 lg:pt-8 xl:px-10">

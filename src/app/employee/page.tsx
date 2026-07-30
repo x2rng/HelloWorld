@@ -16,6 +16,7 @@ import { Card } from "@/components/ui/card";
 import { getAvatarStage, getNextAvatarStage } from "@/lib/avatar-stage";
 import {
   getEmployeeDashboardAction,
+  getEmployeeDashboardJourneyState,
   getEmployeeLevelTitle,
 } from "@/lib/employee-dashboard";
 import {
@@ -80,11 +81,13 @@ function achievementDescription(description: string) {
 function DashboardCompanion({
   config,
   stage,
+  level,
   state,
   compact = false,
 }: {
   config: PixelCompanionConfig;
   stage: CompanionStage;
+  level: number;
   state: CompanionState;
   compact?: boolean;
 }) {
@@ -96,26 +99,26 @@ function DashboardCompanion({
     <div
       className={cx(
         "relative flex flex-col items-center justify-center",
-        compact ? "min-h-40" : "min-h-[28rem]",
+        compact ? "min-h-36" : "min-h-[24rem]",
       )}
     >
       <div
         className={cx(
           "absolute rounded-full bg-blue-400/14 blur-3xl",
-          compact ? "size-28" : "size-64",
+          compact ? "size-24" : "size-60",
         )}
       />
       <div
         className={cx(
           "absolute rounded-full border border-white/8 bg-white/[0.025]",
-          compact ? "size-28" : "size-72",
+          compact ? "size-24" : "size-64",
         )}
       />
       <PixelCompanion
         config={config}
         stage={stage}
         state={state}
-        size={compact ? 124 : 260}
+        size={compact ? 112 : 236}
         className="relative"
       />
       <div
@@ -124,8 +127,17 @@ function DashboardCompanion({
           compact ? "mt-1" : "mt-4",
         )}
       >
-        <p className={cx("font-semibold text-white", compact ? "text-xs" : "text-base")}>
+        <p
+          className={cx(
+            "font-semibold text-white",
+            compact ? "text-[11px]" : "text-sm",
+          )}
+        >
           {family.label}
+          <span className="hidden text-white/25 sm:inline"> · </span>
+          <span className="block text-white/55 sm:inline">
+            Level {level} companion
+          </span>
         </p>
         <Link
           href="/employee/avatar"
@@ -134,7 +146,7 @@ function DashboardCompanion({
             compact ? "text-[10px]" : "text-xs",
           )}
         >
-          Customize companion
+          Edit
         </Link>
       </div>
     </div>
@@ -270,11 +282,6 @@ export default async function EmployeePage() {
   const completedMilestones = journeyMilestones.filter(
     (milestone) => milestone.status === "completed",
   ).length;
-  const activeMilestone =
-    journeyMilestones.find((milestone) => milestone.status === "in_progress") ??
-    journeyMilestones.find((milestone) => milestone.status === "upcoming") ??
-    journeyMilestones.at(-1) ??
-    null;
 
   const level = getLevelInfo(statsResult.data?.total_xp ?? 0);
   const levelTitle = getEmployeeLevelTitle(level.level);
@@ -286,11 +293,16 @@ export default async function EmployeePage() {
     avatarResult.data?.avatar_config,
   );
   const companionState: CompanionState = nextTask ? "working" : "idle";
+  const journeyState = getEmployeeDashboardJourneyState({
+    hasAssignment: Boolean(assignment?.track),
+    totalTasks,
+    completedTasks,
+    nextTaskId: nextTask?.task.id ?? null,
+  });
   const primaryAction = getEmployeeDashboardAction({
     playerSetupCompleted: profile.player_setup_completed !== false,
+    journeyState,
     nextTaskId: nextTask?.task.id ?? null,
-    nextTaskStatus: nextTask?.task.progress?.status ?? null,
-    completedTasks,
   });
 
   const firstName = (profile.full_name ?? profile.email).split(" ")[0];
@@ -324,29 +336,29 @@ export default async function EmployeePage() {
         : [];
     })
     .sort((left, right) => right.unlockedAt.localeCompare(left.unlockedAt))
-    .slice(0, 3);
+    .slice(0, 2);
   const journeyName = assignment?.track?.title ?? "No journey assigned yet";
-  const journeyIsComplete = totalTasks > 0 && completedTasks === totalTasks;
+  const journeyIsComplete = journeyState === "completed";
   const totalCompletedTasks =
     statsResult.data?.completed_tasks_count ?? completedTasks;
 
   return (
-    <div className="space-y-5">
-      <section className="relative overflow-hidden rounded-[38px] border border-white/10 bg-[#090d14] text-white shadow-[0_32px_110px_rgba(0,0,0,0.42)]">
+    <div className="space-y-4 pb-5 lg:pb-0">
+      <section className="relative overflow-hidden rounded-[32px] border border-white/10 bg-[#090d14] text-white shadow-[0_32px_110px_rgba(0,0,0,0.42)] sm:rounded-[38px]">
         <div className="absolute -left-24 top-12 size-72 rounded-full bg-blue-500/14 blur-3xl" />
         <div className="absolute -right-16 -top-20 size-80 rounded-full bg-purple-500/10 blur-3xl" />
         <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-blue-300/35 to-transparent" />
 
-        <div className="relative grid lg:grid-cols-[minmax(0,1.12fr)_minmax(21rem,0.68fr)]">
-          <div className="p-5 sm:p-8 lg:p-9">
+        <div className="relative grid lg:grid-cols-[minmax(0,1.18fr)_minmax(19rem,0.62fr)]">
+          <div className="p-5 sm:p-7 lg:p-9">
             <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-blue-200/65">
               Player home
             </p>
-            <h1 className="mt-3 max-w-3xl text-4xl leading-[0.98] sm:text-6xl">
+            <h1 className="mt-2 max-w-3xl text-[2.15rem] leading-none sm:text-5xl lg:text-[3.6rem]">
               Welcome back, {firstName}.
             </h1>
 
-            <div className="mt-6 grid grid-cols-[minmax(0,1fr)_8.5rem] items-center gap-3 sm:grid-cols-[minmax(0,1fr)_11rem] lg:block">
+            <div className="mt-5 grid grid-cols-[minmax(0,1fr)_8rem] items-center gap-2 sm:grid-cols-[minmax(0,1fr)_10rem] lg:block">
               <div className="min-w-0">
                 <p className="flex flex-wrap items-baseline gap-x-2 text-2xl font-semibold tracking-tight sm:text-3xl">
                   <span className="whitespace-nowrap">Level {level.level}</span>
@@ -355,13 +367,13 @@ export default async function EmployeePage() {
                     {levelTitle}
                   </span>
                 </p>
-                <p className="mt-2 text-sm text-white/52">
+                <p className="mt-1.5 text-sm text-white/52">
                   {level.nextLevel
                     ? `${level.totalXp} / ${xpTarget} XP to Level ${level.nextLevel}`
                     : `${level.totalXp} total XP · Current level peak`}
                 </p>
                 <div
-                  className="mt-4 h-2.5 overflow-hidden rounded-full bg-white/9"
+                  className="mt-3 h-2 overflow-hidden rounded-full bg-white/9"
                   role="progressbar"
                   aria-label="Level progress"
                   aria-valuemin={0}
@@ -373,7 +385,7 @@ export default async function EmployeePage() {
                     style={{ width: `${Math.min(100, Math.max(0, level.progress))}%` }}
                   />
                 </div>
-                <p className="mt-2 text-xs text-white/38">
+                <p className="mt-1.5 text-xs text-white/38">
                   {level.nextLevel
                     ? `${level.xpToNextLevel} XP remaining`
                     : "Highest current EXP level reached"}
@@ -384,19 +396,20 @@ export default async function EmployeePage() {
                 <DashboardCompanion
                   config={companionConfig}
                   stage={companionStage.id}
+                  level={level.level}
                   state={companionState}
                   compact
                 />
               </div>
             </div>
 
-            <div className="mt-7 border-t border-white/9 pt-6">
+            <div className="mt-5 border-t border-white/9 pt-5">
               <div className="flex items-end justify-between gap-4">
                 <div className="min-w-0">
                   <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/38">
                     Current journey
                   </p>
-                  <p className="mt-2 line-clamp-1 text-lg font-semibold sm:text-xl">
+                  <p className="mt-1.5 line-clamp-1 text-lg font-semibold sm:text-xl">
                     {journeyName}
                   </p>
                   <p className="mt-1 text-sm text-white/46">
@@ -410,7 +423,7 @@ export default async function EmployeePage() {
                 </p>
               </div>
               <div
-                className="mt-4 h-2 overflow-hidden rounded-full bg-white/9"
+                className="mt-3 h-2 overflow-hidden rounded-full bg-white/9"
                 role="progressbar"
                 aria-label="Journey progress"
                 aria-valuemin={0}
@@ -422,17 +435,37 @@ export default async function EmployeePage() {
                   style={{ width: `${journeyProgress}%` }}
                 />
               </div>
+
+              {journeyState === "active" && nextTask ? (
+                <div className="mt-3 flex items-center justify-between gap-3 rounded-2xl border border-blue-300/10 bg-blue-300/[0.045] px-3.5 py-2.5">
+                  <p className="min-w-0 truncate text-xs text-white/66 sm:text-sm">
+                    <span className="font-semibold text-blue-100">Next up:</span>{" "}
+                    {nextTask.task.title}
+                  </p>
+                  <span className="shrink-0 text-[10px] font-semibold text-amber-200 sm:text-xs">
+                    +{TASK_XP_REWARD} XP
+                  </span>
+                </div>
+              ) : null}
             </div>
 
-            <Link
-              href={primaryAction.href}
-              className="mt-7 inline-flex h-12 w-full items-center justify-center rounded-full bg-white px-6 text-sm font-semibold text-slate-950 shadow-[0_14px_40px_rgba(255,255,255,0.1)] transition hover:-translate-y-0.5 hover:bg-blue-50 sm:w-auto"
-            >
-              {primaryAction.label}
-              <span className="ml-2" aria-hidden="true">
-                →
-              </span>
-            </Link>
+            <div className="mt-5 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+              <Link
+                href={primaryAction.href}
+                className="inline-flex h-12 w-full items-center justify-center rounded-full bg-white px-6 text-sm font-semibold text-slate-950 shadow-[0_14px_40px_rgba(255,255,255,0.1)] transition hover:-translate-y-0.5 hover:bg-blue-50 sm:w-auto"
+              >
+                {primaryAction.label}
+                <span className="ml-2" aria-hidden="true">
+                  →
+                </span>
+              </Link>
+              <Link
+                href="/employee/activities"
+                className="inline-flex px-1 text-xs font-semibold text-white/48 transition hover:text-white/78"
+              >
+                Log activity
+              </Link>
+            </div>
           </div>
 
           <div className="relative hidden overflow-hidden border-l border-white/8 bg-white/[0.018] lg:flex lg:items-center lg:justify-center">
@@ -440,6 +473,7 @@ export default async function EmployeePage() {
             <DashboardCompanion
               config={companionConfig}
               stage={companionStage.id}
+              level={level.level}
               state={companionState}
             />
           </div>
@@ -448,59 +482,81 @@ export default async function EmployeePage() {
 
       {!hasRoleSkills ? <OccupationSetupForm /> : null}
 
-      <div className="grid gap-5 xl:grid-cols-[0.9fr_1.1fr]">
-        <Card className="rounded-[34px] p-6 sm:p-8">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <p className="eyebrow">Today&apos;s focus</p>
-              <h2 className="mt-2 text-3xl">Your next meaningful step</h2>
-            </div>
-            {nextTask ? (
-              <BadgePill tone="amber">+{TASK_XP_REWARD} XP</BadgePill>
-            ) : null}
-          </div>
-
-          {nextTask ? (
-            <div className="mt-7">
-              <p className="text-sm font-semibold text-blue-200">
+      <Card className="overflow-hidden rounded-[30px] p-0">
+        <div className="grid xl:grid-cols-[0.9fr_1.1fr]">
+          <section className="p-5 sm:p-7 xl:flex xl:flex-col xl:justify-center">
+          {journeyState === "active" && nextTask ? (
+            <>
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="eyebrow">Today&apos;s focus</p>
+                  <h2 className="mt-2 text-2xl leading-tight sm:text-3xl">
+                    {nextTask.task.title}
+                  </h2>
+                </div>
+                <BadgePill tone="amber">+{TASK_XP_REWARD} XP</BadgePill>
+              </div>
+              <p className="mt-4 text-sm font-semibold text-blue-200">
                 {nextTask.milestone.title}
               </p>
-              <h3 className="mt-2 text-3xl leading-tight">
-                {nextTask.task.title}
-              </h3>
-              <p className="mt-3 text-sm leading-7 text-[var(--color-muted)]">
+              <p className="mt-2 text-sm leading-6 text-[var(--color-muted)]">
                 {nextTask.task.description ??
                   "Continue this step to move your onboarding journey forward."}
               </p>
               <Link
                 href={`/employee/onboarding#task-${nextTask.task.id}`}
-                className="mt-6 inline-flex h-11 items-center justify-center rounded-full border border-white/12 bg-white/[0.055] px-5 text-sm font-semibold text-white transition hover:bg-white/[0.1]"
+                className="mt-5 inline-flex h-11 items-center justify-center rounded-full border border-white/12 bg-white/[0.055] px-5 text-sm font-semibold text-white transition hover:bg-white/[0.1]"
               >
-                Open next step
+                Continue next step
               </Link>
-            </div>
-          ) : assignment ? (
-            <div className="mt-7 rounded-[26px] border border-emerald-400/14 bg-emerald-400/[0.055] p-5">
-              <p className="text-xl font-semibold">
-                {journeyIsComplete
-                  ? "Your assigned journey is complete."
-                  : "There is no active step right now."}
+            </>
+          ) : journeyIsComplete ? (
+            <>
+              <p className="eyebrow text-emerald-200/70">Journey complete</p>
+              <h2 className="mt-2 text-2xl sm:text-3xl">Every step is complete.</h2>
+              <p className="mt-3 max-w-xl text-sm leading-6 text-[var(--color-muted)]">
+                You completed every step in this onboarding journey. Review your
+                progress or see what you unlocked.
               </p>
-              <p className="mt-2 text-sm leading-6 text-[var(--color-muted)]">
-                Review the journey to see the progress already recorded across
-                each milestone.
+              <div className="mt-5 flex flex-wrap items-center gap-4">
+                <Link
+                  href="/employee/onboarding"
+                  className="inline-flex h-11 items-center justify-center rounded-full border border-emerald-300/18 bg-emerald-300/[0.08] px-5 text-sm font-semibold text-emerald-100 transition hover:bg-emerald-300/[0.13]"
+                >
+                  Review journey
+                </Link>
+                <Link
+                  href="/employee/player"
+                  className="text-sm font-semibold text-blue-200"
+                >
+                  View achievements
+                </Link>
+              </div>
+            </>
+          ) : journeyState === "assigned_without_next" ? (
+            <>
+              <p className="eyebrow">Journey status</p>
+              <h2 className="mt-2 text-2xl sm:text-3xl">
+                No next step is available.
+              </h2>
+              <p className="mt-3 text-sm leading-6 text-[var(--color-muted)]">
+                Your journey is assigned, but there is no actionable step to
+                continue right now.
               </p>
               <Link
                 href="/employee/onboarding"
-                className="mt-5 inline-flex text-sm font-semibold text-emerald-200"
+                className="mt-5 inline-flex text-sm font-semibold text-blue-200"
               >
                 View journey
               </Link>
-            </div>
+            </>
           ) : (
-            <div className="mt-7 rounded-[26px] border border-white/8 bg-white/[0.025] p-5">
-              <p className="text-xl font-semibold">No journey assigned yet.</p>
-              <p className="mt-2 text-sm leading-6 text-[var(--color-muted)]">
+            <>
+              <p className="eyebrow">Journey status</p>
+              <h2 className="mt-2 text-2xl sm:text-3xl">
+                No journey assigned yet.
+              </h2>
+              <p className="mt-3 text-sm leading-6 text-[var(--color-muted)]">
                 Your workspace admin can assign an onboarding journey when it is
                 ready.
               </p>
@@ -510,126 +566,125 @@ export default async function EmployeePage() {
               >
                 View journey
               </Link>
-            </div>
+            </>
           )}
-        </Card>
+          </section>
 
-        <Card className="rounded-[34px] p-6 sm:p-8">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <p className="eyebrow">Journey progress</p>
-              <h2 className="mt-2 text-3xl">{journeyName}</h2>
-            </div>
-            <p className="text-3xl font-semibold text-white">
-              {journeyProgress}%
+          <section className="border-t border-white/8 p-5 sm:p-7 xl:border-l xl:border-t-0">
+            <p className="eyebrow">Journey progress</p>
+            <h2 className="mt-2 text-2xl sm:text-3xl">Milestone path</h2>
+            <p className="mt-2 text-sm text-[var(--color-muted)]">
+              See the structure behind your overall journey progress.
             </p>
-          </div>
 
-          <div className="mt-7 h-2.5 overflow-hidden rounded-full bg-white/8">
-            <div
-              className="h-full rounded-full bg-gradient-to-r from-blue-500 to-cyan-200"
-              style={{ width: `${journeyProgress}%` }}
-            />
-          </div>
-
-          <div className="mt-7 rounded-[26px] border border-white/8 bg-white/[0.025] p-5">
-            <div className="flex items-center justify-between gap-3">
-              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-white/38">
-                {journeyIsComplete ? "Final milestone" : "Current milestone"}
-              </p>
-              {activeMilestone ? (
-                <span
-                  className={cx(
-                    "rounded-full px-2.5 py-1 text-[10px] font-semibold",
-                    activeMilestone.status === "completed"
-                      ? "bg-emerald-400/10 text-emerald-200"
-                      : activeMilestone.status === "in_progress"
-                        ? "bg-blue-400/10 text-blue-200"
-                        : "bg-white/[0.055] text-white/45",
-                  )}
-                >
-                  {milestoneStatusCopy[activeMilestone.status]}
-                </span>
-              ) : null}
-            </div>
-            <p className="mt-3 text-xl font-semibold">
-              {activeMilestone?.milestone.title ?? "Waiting for your first milestone"}
-            </p>
-            <p className="mt-2 text-sm leading-6 text-[var(--color-muted)]">
-              {activeMilestone?.milestone.description ??
-                (assignment
-                  ? "Milestone details will appear as the journey is prepared."
-                  : "A current milestone will appear after a journey is assigned.")}
-            </p>
-            {activeMilestone ? (
-              <div className="mt-5 flex items-center justify-between gap-4 text-sm">
-                <span className="text-[var(--color-muted)]">
-                  {activeMilestone.completedTasks} of {activeMilestone.totalTasks} steps
-                </span>
-                <span className="font-semibold">
-                  {activeMilestone.progress}%
-                </span>
+            {journeyMilestones.length > 0 ? (
+              <ol className="mt-5 space-y-2">
+                {journeyMilestones.map((milestone, index) => (
+                  <li
+                    key={milestone.milestone.id}
+                    className="flex items-center gap-3 rounded-[20px] border border-white/8 bg-white/[0.025] px-3.5 py-3"
+                  >
+                    <span
+                      className={cx(
+                        "flex size-8 shrink-0 items-center justify-center rounded-xl border text-xs font-semibold",
+                        milestone.status === "completed"
+                          ? "border-emerald-300/18 bg-emerald-300/10 text-emerald-200"
+                          : milestone.status === "in_progress"
+                            ? "border-blue-300/20 bg-blue-300/10 text-blue-100"
+                            : "border-white/9 bg-white/[0.035] text-white/35",
+                      )}
+                      aria-hidden="true"
+                    >
+                      {milestone.status === "completed" ? "✓" : index + 1}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-semibold text-white">
+                        {milestone.milestone.title}
+                      </p>
+                      <p className="mt-0.5 text-xs text-[var(--color-muted)]">
+                        {milestone.completedTasks} of {milestone.totalTasks} steps
+                      </p>
+                    </div>
+                    <span
+                      className={cx(
+                        "shrink-0 rounded-full px-2.5 py-1 text-[10px] font-semibold",
+                        milestone.status === "completed"
+                          ? "bg-emerald-400/10 text-emerald-200"
+                          : milestone.status === "in_progress"
+                            ? "bg-blue-400/10 text-blue-200"
+                            : "bg-white/[0.055] text-white/42",
+                      )}
+                    >
+                      {milestoneStatusCopy[milestone.status]}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <div className="mt-5 rounded-[20px] border border-white/8 bg-white/[0.025] p-4">
+                <p className="text-sm font-semibold">
+                  {assignment
+                    ? "Milestones are still being prepared."
+                    : "Your milestone path will appear here."}
+                </p>
               </div>
-            ) : null}
-          </div>
+            )}
 
-          <div className="mt-5 flex flex-wrap items-center justify-between gap-3 text-sm text-[var(--color-muted)]">
-            <span>
-              {completedMilestones} of {journeyMilestones.length} milestones completed
-            </span>
             {assignment ? (
               <Link
                 href="/employee/onboarding"
-                className="font-semibold text-blue-200"
+                className="mt-5 inline-flex text-sm font-semibold text-blue-200"
               >
                 Open full journey
               </Link>
             ) : null}
-          </div>
-        </Card>
-      </div>
+          </section>
+        </div>
+      </Card>
 
-      <div className="grid gap-5 xl:grid-cols-[1.12fr_0.88fr]">
-        <Card className="rounded-[34px] p-6 sm:p-8">
-          <div className="flex items-start justify-between gap-4">
+      <div className="grid gap-4 xl:grid-cols-[1.12fr_0.88fr]">
+        <Card className="rounded-[30px] p-5 sm:p-7">
+          <div className="flex items-start justify-between gap-3">
             <div>
               <p className="eyebrow">Achievements preview</p>
-              <h2 className="mt-2 text-3xl">Recent proof of growth</h2>
+              <h2 className="mt-2 text-2xl sm:text-3xl">Proof of growth</h2>
             </div>
             <BadgePill tone="amber">
               {unlockedResult.data.length} unlocked
             </BadgePill>
           </div>
 
-          <div className="mt-7 space-y-3">
+          <div className="mt-5 space-y-2.5">
             {recentUnlockedAchievements.length > 0 ? (
               recentUnlockedAchievements.map(({ achievement, unlockedAt }) => (
                 <div
                   key={achievement.id}
-                  className="flex items-start gap-4 rounded-[24px] border border-amber-300/12 bg-amber-300/[0.045] p-4"
+                  className="flex items-start gap-3 rounded-[20px] border border-amber-300/12 bg-amber-300/[0.045] p-3.5"
                 >
-                  <span className="flex size-10 shrink-0 items-center justify-center rounded-2xl border border-amber-300/18 bg-amber-300/10 text-amber-200">
+                  <span className="flex size-9 shrink-0 items-center justify-center rounded-xl border border-amber-300/18 bg-amber-300/10 text-sm text-amber-200">
                     ◆
                   </span>
-                  <div className="min-w-0">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <p className="font-semibold">{achievement.title}</p>
-                      <p className="text-[10px] uppercase tracking-[0.12em] text-white/35">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center justify-between gap-1.5">
+                      <p className="text-sm font-semibold">{achievement.title}</p>
+                      <p className="text-[9px] uppercase tracking-[0.1em] text-white/35">
                         {new Intl.DateTimeFormat("en", {
                           dateStyle: "medium",
                         }).format(new Date(unlockedAt))}
                       </p>
                     </div>
-                    <p className="mt-1 text-sm leading-6 text-[var(--color-muted)]">
+                    <p className="mt-1 line-clamp-2 text-xs leading-5 text-[var(--color-muted)]">
                       {achievementDescription(achievement.description)}
                     </p>
                   </div>
                 </div>
               ))
             ) : (
-              <div className="rounded-[24px] border border-white/8 bg-white/[0.025] p-5">
-                <p className="font-semibold">Your first achievement is ahead.</p>
-                <p className="mt-2 text-sm leading-6 text-[var(--color-muted)]">
+              <div className="rounded-[20px] border border-white/8 bg-white/[0.025] p-4">
+                <p className="text-sm font-semibold">
+                  Your first achievement is ahead.
+                </p>
+                <p className="mt-1.5 text-xs leading-5 text-[var(--color-muted)]">
                   Complete journey steps to begin building a visible record of
                   progress.
                 </p>
@@ -639,37 +694,36 @@ export default async function EmployeePage() {
 
           <Link
             href="/employee/player"
-            className="mt-6 inline-flex text-sm font-semibold text-blue-200"
+            className="mt-5 inline-flex text-sm font-semibold text-blue-200"
           >
-            View Player and achievements
+            View all achievements
           </Link>
         </Card>
 
-        <Card className="rounded-[34px] p-6 sm:p-8">
+        <Card className="rounded-[30px] p-5 sm:p-7">
           <p className="eyebrow">Progress summary</p>
-          <h2 className="mt-2 text-3xl">Your momentum at a glance</h2>
+          <h2 className="mt-2 text-2xl sm:text-3xl">Momentum at a glance</h2>
 
-          <dl className="mt-7 divide-y divide-white/8 border-y border-white/8">
+          <dl className="mt-5 grid grid-cols-2 gap-2.5">
             {[
-              ["Total steps completed", totalCompletedTasks],
-              ["Milestones completed", completedMilestones],
-              ["Steps remaining", remainingTasks],
-              ["Achievements unlocked", unlockedResult.data.length],
+              ["Steps", totalCompletedTasks],
+              ["Milestones", completedMilestones],
+              ["Achievements", unlockedResult.data.length],
+              ["Remaining", remainingTasks],
             ].map(([label, value]) => (
               <div
                 key={label}
-                className="flex items-center justify-between gap-4 py-4"
+                className="rounded-[20px] border border-white/8 bg-white/[0.025] p-3.5 sm:p-4"
               >
-                <dt className="text-sm text-[var(--color-muted)]">{label}</dt>
-                <dd className="text-2xl font-semibold text-white">{value}</dd>
+                <dd className="text-2xl font-semibold text-white sm:text-3xl">
+                  {value}
+                </dd>
+                <dt className="mt-1 text-xs text-[var(--color-muted)]">
+                  {label}
+                </dt>
               </div>
             ))}
           </dl>
-
-          <p className="mt-5 text-sm leading-6 text-[var(--color-muted)]">
-            Progress reflects completed onboarding steps and achievements already
-            recorded in EXP.
-          </p>
         </Card>
       </div>
 
