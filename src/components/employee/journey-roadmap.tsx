@@ -220,13 +220,15 @@ function TaskCard({
   return (
     <article
       className={cx(
-        "rounded-[22px] border p-4",
+        "rounded-[20px] border",
         isNext &&
-          "border-blue-300/28 bg-blue-300/[0.07] shadow-[0_16px_42px_rgba(59,130,246,0.09)]",
-        isCompleted && "border-emerald-300/8 bg-emerald-300/[0.02]",
-        task.state === "available" && "border-white/8 bg-white/[0.025]",
+          "border-blue-300/28 bg-blue-300/[0.07] p-4 shadow-[0_16px_42px_rgba(59,130,246,0.09)]",
+        isCompleted &&
+          "border-emerald-300/7 bg-emerald-300/[0.015] p-3.5",
+        task.state === "available" &&
+          "border-white/8 bg-white/[0.025] p-3.5",
         task.state === "locked" &&
-          "border-white/6 bg-white/[0.015] text-white/58",
+          "border-white/6 bg-white/[0.015] p-3.5 text-white/58",
       )}
     >
       <div className="flex items-start justify-between gap-3">
@@ -239,10 +241,12 @@ function TaskCard({
           >
             {task.title}
           </h4>
-          <p className="mt-1.5 text-sm leading-6 text-[var(--color-muted)]">
-            {task.description ??
-              "Complete this task to continue your onboarding progress."}
-          </p>
+          {!isCompleted ? (
+            <p className="mt-1.5 text-sm leading-6 text-[var(--color-muted)]">
+              {task.description ??
+                "Complete this task to continue your onboarding progress."}
+            </p>
+          ) : null}
         </div>
         <TaskStateBadge state={task.state} />
       </div>
@@ -259,11 +263,13 @@ function TaskCard({
       </div>
 
       {task.skillContributions.length > 0 ? (
-        <div className="mt-3">
-          <p className="text-[9px] font-semibold uppercase tracking-[0.13em] text-white/30">
-            Skill contribution
-          </p>
-          <div className="mt-2 flex flex-wrap gap-2">
+        <div className={cx(isCompleted ? "mt-2.5" : "mt-3")}>
+          {!isCompleted ? (
+            <p className="text-[9px] font-semibold uppercase tracking-[0.13em] text-white/30">
+              Skill contribution
+            </p>
+          ) : null}
+          <div className={cx("flex flex-wrap gap-2", !isCompleted && "mt-2")}>
             {task.skillContributions.map((contribution) => (
               <span
                 key={contribution.skill}
@@ -329,27 +335,22 @@ function MilestoneDetails({
       </div>
 
       <div className="space-y-5 px-5 py-5 sm:px-6">
-        <div className="grid grid-cols-3 gap-2">
-          {[
-            ["Tasks", `${milestone.completedTasks}/${milestone.totalTasks}`],
-            ["Progress", `${milestone.progress}%`],
-            [
-              milestone.state === "completed" ? "XP earned" : "Available XP",
-              milestone.state === "completed"
-                ? milestone.earnedXp
-                : milestone.totalXp,
-            ],
-          ].map(([label, value]) => (
-            <div
-              key={label}
-              className="rounded-[17px] border border-white/7 bg-white/[0.022] p-3"
-            >
-              <p className="text-lg font-semibold text-white">{value}</p>
-              <p className="mt-0.5 text-[9px] uppercase tracking-[0.09em] text-white/30">
-                {label}
-              </p>
-            </div>
-          ))}
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="rounded-full border border-white/8 bg-white/[0.025] px-3 py-1.5 text-xs font-medium text-white/65">
+            {milestone.completedTasks}/{milestone.totalTasks} tasks
+          </span>
+          <span className="rounded-full border border-white/8 bg-white/[0.025] px-3 py-1.5 text-xs font-medium text-white/65">
+            {milestone.progress}%
+          </span>
+          {(milestone.state === "completed"
+            ? milestone.earnedXp
+            : milestone.totalXp) > 0 ? (
+            <span className="rounded-full border border-cyan-300/10 bg-cyan-300/[0.035] px-3 py-1.5 text-xs font-medium text-cyan-100/72">
+              {milestone.state === "completed"
+                ? `${milestone.earnedXp} XP earned`
+                : `${milestone.totalXp} XP available`}
+            </span>
+          ) : null}
         </div>
 
         {milestone.state === "current" ? (
@@ -487,16 +488,20 @@ function MilestoneDetails({
 function MilestoneNode({
   milestone,
   index,
+  isLast,
   selected,
   showCompanion,
+  markerComplete,
   companion,
   companionState,
   onSelect,
 }: {
   milestone: JourneyRoadmapMilestone;
   index: number;
+  isLast: boolean;
   selected: boolean;
   showCompanion: boolean;
+  markerComplete: boolean;
   companion: JourneyRoadmapProps["companion"];
   companionState: CompanionState;
   onSelect: (milestoneId: string) => void;
@@ -505,29 +510,74 @@ function MilestoneNode({
     milestone.state === "completed"
       ? `${milestone.earnedXp} XP earned`
       : `${milestone.totalXp} XP available`;
+  const nextTask =
+    milestone.tasks.find((task) => task.state === "next") ?? null;
 
   return (
     <li
       id={`milestone-${milestone.id}`}
-      className="relative grid scroll-mt-24 grid-cols-[2.5rem_minmax(0,1fr)] gap-3 pb-5 last:pb-0"
+      className="relative grid scroll-mt-24 grid-cols-[3.5rem_minmax(0,1fr)] gap-2 pb-4 last:pb-0 sm:gap-3 sm:pb-5"
     >
+      {!isLast ? (
+        <span
+          aria-hidden="true"
+          className={cx(
+            "absolute bottom-0 left-[1.72rem] top-10 z-0 w-[2px]",
+            milestone.state === "completed"
+              ? "bg-gradient-to-b from-emerald-300/62 via-emerald-300/38 to-emerald-300/22 shadow-[0_0_12px_rgba(110,231,183,0.12)]"
+              : "bg-[repeating-linear-gradient(to_bottom,rgba(148,163,184,0.2)_0,rgba(148,163,184,0.2)_5px,transparent_5px,transparent_11px)]",
+          )}
+        />
+      ) : null}
+
       <div className="relative z-10 col-start-1 flex justify-center">
         <span
           className={cx(
-            "flex size-9 items-center justify-center rounded-[14px] border bg-[#101620] shadow-[0_9px_24px_rgba(0,0,0,0.28)]",
+            "flex items-center justify-center border bg-[#101620] shadow-[0_9px_24px_rgba(0,0,0,0.28)]",
             milestone.state === "completed" &&
-              "border-emerald-300/14 text-emerald-100/68",
+              "size-9 rounded-[14px] border-emerald-300/20 bg-emerald-300/12 text-emerald-100/78",
             milestone.state === "current" &&
-              "border-blue-300/48 bg-blue-400/12 text-blue-100 shadow-[0_0_28px_rgba(96,165,250,0.2)]",
+              "size-11 rounded-[16px] border-blue-200/65 bg-blue-400/18 text-blue-50 ring-4 ring-blue-400/8 shadow-[0_0_34px_rgba(96,165,250,0.32)]",
             milestone.state === "available_next" &&
-              "border-cyan-300/16 text-cyan-100/65",
+              "size-9 rounded-[14px] border-cyan-200/38 bg-transparent text-cyan-100/72",
             milestone.state === "locked" &&
-              "border-white/7 text-white/25",
+              "size-9 rounded-[14px] border-white/8 bg-white/[0.025] text-white/28",
           )}
         >
           <StatusIcon state={milestone.state} className="size-4.5" />
         </span>
       </div>
+
+      {showCompanion ? (
+        <div className="pointer-events-none absolute left-0 top-[2.15rem] z-20 flex w-[5.35rem] flex-col items-center">
+          <div className="relative flex size-[4.6rem] items-center justify-center">
+            <div
+              className={cx(
+                "absolute size-14 rounded-full blur-2xl",
+                markerComplete ? "bg-emerald-300/12" : "bg-blue-300/12",
+              )}
+            />
+            <PixelCompanion
+              config={companion.config}
+              stage={companion.stage}
+              state={companionState}
+              size={72}
+              className="relative"
+              label={`${companion.config.family} companion at ${milestone.title}`}
+            />
+          </div>
+          <span
+            className={cx(
+              "-mt-1 whitespace-nowrap rounded-full border px-2 py-1 text-[8px] font-semibold uppercase tracking-[0.08em] shadow-[0_8px_22px_rgba(0,0,0,0.28)]",
+              markerComplete
+                ? "border-emerald-300/12 bg-[#101916] text-emerald-100/66"
+                : "border-blue-300/16 bg-[#101722] text-blue-100/72",
+            )}
+          >
+            {markerComplete ? "Journey complete" : "You are here"}
+          </span>
+        </div>
+      ) : null}
 
       <button
         type="button"
@@ -535,8 +585,12 @@ function MilestoneNode({
         aria-label={`Open ${milestone.title} milestone details`}
         aria-pressed={selected}
         className={cx(
-          "group relative col-start-2 w-full overflow-hidden rounded-[24px] border p-4 text-left outline-none transition",
-          showCompanion && "pr-[6.5rem]",
+          "group relative col-start-2 w-full overflow-hidden rounded-[22px] border text-left outline-none transition",
+          milestone.state === "completed" && "p-3.5",
+          milestone.state === "current" && "p-5",
+          milestone.state === "available_next" && "p-3.5",
+          milestone.state === "locked" && "p-3.5",
+          showCompanion && "min-h-[7.6rem] pl-[3.85rem] sm:pl-[4.35rem]",
           milestone.state === "completed" &&
             "border-emerald-300/9 bg-emerald-300/[0.02] hover:border-emerald-300/16",
           milestone.state === "current" &&
@@ -567,29 +621,20 @@ function MilestoneNode({
           ) : null}
         </div>
 
-        {showCompanion ? (
-          <div className="absolute -bottom-2 right-2 flex size-[5.5rem] items-center justify-center">
-            <div className="absolute size-16 rounded-full bg-blue-300/10 blur-2xl" />
-            <PixelCompanion
-              config={companion.config}
-              stage={companion.stage}
-              state={companionState}
-              size={84}
-              className="relative"
-              label={`${companion.config.family} companion at ${milestone.title}`}
-            />
-          </div>
+        {milestone.state === "current" ? (
+          <p className="mt-2 line-clamp-2 text-sm leading-6 text-[var(--color-muted)]">
+            {milestone.description ??
+              "A focused stage in your onboarding journey."}
+          </p>
         ) : null}
-
-        <p className="mt-2 line-clamp-1 text-sm leading-6 text-[var(--color-muted)]">
-          {milestone.description ?? "A focused stage in your onboarding journey."}
-        </p>
 
         <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs">
           <span className="text-white/43">
             {milestone.completedTasks} / {milestone.totalTasks} tasks
           </span>
-          {milestone.totalTasks > 0 ? (
+          {(milestone.state === "completed"
+            ? milestone.earnedXp
+            : milestone.totalXp) > 0 ? (
             <span
               className={cx(
                 "font-semibold",
@@ -604,10 +649,26 @@ function MilestoneNode({
         </div>
 
         {milestone.state === "current" ? (
-          <ProgressBar value={milestone.progress} tone="blue" className="mt-3" />
+          <>
+            <ProgressBar
+              value={milestone.progress}
+              tone="blue"
+              className="mt-3"
+            />
+            {nextTask ? (
+              <p className="mt-2 truncate text-xs font-medium text-blue-100/68">
+                Next: {nextTask.title}
+              </p>
+            ) : null}
+          </>
         ) : null}
 
-        <span className="mt-3 inline-flex items-center text-[11px] font-semibold text-white/40 transition group-hover:text-white/67">
+        <span
+          className={cx(
+            "inline-flex items-center text-[11px] font-semibold text-white/40 transition group-hover:text-white/67",
+            milestone.state === "current" ? "mt-3" : "mt-2.5",
+          )}
+        >
           {milestone.state === "locked" ? "Preview milestone" : "View details"}
           <span className="ml-1.5" aria-hidden="true">
             →
@@ -786,15 +847,24 @@ export function JourneyRoadmap({
         <div className="relative">
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
-              <p className="eyebrow text-blue-100/52">Your journey</p>
-              <h1 className="mt-2 truncate text-3xl leading-tight sm:text-4xl">
-                {track.title}
+              <p className="eyebrow text-blue-100/52">{track.title}</p>
+              <h1 className="mt-2 text-2xl leading-tight sm:text-4xl">
+                {journeyComplete
+                  ? "Journey complete"
+                  : currentMilestone
+                    ? `You are in ${currentMilestone.title}`
+                    : milestones.length > 0
+                      ? "Your roadmap is ready"
+                      : "Your roadmap is being prepared"}
               </h1>
-              {track.description ? (
-                <p className="mt-2 line-clamp-2 max-w-2xl text-sm leading-6 text-[var(--color-muted)]">
-                  {track.description}
-                </p>
-              ) : null}
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--color-muted)]">
+                {journeyComplete
+                  ? `You completed every milestone in ${track.title}.`
+                  : currentMilestone
+                    ? `${currentMilestone.completedTasks} of ${currentMilestone.totalTasks} tasks complete.`
+                    : track.description ??
+                      "Your milestone path will appear here when it is ready."}
+              </p>
             </div>
             <div className="shrink-0 text-right">
               <p
@@ -818,95 +888,44 @@ export function JourneyRoadmap({
             />
           </div>
 
-          <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-white/7 pt-4 sm:grid-cols-4">
-            <div>
-              <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-white/28">
-                Current milestone
-              </p>
-              <p className="mt-1 truncate text-sm font-semibold">
-                {currentMilestone?.title ??
-                  (journeyComplete ? "Journey complete" : "Preparing roadmap")}
-              </p>
-            </div>
-            <div>
-              <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-white/28">
-                Progress
-              </p>
-              <p className="mt-1 text-sm font-semibold">
-                {completedTasks} of {totalTasks} tasks
-              </p>
-            </div>
-            <div>
-              <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-white/28">
-                Level
-              </p>
-              <p className="mt-1 text-sm font-semibold">Level {level.current}</p>
-            </div>
-            <div>
-              <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-white/28">
-                Experience
-              </p>
-              <p className="mt-1 text-sm font-semibold">
+          <div className="mt-4 flex flex-col gap-3 border-t border-white/7 pt-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="rounded-full border border-white/8 bg-white/[0.025] px-3 py-1.5 text-xs font-semibold text-white/72">
+                Level {level.current}
+              </span>
+              <span className="rounded-full border border-cyan-300/10 bg-cyan-300/[0.035] px-3 py-1.5 text-xs font-semibold text-cyan-100/72">
                 {level.totalXp} XP
                 {level.nextLevel ? (
-                  <span className="ml-1 text-white/35">
+                  <span className="ml-1 text-cyan-100/38">
                     · {level.xpToNextLevel} to L{level.nextLevel}
                   </span>
                 ) : null}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="mt-4 rounded-[27px] border border-blue-300/16 bg-gradient-to-br from-blue-400/[0.07] via-[#10151d] to-[#0d1219] p-5 shadow-[0_18px_55px_rgba(59,130,246,0.08)]">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="min-w-0">
-            <p className="eyebrow text-blue-100/56">
-              {journeyComplete ? "Journey complete" : "You are here"}
-            </p>
-            <h2 className="mt-2 text-2xl leading-tight">
-              {statusMilestone?.title ??
-                (milestones.length > 0
-                  ? "Your roadmap is ready"
-                  : "Your roadmap is being prepared")}
-            </h2>
-            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-[var(--color-muted)]">
-              {statusMilestone ? (
-                <span>
-                  {statusMilestone.completedTasks} of{" "}
-                  {statusMilestone.totalTasks} tasks complete
-                </span>
-              ) : null}
-              {nextTask ? (
-                <span className="font-medium text-cyan-100/68">
-                  Next: {nextTask.title}
-                </span>
-              ) : journeyComplete ? (
-                <span>Review the progress you completed.</span>
-              ) : null}
-            </div>
-          </div>
-
-          {primaryActionLabel && statusMilestone ? (
-            <button
-              type="button"
-              onClick={activatePrimaryAction}
-              className="inline-flex h-11 shrink-0 items-center justify-center rounded-full bg-white px-5 text-sm font-semibold text-slate-950 shadow-[0_12px_34px_rgba(255,255,255,0.09)] transition hover:-translate-y-0.5 hover:bg-blue-50"
-            >
-              {primaryActionLabel}
-              <span className="ml-2" aria-hidden="true">
-                →
               </span>
-            </button>
-          ) : null}
+              <span className="rounded-full border border-white/8 bg-white/[0.025] px-3 py-1.5 text-xs font-medium text-white/50">
+                {completedTasks}/{totalTasks} tasks
+              </span>
+            </div>
+
+            {primaryActionLabel && statusMilestone ? (
+              <button
+                type="button"
+                onClick={activatePrimaryAction}
+                className="inline-flex h-11 shrink-0 items-center justify-center rounded-full bg-white px-5 text-sm font-semibold text-slate-950 shadow-[0_12px_34px_rgba(255,255,255,0.09)] transition hover:-translate-y-0.5 hover:bg-blue-50"
+              >
+                {primaryActionLabel}
+                <span className="ml-2" aria-hidden="true">
+                  →
+                </span>
+              </button>
+            ) : null}
+          </div>
         </div>
       </section>
 
       <section
         id="roadmap"
         ref={roadmapSectionRef}
-        className="mt-6 scroll-mt-5"
+        className="mt-5 scroll-mt-5"
       >
         <div className="px-1">
           <p className="eyebrow">Journey roadmap</p>
@@ -926,15 +945,16 @@ export function JourneyRoadmap({
         {milestones.length > 0 ? (
           <div className="mt-5 grid items-start gap-5 lg:grid-cols-[minmax(0,0.88fr)_minmax(24rem,1.12fr)]">
             <div className="relative rounded-[29px] border border-white/7 bg-[#090d14]/68 px-4 py-5 sm:px-5 sm:py-6">
-              <div className="absolute bottom-7 left-[2.1rem] top-7 w-px bg-gradient-to-b from-blue-300/22 via-white/9 to-white/4" />
               <ol className="relative">
                 {milestones.map((milestone, index) => (
                   <MilestoneNode
                     key={milestone.id}
                     milestone={milestone}
                     index={index}
+                    isLast={index === milestones.length - 1}
                     selected={selectedMilestone?.id === milestone.id}
                     showCompanion={markerMilestone?.id === milestone.id}
+                    markerComplete={journeyComplete}
                     companion={companion}
                     companionState={companionState}
                     onSelect={selectMilestone}
